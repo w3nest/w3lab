@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from youwol.app.environment import YouwolEnvironment
-from youwol.app.routers.projects import IPipelineFactory, BrowserApp, Execution, Link, BrowserAppGraphics
-from youwol.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
-from youwol.utils import parse_json, encode_id
-from youwol.utils.context import Context
+from w3nest.app.environment import Environment
+from w3nest.app.routers.projects import IPipelineFactory, BrowserApp, Execution, Link, BrowserAppGraphics
+from w3nest.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
+from w3nest.utils import parse_json, encode_id
+from w3nest_client.context import Context
 
 
 folder_path = Path(__file__).parent.parent
@@ -18,7 +18,7 @@ class PipelineFactory(IPipelineFactory):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    async def get(self, _env: YouwolEnvironment, context: Context):
+    async def get(self, _env: Environment, context: Context):
         config = PipelineConfig(target=BrowserApp(
             displayName="Co-Lab",
             execution=Execution(
