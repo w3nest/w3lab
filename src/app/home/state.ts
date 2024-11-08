@@ -14,8 +14,8 @@ import * as webpm from '@youwol/webpm-client'
 export type HomePageMode = 'view' | 'edit'
 
 const defaultJs = `
-return async({md, webpm, mkdocs, router}) => {
-    return mkdocsTs.parseMd({src: md, router})
+return async({mdSrc, webpm, mkdocs, router}) => {
+    return mkdocs.parseMd({src: mdSrc, router})
 }
 `
 
