@@ -1,9 +1,9 @@
 {
-    "name": "@youwol/co-lab",
-    "description": "The YouWol's collaborative laboratory application.",
-    "version": "0.6.2-wip",
+    "name": "@w3nest/co-lab",
+    "description": "The W3Nest's collaborative laboratory application.",
+    "version": "0.7.0-wip",
     "author": "greinisch@youwol.com",
-    "homepage": "https://github.com/youwol/co-lab#README.md",
+    "homepage": "https://github.com/w3nest/co-lab#README.md",
     "main": "dist/index.html",
     "types": "src/index.ts",
     "scripts": {
