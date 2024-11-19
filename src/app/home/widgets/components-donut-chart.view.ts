@@ -1,7 +1,7 @@
 import { AppState } from '../../app-state'
 import { map } from 'rxjs/operators'
 import { DonutChart, DonutChartSection } from './donut-chart.utils'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { Router } from '@youwol/mkdocs-ts'
 
 /**
@@ -13,12 +13,12 @@ import { Router } from '@youwol/mkdocs-ts'
  * This component is designed to be embedded in a `Markdown` page,
  * refer to {@link ComponentsDonutChart.fromHTMLElement}.
  */
-export class ComponentsDonutChart extends DonutChart<Routers.LocalCdn.CdnPackageLight> {
+export class ComponentsDonutChart extends DonutChart<Local.Routers.LocalCdn.CdnPackageLight> {
     constructor(params: {
         appState: AppState
         width: string
         margin: number
-        sections: DonutChartSection<Routers.LocalCdn.CdnPackage>[]
+        sections: DonutChartSection<Local.Routers.LocalCdn.CdnPackage>[]
     }) {
         super({
             ...params,

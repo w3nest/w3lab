@@ -5,7 +5,7 @@ import * as Pyodide from './pyodide'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 
 import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { PackageView } from './js-wasm/package.views'
 import { BackendView } from './backends/package.views'
 import { State } from './state'
@@ -24,7 +24,7 @@ export const navigation = (appState: AppState): Navigation => ({
 })
 
 export function formatChildren(
-    { packages }: Routers.LocalCdn.CdnStatusResponse,
+    { packages }: Local.Routers.LocalCdn.CdnStatusResponse,
     target: Target,
 ) {
     return packages
@@ -45,12 +45,12 @@ export function formatChildren(
 }
 
 export function lazyResolver(
-    status: Routers.LocalCdn.CdnStatusResponse,
+    status: Local.Routers.LocalCdn.CdnStatusResponse,
     appState: AppState,
-    target: Routers.LocalCdn.WebpmLibraryType,
+    target: Local.Routers.LocalCdn.WebpmLibraryType,
 ) {
     const htmlFactory: Record<
-        Routers.LocalCdn.WebpmLibraryType,
+        Local.Routers.LocalCdn.WebpmLibraryType,
         (p: {
             appState: AppState
             cdnState: State

@@ -4,8 +4,7 @@ import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { HdPathBookView } from '../../common'
 import { map, mergeMap } from 'rxjs/operators'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
-import { PyYouwolClient } from '@youwol/local-youwol-client'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 
 export const navigation = (appState: AppState): Navigation => ({
     html: ({ router }) => new PageView({ appState, router }),
@@ -50,7 +49,7 @@ Below is displayed the current configuration of the local YouWol server:
                             language: 'python',
                             content: appState.environment$.pipe(
                                 mergeMap(() =>
-                                    new PyYouwolClient().admin.environment
+                                    new Local.Client().admin.environment
                                         .getFileContent$()
                                         .pipe(raiseHTTPErrors()),
                                 ),

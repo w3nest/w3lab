@@ -9,9 +9,12 @@ import { BehaviorSubject, mergeMap, Observable, of, Subject, timer } from 'rxjs'
 import { setup } from '../../auto-generated'
 import { AppState } from '../app-state'
 import { take } from 'rxjs/operators'
-import { Routers } from '@youwol/local-youwol-client'
-import { onHTTPErrors } from '@youwol/http-primitives'
-import { AssetsGateway, ExplorerBackend } from '@youwol/http-clients'
+import {
+    AssetsGateway,
+    ExplorerBackend,
+    Local,
+    onHTTPErrors,
+} from '@w3nest/http-clients'
 import { getProjectNav$ } from './utils-nav'
 
 /**
@@ -511,7 +514,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
             sep,
             {
                 source$: appState.cdnState.status$,
-                vdomMap: (status: Routers.LocalCdn.CdnStatusResponse) => {
+                vdomMap: (status: Local.Routers.LocalCdn.CdnStatusResponse) => {
                     const target = status.packages.find(
                         (p) => p.name === component,
                     )
@@ -585,7 +588,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
             sep,
             {
                 source$: appState.projectsState.projects$,
-                vdomMap: (projects: Routers.Projects.Project[]) => {
+                vdomMap: (projects: Local.Routers.Projects.Project[]) => {
                     const project = projects.find(
                         (p) => p.name.split('~')[0] === component,
                     )

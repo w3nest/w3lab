@@ -6,8 +6,6 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from '@youwol/rx-vdom'
-import { AssetsGateway } from '@youwol/http-clients'
-import { onHTTPErrors } from '@youwol/http-primitives'
 import {
     BehaviorSubject,
     combineLatest,
@@ -19,7 +17,8 @@ import {
 import { filter, map, shareReplay, take, tap } from 'rxjs/operators'
 import { AppState } from '../../app-state'
 import { styleShellStdOut } from '../../common'
-import { ContextMessage, PyYouwolClient } from '@youwol/local-youwol-client'
+import { ContextMessage, Local, onHTTPErrors,
+    AssetsGateway } from '@w3nest/http-clients'
 
 /**
  * @category View
@@ -230,7 +229,7 @@ class UninstallButton implements VirtualDOM<'div'> {
                         .pipe(
                             take(1),
                             switchMap((version) =>
-                                new PyYouwolClient().admin.system.uninstallBackend$(
+                                new Local.Client().admin.system.uninstallBackend$(
                                     { name: backend, version },
                                 ),
                             ),

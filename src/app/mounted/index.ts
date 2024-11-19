@@ -9,8 +9,7 @@ import {
 } from '@youwol/mkdocs-ts'
 import { FileContentView } from './file-content-view'
 import { map, take } from 'rxjs/operators'
-import { PyYouwolClient } from '@youwol/local-youwol-client'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ExplorerView } from './explorer.view'
 
 export function encodeHdPath(str) {
@@ -127,7 +126,7 @@ function lazyResolver(
 
     const fromDecoded = from != '' ? decodeHRef(from) : ''
 
-    return new PyYouwolClient().admin.system
+    return new Local.Client().admin.system
         .queryFolderContent$({
             path: `${decodeHdPath(origin)}/${fromDecoded}`,
         })

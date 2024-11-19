@@ -1,5 +1,5 @@
 import { AppState } from '../../app-state'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { DonutChart, DonutChartSection } from './donut-chart.utils'
 import { Router } from '@youwol/mkdocs-ts'
 
@@ -12,12 +12,12 @@ import { Router } from '@youwol/mkdocs-ts'
  * This component is designed to be embedded in a `Markdown` page,
  * refer to {@link ProjectsDonutChart.fromHTMLElement}.
  */
-export class ProjectsDonutChart extends DonutChart<Routers.Projects.Project> {
+export class ProjectsDonutChart extends DonutChart<Local.Routers.Projects.Project> {
     constructor(params: {
         appState: AppState
         width: string
         margin: number
-        sections: DonutChartSection<Routers.Projects.Project>[]
+        sections: DonutChartSection<Local.Routers.Projects.Project>[]
     }) {
         super({
             ...params,

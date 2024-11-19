@@ -1,15 +1,14 @@
 import { ReplaySubject } from 'rxjs'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
 import { AppState } from '../../app-state'
 import { filter, mergeMap, tap } from 'rxjs/operators'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 
 export class State {
     public readonly stdOuts$: { [k: string]: ReplaySubject<{ text: string }> } =
         {}
 
     public readonly dispatchLogs$: {
-        [k: string]: ReplaySubject<Routers.System.LogResponse>
+        [k: string]: ReplaySubject<Local.Routers.System.LogResponse>
     } = {}
 
     public readonly appState: AppState
@@ -18,7 +17,7 @@ export class State {
 
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
-        const ws = new PyYouwolClient().admin.environment.webSocket
+        const ws = new Local.Client().admin.environment.webSocket
         ws.esmServerStdOut$().subscribe((message) => {
             const uid = message.attributes.proxyUid
             uid && this.getStdOut$(uid).next(message)
@@ -33,7 +32,7 @@ export class State {
                     traceIds.add(d.attributes.traceId)
                 }),
                 mergeMap((d) => {
-                    return new PyYouwolClient().admin.system.queryLogs$({
+                    return new Local.Client().admin.system.queryLogs$({
                         parentId: d.parentContextId,
                     })
                 }),

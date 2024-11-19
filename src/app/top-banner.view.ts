@@ -6,9 +6,8 @@ import {
     CustomAttribute,
     RxAttribute,
 } from '@youwol/rx-vdom'
-import { Routers, PyYouwolClient } from '@youwol/local-youwol-client'
+import { Local, Accounts } from '@w3nest/http-clients'
 import { AppState } from './app-state'
-import { Accounts } from '@youwol/http-clients'
 import { internalAnchor } from './common/links.view'
 import { map, mergeMap } from 'rxjs/operators'
 import { combineLatest } from 'rxjs'
@@ -152,7 +151,7 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
                 ),
                 vdomMap: ([sessionInfo, env]: [
                     Accounts.SessionDetails,
-                    Routers.Environment.EnvironmentStatusResponse,
+                    Local.Routers.Environment.EnvironmentStatusResponse,
                 ]) => {
                     return {
                         tag: 'div',
@@ -189,7 +188,7 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
     }
 
     private currentConnection(
-        env: Routers.Environment.EnvironmentStatusResponse,
+        env: Local.Routers.Environment.EnvironmentStatusResponse,
     ): AnyVirtualDOM {
         return {
             tag: 'div',
@@ -220,8 +219,8 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
         remote,
         connection,
     }: {
-        remote: Routers.Environment.CloudEnvironment
-        connection: Routers.Environment.Connection
+        remote: Local.Routers.Environment.CloudEnvironment
+        connection: Local.Routers.Environment.Connection
     }) {
         const browserAuths = remote.authentications.filter(
             (auth) => auth.type === 'BrowserAuth',
@@ -277,7 +276,7 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
     private authsSection(
         type: 'Browser' | 'Direct',
         envId: string,
-        connection: Routers.Environment.Connection,
+        connection: Local.Routers.Environment.Connection,
         auths: { authId: string }[],
     ): AnyVirtualDOM {
         return {
@@ -313,13 +312,13 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                                 },
                             ],
                             onclick: () => {
-                                new PyYouwolClient().admin.environment
+                                new Local.Client().admin.environment
                                     .login$({
                                         body: { authId, envId },
                                     })
                                     .pipe(
                                         mergeMap(() => {
-                                            return new PyYouwolClient().admin.environment.getStatus$()
+                                            return new Local.Client().admin.environment.getStatus$()
                                         }),
                                     )
                                     .subscribe(() => {})
@@ -407,9 +406,11 @@ export class BackendServingView implements VirtualDOM<'a'> {
         this.children = [
             {
                 source$: state.environment$.pipe(
-                    map((env) => env.configuration.proxiedBackends),
+                    map((env) => env.youwolEnvironment.proxiedBackends),
                 ),
-                vdomMap: (proxieds: Routers.Environment.ProxiedBackend[]) => {
+                vdomMap: (
+                    proxieds: Local.Routers.Environment.ProxiedBackend[],
+                ) => {
                     return proxieds.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-network-wired me-1' }
@@ -453,7 +454,9 @@ export class EsmServingView implements VirtualDOM<'a'> {
                 source$: state.environment$.pipe(
                     map((env) => env.youwolEnvironment.proxiedEsmServers),
                 ),
-                vdomMap: (proxieds: Routers.Environment.ProxiedBackend[]) => {
+                vdomMap: (
+                    proxieds: Local.Routers.Environment.ProxiedBackend[],
+                ) => {
                     return proxieds.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-laptop-code me-1' }

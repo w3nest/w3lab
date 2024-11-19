@@ -1,6 +1,6 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Router } from '@youwol/mkdocs-ts'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { classFolderFileBase } from '../explorer/item.view'
 import { decodeHdPath, encodeHdPath, encodeHRef } from './index'
 import {
@@ -150,7 +150,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
         origin,
         router,
     }: {
-        response: Routers.System.QueryFolderContentResponse
+        response: Local.Routers.System.QueryFolderContentResponse
         path: string
         origin: string
         router: Router

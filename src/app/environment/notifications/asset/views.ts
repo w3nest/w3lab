@@ -2,11 +2,10 @@ import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { AssetDownloadEvent, State } from '../state'
 import { filter } from 'rxjs/operators'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
 import { downloadIcon } from '../views'
 import { Observable } from 'rxjs'
 import { LogsExplorerView } from '../../../common/logs-explorer.view'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { Router } from '@youwol/mkdocs-ts'
 
 export class AssetDownloadNotificationView extends ExpandableGroupView {
@@ -25,7 +24,7 @@ export class AssetDownloadNotificationView extends ExpandableGroupView {
             tag: 'div',
             class: {
                 source$: message$,
-                vdomMap: (m: Routers.System.DownloadEvent) => {
+                vdomMap: (m: Local.Routers.System.DownloadEvent) => {
                     const factory = {
                         succeeded: 'fa-check text-success',
                         failed: 'fa-times text-danger',
@@ -82,7 +81,7 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
                 source$: notification$,
                 vdomMap: (notif: AssetDownloadEvent) => {
                     return new LogsExplorerView({
-                        rootLogs$: new PyYouwolClient().admin.system
+                        rootLogs$: new Local.Client().admin.system
                             .queryLogs$({
                                 parentId: notif.contextId,
                             })

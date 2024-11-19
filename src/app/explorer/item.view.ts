@@ -4,7 +4,7 @@ import {
     CSSAttribute,
     VirtualDOM,
 } from '@youwol/rx-vdom'
-import { ExplorerBackend } from '@youwol/http-clients'
+import { ExplorerBackend } from '@w3nest/http-clients'
 import {
     ApplicationInfo,
     OpenWithParametrization,

@@ -1,9 +1,8 @@
 import { BehaviorSubject, merge, ReplaySubject } from 'rxjs'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { filter } from 'rxjs/operators'
-import * as pyYw from '@youwol/local-youwol-client'
 
-export type BackendInstallEvent = Routers.System.InstallBackendEvent
+export type BackendInstallEvent = Local.Routers.System.InstallBackendEvent
 
 export type Error = {
     kind: 'BackendInstall' | 'AssetDownload'
@@ -54,13 +53,13 @@ export class BackendEvents {
     public readonly failedInstall$ = new ReplaySubject<BackendInstallFlow>()
 
     constructor() {
-        new PyYouwolClient().admin.system.webSocket
+        new Local.Client().admin.system.webSocket
             .installBackendEvent$()
             .subscribe((m) => {
                 this.install$.next(m.data)
             })
 
-        new PyYouwolClient().admin.system.webSocket
+        new Local.Client().admin.system.webSocket
             .installBackendStdOut$()
             .subscribe((m) => {
                 this.installStdOut$.next({
@@ -103,7 +102,7 @@ export class BackendEvents {
     }
 }
 
-export type AssetDownloadEvent = Routers.System.DownloadEvent & {
+export type AssetDownloadEvent = Local.Routers.System.DownloadEvent & {
     contextId: string
 }
 
@@ -130,19 +129,19 @@ export class AssetEvents {
      * The assets currently downloading (started but not yet done).
      */
     public readonly downloading$ = new BehaviorSubject<
-        Routers.System.DownloadEvent[]
+        Local.Routers.System.DownloadEvent[]
     >([])
 
     /**
      * Emit each time an asset failed to download.
      */
     public readonly failedDownload$ =
-        new ReplaySubject<Routers.System.DownloadEvent>()
+        new ReplaySubject<Local.Routers.System.DownloadEvent>()
 
     private enqueuedRawIds: string[] = []
 
     constructor() {
-        new pyYw.PyYouwolClient().admin.system.webSocket
+        new Local.Client().admin.system.webSocket
             .downloadEvent$()
             .subscribe(({ data, contextId }) => {
                 if (

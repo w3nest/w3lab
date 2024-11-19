@@ -3,8 +3,7 @@ import { AppState } from '../../app-state'
 import { parseMd, Router, MdWidgets } from '@youwol/mkdocs-ts'
 import { debounceTime, merge, Observable, of } from 'rxjs'
 import { filter, map, mergeMap, shareReplay } from 'rxjs/operators'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ComponentCrossLinksView, LogsExplorerView } from '../../common'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 
@@ -17,7 +16,7 @@ export class BackendView implements VirtualDOM<'div'> {
         router,
         appState,
     }: {
-        backend: Routers.Environment.ProxiedBackend
+        backend: Local.Routers.Environment.ProxiedBackend
         appState: AppState
         router: Router
     }) {
@@ -32,7 +31,7 @@ export class BackendView implements VirtualDOM<'div'> {
             ),
             debounceTime(500),
             mergeMap(() =>
-                new PyYouwolClient().admin.system.queryBackendLogs$({
+                new Local.Client().admin.system.queryBackendLogs$({
                     name: backend.name,
                     version: backend.version,
                 }),
@@ -116,13 +115,13 @@ class OutputsView implements VirtualDOM<'pre'> {
         logs$,
         reverse,
     }: {
-        logs$: Observable<Routers.System.BackendLogsResponse>
+        logs$: Observable<Local.Routers.System.BackendLogsResponse>
         reverse?: boolean
     }) {
         this.children = {
             policy: 'replace',
             source$: logs$,
-            vdomMap: (resp: Routers.System.BackendLogsResponse) => {
+            vdomMap: (resp: Local.Routers.System.BackendLogsResponse) => {
                 const outputs = reverse
                     ? resp.server_outputs.reverse()
                     : resp.server_outputs
@@ -155,7 +154,7 @@ export class TerminateButton implements VirtualDOM<'button'> {
                 tag: 'div',
                 innerText: 'Terminate',
                 onclick: () => {
-                    new PyYouwolClient().admin.system
+                    new Local.Client().admin.system
                         .terminateBackend$({
                             uid,
                         })
@@ -189,7 +188,9 @@ export class StatusView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: backends$,
-                vdomMap: (backends: Routers.Environment.ProxiedBackend[]) => {
+                vdomMap: (
+                    backends: Local.Routers.Environment.ProxiedBackend[],
+                ) => {
                     if (backends.find((b) => b.uid === uid)) {
                         return new TerminateButton({ uid, router })
                     }
@@ -207,9 +208,9 @@ export class StatusView implements VirtualDOM<'div'> {
 export class ConfigView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly backend: Routers.Environment.ProxiedBackend
+    public readonly backend: Local.Routers.Environment.ProxiedBackend
 
-    constructor(params: { backend: Routers.Environment.ProxiedBackend }) {
+    constructor(params: { backend: Local.Routers.Environment.ProxiedBackend }) {
         Object.assign(this, params)
         this.children = [
             new ExpandableGroupView({

@@ -1,10 +1,10 @@
 import { AppState } from '../app-state'
 import { BehaviorSubject, Observable } from 'rxjs'
 
-import * as pyYw from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { map, shareReplay } from 'rxjs/operators'
 
-type LocalCdnRouter = pyYw.Routers.LocalCdn.LocalCdnRouter
+type LocalCdnRouter = Local.Routers.LocalCdn.LocalCdnRouter
 
 /**
  * @category Event
@@ -23,7 +23,7 @@ export class PackageEvents {
     /**
      * @group Observables
      */
-    public readonly info$: Observable<pyYw.Routers.LocalCdn.CdnPackage>
+    public readonly info$: Observable<Local.Routers.LocalCdn.CdnPackage>
 
     constructor(params: { packageId: string; client: LocalCdnRouter }) {
         Object.assign(this, params)
@@ -47,7 +47,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly cdnClient = new pyYw.PyYouwolClient().admin.localCdn
+    public readonly cdnClient = new Local.Client().admin.localCdn
 
     /**
      * @group States
@@ -62,7 +62,7 @@ export class State {
     /**
      * @group Observables
      */
-    public readonly status$: Observable<pyYw.Routers.LocalCdn.CdnStatusResponse>
+    public readonly status$: Observable<Local.Routers.LocalCdn.CdnStatusResponse>
 
     /**
      * @group Observables

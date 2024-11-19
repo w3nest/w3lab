@@ -3,7 +3,7 @@ import { parseMd, Router } from '@youwol/mkdocs-ts'
 import { HdPathBookView } from '../common'
 import { AppState } from '../app-state'
 import { FailuresView } from './project.view'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 
 export class ProjectsFinderView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -16,7 +16,7 @@ export class ProjectsFinderView implements VirtualDOM<'div'> {
     }: {
         router: Router
         appState: AppState
-        finder: Routers.Environment.ProjectFinders
+        finder: Local.Routers.Environment.ProjectFinders
     }) {
         const ignored = finder.lookUpIgnore
             .filter((pattern) => !pattern.includes('/.'))

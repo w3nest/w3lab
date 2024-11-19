@@ -2,9 +2,7 @@
 const runTimeDependencies = {
     "externals": {
         "@floating-ui/dom": "^1.6.3",
-        "@youwol/http-clients": "^3.0.0",
-        "@youwol/http-primitives": "^0.2.5",
-        "@youwol/local-youwol-client": "^0.3.2",
+        "@w3nest/http-clients": "^0.1.0",
         "@youwol/mkdocs-ts": "^0.6.3",
         "@youwol/os-core": "^0.2.0",
         "@youwol/rx-code-mirror-editors": "^0.5.0",
@@ -21,9 +19,7 @@ const runTimeDependencies = {
 }
 const externals = {
     "@floating-ui/dom": "window['@floating-ui/dom_APIv1']",
-    "@youwol/http-clients": "window['@youwol/http-clients_APIv3']",
-    "@youwol/http-primitives": "window['@youwol/http-primitives_APIv02']",
-    "@youwol/local-youwol-client": "window['@youwol/local-youwol-client_APIv03']",
+    "@w3nest/http-clients": "window['@w3nest/http-clients_APIv01']",
     "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv06']",
     "@youwol/os-core": "window['@youwol/os-core_APIv02']",
     "@youwol/rx-code-mirror-editors": "window['@youwol/rx-code-mirror-editors_APIv05']",
@@ -41,17 +37,9 @@ const exportedSymbols = {
         "apiKey": "1",
         "exportedSymbol": "@floating-ui/dom"
     },
-    "@youwol/http-clients": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/http-clients"
-    },
-    "@youwol/http-primitives": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/http-primitives"
-    },
-    "@youwol/local-youwol-client": {
-        "apiKey": "03",
-        "exportedSymbol": "@youwol/local-youwol-client"
+    "@w3nest/http-clients": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/http-clients"
     },
     "@youwol/mkdocs-ts": {
         "apiKey": "06",
@@ -98,9 +86,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "@youwol/rx-vdom",
         "bootstrap",
         "@youwol/webpm-client",
-        "@youwol/http-clients",
-        "@youwol/http-primitives",
-        "@youwol/local-youwol-client",
+        "@w3nest/http-clients",
         "@youwol/os-core",
         "@youwol/rx-tree-views",
         "@youwol/rx-code-mirror-editors",

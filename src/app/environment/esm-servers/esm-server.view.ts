@@ -1,5 +1,5 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
 import {
     ComponentCrossLinksView,
@@ -19,7 +19,7 @@ export class EsmServerView implements VirtualDOM<'div'> {
         appState,
         router,
     }: {
-        esmServer: Routers.Environment.ProxiedEsmServer
+        esmServer: Local.Routers.Environment.ProxiedEsmServer
         appState: AppState
         router: Router
     }) {

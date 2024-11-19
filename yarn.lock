@@ -1353,6 +1353,13 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@w3nest/http-clients@file:.local-dependencies/w3nest-http-clients-0.1.0-wip-1732003727.tgz":
+  version "0.1.0-wip"
+  resolved "file:.local-dependencies/w3nest-http-clients-0.1.0-wip-1732003727.tgz#fe241d2de999b21cc5491643d83e63eaa5bd6c9d"
+  dependencies:
+    "@youwol/http-primitives" "^0.2.0"
+    rxjs "^7.5.6"
+
 "@webassemblyjs/ast@1.12.1", "@webassemblyjs/ast@^1.12.1":
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.12.1.tgz#bb16a0e8b1914f979f45864c23819cc3e3f0d4bb"
@@ -1507,19 +1514,11 @@
     "@youwol/http-primitives" "^0.2.0"
     rxjs "^7.5.6"
 
-"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.3", "@youwol/http-primitives@^0.2.4", "@youwol/http-primitives@^0.2.5":
+"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.3", "@youwol/http-primitives@^0.2.4":
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/@youwol/http-primitives/-/http-primitives-0.2.6.tgz#e314810904a28dddb99174a6102626157ac7575c"
   integrity sha512-IYQwEgElZyrmsaet/ZZ8nGgu3sWDEc9HmUWRpV0eJMmhSzmIxWWDzHF9QIiiBDqtrQimS/9NM+pBUaWYhw7KSw==
   dependencies:
-    rxjs "^7.5.6"
-
-"@youwol/local-youwol-client@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@youwol/local-youwol-client/-/local-youwol-client-0.3.2.tgz#437419057a567f15e780fa23ed03fdbd241c4b22"
-  integrity sha512-NozA9JBlhVhX9cJvQsLxDK2CcEwcid4Ogs9/amJQ9btQDbBV32Mt9DkRuGWPsLjDe17EQhtku7AzVrfcCgcllw==
-  dependencies:
-    "@youwol/http-primitives" "^0.2.5"
     rxjs "^7.5.6"
 
 "@youwol/logging@^0.2.0":

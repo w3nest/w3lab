@@ -4,7 +4,7 @@ import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { SearchView } from './search.view'
 import { pyYwDocLink } from '../common/py-yw-references.view'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 import { icon } from './icons'
@@ -92,11 +92,11 @@ To create a new project from a template, you need to reference the associated py
 file. Below is an example using the youwol's \`pipeline_typescript_weback_npm\`:
 
 \`\`\`python
-from youwol.app.environment import (
+from w3nest.app.environment import (
     Configuration,
     Projects,
 )
-from youwol.pipelines.pipeline_typescript_weback_npm \
+from w3nest.pipelines.pipeline_typescript_weback_npm \
     import app_ts_webpack_template
 
 projects_folder = Path.home() / 'auto-generated'
@@ -141,7 +141,9 @@ The following projects have failed to load:
                         children: {
                             policy: 'replace',
                             source$: projectsState.projects$,
-                            vdomMap: (projects: Routers.Projects.Project[]) =>
+                            vdomMap: (
+                                projects: Local.Routers.Projects.Project[],
+                            ) =>
                                 projects.map((p) =>
                                     parseMd({
                                         src: `*  [${p.name}](@nav/projects/${p.id})`,
@@ -160,8 +162,8 @@ The following projects have failed to load:
 
 function lazyResolver(
     path: string,
-    env: Routers.Environment.EnvironmentStatusResponse,
-    projects: Routers.Projects.Project[],
+    env: Local.Routers.Environment.EnvironmentStatusResponse,
+    projects: Local.Routers.Projects.Project[],
     appState: AppState,
 ) {
     const parts = path.split('/').filter((d) => d != '')

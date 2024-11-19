@@ -1,7 +1,6 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { State as ProjectsState } from './state'
-import { HTTPError, dispatchHTTPErrors } from '@youwol/http-primitives'
-import * as pyYw from '@youwol/local-youwol-client'
+import { HTTPError, dispatchHTTPErrors, Local } from '@w3nest/http-clients'
 import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
 import { install } from '@youwol/webpm-client'
 import { delay, map, shareReplay, tap } from 'rxjs/operators'
@@ -74,11 +73,11 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly projectTemplate: pyYw.Routers.Environment.ProjectTemplate
+    public readonly projectTemplate: Local.Routers.Environment.ProjectTemplate
 
     constructor(params: {
         projectsState: ProjectsState
-        projectTemplate: pyYw.Routers.Environment.ProjectTemplate
+        projectTemplate: Local.Routers.Environment.ProjectTemplate
     }) {
         Object.assign(this, params)
 
@@ -130,7 +129,7 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly projectTemplate: pyYw.Routers.Environment.ProjectTemplate
+    public readonly projectTemplate: Local.Routers.Environment.ProjectTemplate
 
     /**
      * @group State
@@ -145,7 +144,7 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
     constructor(params: {
         projectsState: ProjectsState
         CodeEditorModule: CodeEditorModule
-        projectTemplate: pyYw.Routers.Environment.ProjectTemplate
+        projectTemplate: Local.Routers.Environment.ProjectTemplate
         onError: () => void
     }) {
         Object.assign(this, params)
@@ -224,7 +223,7 @@ export class GenerateButton implements VirtualDOM<'div'> {
         file$,
     }: {
         projectsState: ProjectsState
-        projectTemplate: pyYw.Routers.Environment.ProjectTemplate
+        projectTemplate: Local.Routers.Environment.ProjectTemplate
         file$: BehaviorSubject<{
             path: string
             content: string
@@ -256,7 +255,7 @@ export class GenerateButton implements VirtualDOM<'div'> {
                     tap(() => creating$.next(false)),
                     dispatchHTTPErrors(this.error$),
                 )
-                .subscribe((resp: pyYw.Routers.Projects.Project) => {
+                .subscribe((resp: Local.Routers.Projects.Project) => {
                     projectsState.openProject(resp)
                 })
         }

@@ -1,9 +1,12 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
-import { onHTTPErrors } from '@youwol/http-primitives'
 import { mergeMap, of } from 'rxjs'
-import { AssetsGateway, ExplorerBackend } from '@youwol/http-clients'
+import {
+    AssetsGateway,
+    ExplorerBackend,
+    onHTTPErrors,
+    Local,
+} from '@w3nest/http-clients'
 
 export const internalAnchor = ({
     path,
@@ -25,7 +28,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ name, router }: { name: string; router: Router }) {
-        const client = new PyYouwolClient().admin.localCdn
+        const client = new Local.Client().admin.localCdn
 
         this.children = [
             {
@@ -36,7 +39,9 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                     .pipe(
                         onHTTPErrors(() => undefined),
                         mergeMap(
-                            (resp?: Routers.LocalCdn.GetPackageResponse) => {
+                            (
+                                resp?: Local.Routers.LocalCdn.GetPackageResponse,
+                            ) => {
                                 if (resp === undefined) {
                                     return of(undefined)
                                 }
@@ -44,7 +49,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                             },
                         ),
                     ),
-                vdomMap: (resp?: Routers.LocalCdn.GetPackageResponse) => {
+                vdomMap: (resp?: Local.Routers.LocalCdn.GetPackageResponse) => {
                     if (resp == undefined || resp.versions.length == 0) {
                         return parseMd({
                             src: 'The project has not been published in your components database yet.',

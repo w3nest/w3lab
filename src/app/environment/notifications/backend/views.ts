@@ -2,7 +2,7 @@ import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { BackendInstallEvent, State } from '../state'
 import { filter, map, takeUntil } from 'rxjs/operators'
 import { styleShellStdOut } from '../../../common'
-import { ContextMessage, Routers } from '@youwol/local-youwol-client'
+import { ContextMessage, Local } from '@w3nest/http-clients'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Observable } from 'rxjs'
 import { installIcon } from '../views'
@@ -32,7 +32,7 @@ export class BackendInstallNotificationView extends ExpandableGroupView {
             tag: 'div',
             class: {
                 source$: done$,
-                vdomMap: (m: Routers.System.InstallBackendEvent) => {
+                vdomMap: (m: Local.Routers.System.InstallBackendEvent) => {
                     return m.event == 'succeeded'
                         ? 'fas fa-check text-success'
                         : 'fas fa-times text-danger'

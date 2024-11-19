@@ -7,7 +7,7 @@ import {
     Views,
 } from '@youwol/mkdocs-ts'
 import { AppState } from '../../app-state'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
 import { BackendView, TerminateButton } from './backend.view'
 import { InstancesListView, PartitionView } from './partition.view'
@@ -15,7 +15,7 @@ import { ExpandableGroupView } from '../../common/expandable-group.view'
 
 export * from './state'
 
-function backendName(backend: Routers.Environment.ProxiedBackend) {
+function backendName(backend: Local.Routers.Environment.ProxiedBackend) {
     return `${backend.name}#${backend.version}`
 }
 
@@ -33,7 +33,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
 function lazyResolver(
     path: string,
-    env: Routers.Environment.EnvironmentStatusResponse,
+    env: Local.Routers.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
 ) {
@@ -141,7 +141,9 @@ export class PartitionsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (env: Routers.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (
+                env: Local.Routers.Environment.EnvironmentStatusResponse,
+            ) => {
                 const backends = env.youwolEnvironment.proxiedBackends
                 if (backends.length === 0) {
                     return [

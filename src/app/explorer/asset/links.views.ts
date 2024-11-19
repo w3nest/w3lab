@@ -3,7 +3,7 @@ import {
     AssetsBackend,
     AssetsGateway,
     ExplorerBackend,
-} from '@youwol/http-clients'
+} from '@w3nest/http-clients'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { PathView } from '../path.views'
 import { Router } from '@youwol/mkdocs-ts'

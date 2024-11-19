@@ -1,6 +1,6 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { State, Method } from './state'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs'
 import { AttributeView, DashboardTitle } from '../common'
 import { catchError, map, mergeMap, take, withLatestFrom } from 'rxjs/operators'
@@ -31,7 +31,9 @@ export class CommandsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: environmentState.environment$,
-            vdomMap: (env: Routers.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (
+                env: Local.Routers.Environment.EnvironmentStatusResponse,
+            ) => {
                 return Object.entries(env.configuration.commands).map(
                     ([_type, command]) =>
                         new ExpandableGroupView({
@@ -94,21 +96,21 @@ export class CommandView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly command: Routers.Environment.Command
+    public readonly command: Local.Routers.Environment.Command
 
     constructor(params: {
         environmentState: State
-        command: Routers.Environment.Command
+        command: Local.Routers.Environment.Command
     }) {
         Object.assign(this, params)
         let method: Method = 'GET'
-        if (this.command['do_post'] != null) {
+        if (this.command['doPost']) {
             method = 'POST'
         }
-        if (this.command['do_delete'] != null) {
+        if (this.command['doDelete']) {
             method = 'DELETE'
         }
-        if (this.command['do_put'] != null) {
+        if (this.command['doPut']) {
             method = 'PUT'
         }
         const url = `/admin/custom-commands/${this.command.name}`
@@ -177,7 +179,7 @@ export class ExecuteView implements VirtualDOM<'div'> {
 
     constructor(params: {
         environmentState: State
-        command: Routers.Environment.Command
+        command: Local.Routers.Environment.Command
         method: Method
         url: string
     }) {
@@ -458,7 +460,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly command: Routers.Environment.Command
+    public readonly command: Local.Routers.Environment.Command
     /**
      * @group Immutable DOM Constants
      */
@@ -474,7 +476,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
 
     constructor(params: {
         environmentState: State
-        command: Routers.Environment.Command
+        command: Local.Routers.Environment.Command
     }) {
         Object.assign(this, params)
         this.environmentState.openCommand(this.command)

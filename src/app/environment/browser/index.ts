@@ -3,7 +3,7 @@ import { AppState } from '../../app-state'
 import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { map } from 'rxjs/operators'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { HdPathBookView } from '../../common'
 import { BehaviorSubject, Subject } from 'rxjs'
 export * from './state'
@@ -58,7 +58,7 @@ This section compiles the elements stored in the cache, which you can clear as n
                                         appState.environmentState.browserState
                                             .status$,
                                     vdomMap: (
-                                        status: Routers.Environment.BrowserCacheStatusResponse,
+                                        status: Local.Routers.Environment.BrowserCacheStatusResponse,
                                     ) => {
                                         return new ItemsView({
                                             status,
@@ -83,7 +83,7 @@ class FileView implements VirtualDOM<'div'> {
             {
                 source$: appState.environmentState.browserState.status$,
                 vdomMap: (
-                    status: Routers.Environment.BrowserCacheStatusResponse,
+                    status: Local.Routers.Environment.BrowserCacheStatusResponse,
                 ) => {
                     if (status.file && status.file !== 'None') {
                         return {
@@ -124,7 +124,7 @@ class ItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Routers.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const mode$ = new BehaviorSubject<'flat' | 'hierarchical'>('flat')
@@ -194,7 +194,7 @@ class FlatBrowserCacheItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Routers.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const formatted = formatPaths(
@@ -219,7 +219,7 @@ class FlatItemView implements VirtualDOM<'div'> {
         index,
         path,
     }: {
-        status: Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Routers.Environment.BrowserCacheStatusResponse
         appState: AppState
         index: number
         path: string
@@ -274,7 +274,7 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Routers.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const formatted = formatPaths(
@@ -301,7 +301,9 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
                         return status.items[index]
                     }),
                 ),
-                vdomMap: (item?: Routers.Environment.BrowserCacheItem) => {
+                vdomMap: (
+                    item?: Local.Routers.Environment.BrowserCacheItem,
+                ) => {
                     if (!item) {
                         return { tag: 'div' }
                     }
@@ -403,7 +405,7 @@ class ItemView implements VirtualDOM<'i'> {
         item,
         appState,
     }: {
-        item: Routers.Environment.BrowserCacheItem
+        item: Local.Routers.Environment.BrowserCacheItem
         appState: AppState
     }) {
         this.children = [

@@ -12,20 +12,17 @@ import {
     filterCtxMessage,
     raiseHTTPErrors,
     WebSocketResponse$,
-} from '@youwol/http-primitives'
-import {
     ContextMessage,
     Label,
-    PyYouwolClient,
-    Routers,
-} from '@youwol/local-youwol-client'
+    Local,
+    CdnSessionsStorage,
+} from '@w3nest/http-clients'
 import { getProjectNav$ } from '../common/utils-nav'
-import { CdnSessionsStorage } from '@youwol/http-clients'
 import { setup } from '../../auto-generated'
 
 function projectLoadingIsSuccess(
     result: unknown,
-): result is Routers.Projects.ProjectsLoadingResults {
+): result is Local.Routers.Projects.ProjectsLoadingResults {
     return result['failure'] === undefined
 }
 
@@ -33,7 +30,7 @@ export type FlowId = string
 
 export function instanceOfStepStatus(
     data: unknown,
-): data is Routers.Projects.PipelineStepStatusResponse {
+): data is Local.Routers.Projects.PipelineStepStatusResponse {
     return [
         'projectId',
         'flowId',
@@ -50,7 +47,7 @@ export class ProjectEvents {
     /**
      * @group Immutable Constants
      */
-    public readonly projectsClient = new PyYouwolClient().admin.projects
+    public readonly projectsClient = new Local.Client().admin.projects
 
     /**
      * @group Observables
@@ -67,7 +64,7 @@ export class ProjectEvents {
      */
     public readonly selectedStep$: BehaviorSubject<{
         flowId: string
-        step: Routers.Projects.PipelineStep | undefined
+        step: Local.Routers.Projects.PipelineStep | undefined
     }>
 
     /**
@@ -75,7 +72,7 @@ export class ProjectEvents {
      */
     public readonly configureStep$: Subject<{
         flowId: string
-        step: Routers.Projects.PipelineStep | undefined
+        step: Local.Routers.Projects.PipelineStep | undefined
     }> = new Subject()
 
     /**
@@ -84,8 +81,8 @@ export class ProjectEvents {
     public readonly step$: {
         [k: string]: {
             status$: ReplaySubject<
-                | Routers.Projects.PipelineStepEventKind
-                | Routers.Projects.PipelineStepStatusResponse
+                | Local.Routers.Projects.PipelineStepEventKind
+                | Local.Routers.Projects.PipelineStepStatusResponse
             >
             log$: Subject<ContextMessage>
         }
@@ -95,12 +92,12 @@ export class ProjectEvents {
      * @group Observables
      */
     public readonly projectStatusResponse$: WebSocketResponse$<
-        Routers.Projects.ProjectStatus,
+        Local.Routers.Projects.ProjectStatus,
         Label
     >
 
-    constructor(public readonly project: Routers.Projects.Project) {
-        this.messages$ = PyYouwolClient.ws.log$.pipe(
+    constructor(public readonly project: Local.Routers.Projects.Project) {
+        this.messages$ = Local.Client.ws.log$.pipe(
             filterCtxMessage({
                 withAttributes: { projectId: this.project.id },
             }),
@@ -109,7 +106,7 @@ export class ProjectEvents {
 
         this.selectedStep$ = new BehaviorSubject<{
             flowId: string
-            step: Routers.Projects.PipelineStep | undefined
+            step: Local.Routers.Projects.PipelineStep | undefined
         }>({
             flowId: this.project.pipeline.flows[0].name,
             step: undefined,
@@ -123,12 +120,12 @@ export class ProjectEvents {
             .pipe(
                 map((message) => message.data),
                 filter(
-                    (data: Routers.Projects.PipelineStepEvent) =>
+                    (data: Local.Routers.Projects.PipelineStepEvent) =>
                         data.event == 'runStarted' ||
                         data.event == 'statusCheckStarted',
                 ),
             )
-            .subscribe((data: Routers.Projects.PipelineStepEvent) => {
+            .subscribe((data: Local.Routers.Projects.PipelineStepEvent) => {
                 this.getStep$(data.flowId, data.stepId).status$.next(data.event)
             })
         this.messages$
@@ -215,7 +212,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly projectsClient = new PyYouwolClient().admin.projects
+    public readonly projectsClient = new Local.Client().admin.projects
 
     /**
      * @group Immutable Constants
@@ -225,28 +222,28 @@ export class State {
     /**
      * @group Observables
      */
-    public readonly projectsLoading$: Observable<Routers.Projects.ProjectsLoadingResults>
+    public readonly projectsLoading$: Observable<Local.Routers.Projects.ProjectsLoadingResults>
 
     /**
      * @group Observables
      */
-    public readonly projects$: Observable<Routers.Projects.Project[]>
+    public readonly projects$: Observable<Local.Routers.Projects.Project[]>
 
     /**
      * @group Observables
      */
     public readonly projectsFailures$: Observable<
-        Routers.Projects.ProjectsLoadingResults['failures']
+        Local.Routers.Projects.ProjectsLoadingResults['failures']
     >
 
     /**
      * @group Observables
      */
     public readonly openProjects$ = new BehaviorSubject<
-        Routers.Projects.Project[]
+        Local.Routers.Projects.Project[]
     >([])
 
-    public readonly historic$: Observable<Routers.Projects.Project[]>
+    public readonly historic$: Observable<Local.Routers.Projects.Project[]>
     private readonly rawHistoric$ = new BehaviorSubject<string[]>([])
 
     private readonly storageClient = new CdnSessionsStorage.Client()
@@ -323,7 +320,7 @@ export class State {
         })
     }
 
-    openProject(project: Routers.Projects.Project) {
+    openProject(project: Local.Routers.Projects.Project) {
         this.updatePersistedHistoric({ open: [project.name] })
         if (!this.projectEvents[project.id]) {
             this.projectEvents[project.id] = new ProjectEvents(project)

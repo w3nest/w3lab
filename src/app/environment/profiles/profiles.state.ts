@@ -15,14 +15,13 @@ import {
     ChildApplicationAPI,
     Installer,
 } from '@youwol/os-core'
-import { CdnSessionsStorage } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { CdnSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
 import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
 
 import * as webpmClient from '@youwol/webpm-client'
-import * as httpClients from '@youwol/http-clients'
+import * as httpClients from '@w3nest/http-clients'
 
 const cmInstall = {
     modules: [

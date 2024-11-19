@@ -8,7 +8,9 @@ import {
     AssetsBackend,
     AssetsGateway,
     ExplorerBackend,
-} from '@youwol/http-clients'
+    Local,
+    raiseHTTPErrors,
+} from '@w3nest/http-clients'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
 import {
     PathView,
@@ -26,7 +28,6 @@ import {
 } from './item.view'
 import { ContextMenuHandler } from './nav-context-menu.view'
 import { ExplorerState } from './explorer.state'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { TrashNode } from './nodes'
 import { AccessView, WritePermission } from './asset/access.views'
 import { DescriptionView } from './asset/descriptions.views'
@@ -37,7 +38,6 @@ import {
     OpeningAppsViews,
     PackageLogoView,
 } from './asset/opening-apps.views'
-import { PyYouwolClient } from '@youwol/local-youwol-client'
 
 export function headerViewWrapper(headerView: AnyVirtualDOM): AnyVirtualDOM {
     return {
@@ -127,7 +127,7 @@ export class OpenFolderInHostView implements VirtualDOM<'button'> {
     public readonly onclick: () => undefined
     constructor(params: { folder: string }) {
         this.onclick = () => {
-            const client = new PyYouwolClient().admin.system
+            const client = new Local.Client().admin.system
             console.log('Open folder in explorer', params.folder)
             client
                 .openFolder$({ body: { path: params.folder } })

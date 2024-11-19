@@ -1,7 +1,7 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { colabClassPrefix, ComponentCrossLinksView } from '../../common'
 import { Router } from '@youwol/mkdocs-ts'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
 import { getProjectNav$ } from '../../common/utils-nav'
 import { take } from 'rxjs/operators'
@@ -31,7 +31,7 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: this.appState.projectsState.historic$,
-                vdomMap: (projects: Routers.Projects.Project[]) => {
+                vdomMap: (projects: Local.Routers.Projects.Project[]) => {
                     return {
                         tag: 'div',
                         class: 'w-100',
@@ -98,7 +98,7 @@ export class ProjectHistoricItemView implements VirtualDOM<'div'> {
         appState,
     }: {
         appState: AppState
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
     }) {
         this.children = [
             {

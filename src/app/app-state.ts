@@ -18,10 +18,7 @@ import * as Notification from './environment/notifications'
 import * as Explorer from './explorer'
 import * as Doc from './doc'
 import * as Plugins from './plugins'
-import * as pyYw from '@youwol/local-youwol-client'
-import { WsRouter } from '@youwol/local-youwol-client'
-import { Accounts } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { Local, Accounts, raiseHTTPErrors } from '@w3nest/http-clients'
 import { MdWidgets, Navigation, Router, Views } from '@youwol/mkdocs-ts'
 import * as Mounted from './mounted'
 import { setup } from '../auto-generated'
@@ -37,7 +34,7 @@ export type Topic =
     | 'Environment'
     | 'System'
 
-pyYw.PyYouwolClient.ws = new WsRouter({
+Local.Client.ws = new Local.WsRouter({
     autoReconnect: true,
     autoReconnectDelay: 1000,
 })
@@ -72,13 +69,12 @@ export class AppState {
     /**
      * @group Immutable Constants
      */
-    public readonly environmentClient = new pyYw.PyYouwolClient().admin
-        .environment
+    public readonly environmentClient = new Local.Client().admin.environment
 
     /**
      * @group Observables
      */
-    public readonly environment$: Observable<pyYw.Routers.Environment.EnvironmentStatusResponse>
+    public readonly environment$: Observable<Local.Routers.Environment.EnvironmentStatusResponse>
 
     /**
      * @group Observables
@@ -168,7 +164,7 @@ export class AppState {
             )
         }
 
-        pyYw.PyYouwolClient.startWs$()
+        Local.Client.startWs$()
             .pipe(take(1))
             .subscribe(() => {
                 console.log('Web sockets connected')
@@ -177,7 +173,7 @@ export class AppState {
             map(({ data }) => data),
             shareReplay(1),
         )
-        this.connectedLocal$ = pyYw.PyYouwolClient.ws.connected$
+        this.connectedLocal$ = Local.Client.ws.connected$
 
         this.homeState = new Home.State({ appState: this })
         this.projectsState = new Projects.State({ appState: this })

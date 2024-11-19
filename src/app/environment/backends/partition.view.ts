@@ -1,6 +1,6 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { parseMd } from '@youwol/mkdocs-ts'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
 import { TerminateButton } from './backend.view'
 
@@ -51,7 +51,9 @@ export class InstancesListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (env: Routers.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (
+                env: Local.Routers.Environment.EnvironmentStatusResponse,
+            ) => {
                 return env.youwolEnvironment.proxiedBackends
                     .filter((backend) => backend.partitionId === partitionId)
                     .map((backend) => {

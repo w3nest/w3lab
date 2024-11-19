@@ -1,8 +1,6 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs'
-import * as pyYw from '@youwol/local-youwol-client'
-import { Routers, Label } from '@youwol/local-youwol-client'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { Local, Label, raiseHTTPErrors } from '@w3nest/http-clients'
 import { ExpandableGroupView } from './expandable-group.view'
 import { DataView } from './data.view'
 
@@ -23,29 +21,28 @@ export const labelLogIcons = {
 export class LogsExplorerState {
     public readonly title: string
     public readonly t0$ = new BehaviorSubject(Date.now())
-    public readonly rootLogs$: Observable<Routers.System.QueryLogsResponse>
+    public readonly rootLogs$: Observable<Local.Routers.System.QueryLogsResponse>
 
-    public readonly logs$ = new ReplaySubject<pyYw.Routers.System.LogsResponse>(
-        1,
-    )
+    public readonly logs$ =
+        new ReplaySubject<Local.Routers.System.LogsResponse>(1)
 
     public readonly fetchingLogs$ = new BehaviorSubject<boolean>(false)
 
-    public readonly stack$ = new BehaviorSubject<Routers.System.LogResponse[]>(
-        [],
-    )
+    public readonly stack$ = new BehaviorSubject<
+        Local.Routers.System.LogResponse[]
+    >([])
 
-    private rootLogsResponse: Routers.System.LogsResponse
+    private rootLogsResponse: Local.Routers.System.LogsResponse
     public delta = {}
 
     constructor(params: {
-        rootLogs$: Observable<Routers.System.QueryLogsResponse> | string
+        rootLogs$: Observable<Local.Routers.System.QueryLogsResponse> | string
         title: string
     }) {
         Object.assign(this, params)
 
         if (typeof params.rootLogs$ === 'string') {
-            this.rootLogs$ = new pyYw.PyYouwolClient().admin.system
+            this.rootLogs$ = new Local.Client().admin.system
                 .queryLogs$({
                     parentId: params.rootLogs$,
                 })
@@ -61,7 +58,7 @@ export class LogsExplorerState {
                   this.rootLogsResponse = response
                   this.fetchingLogs$.next(false)
               })
-            : new pyYw.PyYouwolClient().admin.system
+            : new Local.Client().admin.system
                   .queryLogs$({
                       parentId: this.stack$.value.slice(-1)[0].contextId,
                   })
@@ -72,19 +69,19 @@ export class LogsExplorerState {
                   })
     }
 
-    elapsedTime(log: Routers.System.LogResponse): number | undefined {
+    elapsedTime(log: Local.Routers.System.LogResponse): number | undefined {
         return log.labels.includes('Label.STARTED') && this.delta[log.contextId]
     }
 
     clear() {
         this.expandLog()
         this.fetchingLogs$.next(true)
-        new pyYw.PyYouwolClient().admin.system.clearLogs$().subscribe(() => {
+        new Local.Client().admin.system.clearLogs$().subscribe(() => {
             this.refresh()
         })
     }
 
-    expandLog(log?: Routers.System.LogResponse) {
+    expandLog(log?: Local.Routers.System.LogResponse) {
         if (!log) {
             this.stack$.next([])
             this.logs$.next(this.rootLogsResponse)
@@ -92,7 +89,7 @@ export class LogsExplorerState {
         }
         const stack = this.stack$.value
 
-        new pyYw.PyYouwolClient().admin.system
+        new Local.Client().admin.system
             .queryLogs$({ parentId: log.contextId })
             .pipe(raiseHTTPErrors())
             .subscribe((response) => {
@@ -128,7 +125,7 @@ export class LogsExplorerView implements VirtualDOM<'div'> {
         fontSize: 'smaller',
     }
     constructor(params: {
-        rootLogs$: Observable<Routers.System.QueryLogsResponse> | string
+        rootLogs$: Observable<Local.Routers.System.QueryLogsResponse> | string
         title: string
         showHeaderMenu?: boolean
     }) {
@@ -150,7 +147,7 @@ export class LogsExplorerView implements VirtualDOM<'div'> {
 
 const stepIntoIcon = (
     state: LogsExplorerState,
-    log?: Routers.System.LogResponse,
+    log?: Local.Routers.System.LogResponse,
 ): AnyVirtualDOM => ({
     tag: 'div',
     class: 'fas fa-sign-in-alt fv-text-focus fv-pointer',
@@ -248,7 +245,7 @@ class StackView implements VirtualDOM<'div'> {
 
     constructor(params: { state: LogsExplorerState }) {
         Object.assign(this, params)
-        const items = (stack: Routers.System.LogResponse[]) =>
+        const items = (stack: Local.Routers.System.LogResponse[]) =>
             [
                 rootElemStackView(this.state),
                 ...stack.map((log) => {
@@ -264,7 +261,7 @@ class StackView implements VirtualDOM<'div'> {
                 children: {
                     source$: this.state.stack$,
                     policy: 'replace',
-                    vdomMap: (stack: Routers.System.LogResponse[]) => {
+                    vdomMap: (stack: Local.Routers.System.LogResponse[]) => {
                         return items(stack).map((item, i) => {
                             return {
                                 tag: 'div',
@@ -288,10 +285,10 @@ class LogView implements VirtualDOM<'div'> {
     public readonly class = 'w-100'
     public readonly children: ChildrenLike
     public readonly state: LogsExplorerState
-    public readonly log: Routers.System.LogResponse
+    public readonly log: Local.Routers.System.LogResponse
     constructor(params: {
         state: LogsExplorerState
-        log: Routers.System.LogResponse
+        log: Local.Routers.System.LogResponse
     }) {
         Object.assign(this, params)
         this.children = [
@@ -319,10 +316,10 @@ class LogLabelsView {
     public readonly children: ChildrenLike
     public readonly connectedCallback: (elem: HTMLElement) => void
     public readonly state: LogsExplorerState
-    public readonly log: Routers.System.LogResponse
+    public readonly log: Local.Routers.System.LogResponse
 
     constructor(params: {
-        log: Routers.System.LogResponse
+        log: Local.Routers.System.LogResponse
         state: LogsExplorerState
     }) {
         Object.assign(this, params, labelsStyle)
@@ -367,12 +364,12 @@ class LogTitleView implements VirtualDOM<'div'> {
         minWidth: '50%',
     }
     public readonly state: LogsExplorerState
-    public readonly log: Routers.System.LogResponse
+    public readonly log: Local.Routers.System.LogResponse
     public readonly children: ChildrenLike
 
     constructor(params: {
         state: LogsExplorerState
-        log: Routers.System.LogResponse
+        log: Local.Routers.System.LogResponse
     }) {
         Object.assign(this, params)
         const isMethodCall = this.log.labels.includes('Label.STARTED')
@@ -431,12 +428,12 @@ class LogDetailsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'py-2 overflow-auto'
     public readonly children: ChildrenLike
-    public readonly log: Routers.System.LogResponse
+    public readonly log: Local.Routers.System.LogResponse
     public readonly style = {
         fontSize: 'small',
         fontWeight: 'normal' as const,
     }
-    constructor(params: { log: Routers.System.LogResponse }) {
+    constructor(params: { log: Local.Routers.System.LogResponse }) {
         Object.assign(this, params)
         const attributes: AnyVirtualDOM[] = Object.entries(
             this.log.attributes,
@@ -497,7 +494,7 @@ class LogsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: this.state.logs$,
-            vdomMap: (response: pyYw.Routers.System.LogsResponse) =>
+            vdomMap: (response: Local.Routers.System.LogsResponse) =>
                 response.logs.map((log) => {
                     return new LogView({ state: this.state, log })
                 }),

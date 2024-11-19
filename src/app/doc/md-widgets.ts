@@ -3,8 +3,7 @@ import { Router } from '@youwol/mkdocs-ts'
 import { AppState } from '../app-state'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { icon } from '../projects/icons'
-import { AssetsGateway } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { buttonsFactory } from '../common/buttons'
 
 const inlineBlock = {

@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs'
-import { ExplorerBackend } from '@youwol/http-clients'
+import { ExplorerBackend } from '@w3nest/http-clients'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
 export interface Origin {

@@ -1,8 +1,8 @@
 import { ReplaySubject } from 'rxjs'
 import { Backend } from '../../environment/notifications'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 
-type BackendResponse = Routers.System.BackendResponse
+type BackendResponse = Local.Routers.System.BackendResponse
 export class State {
     /**
      * All install events.
@@ -17,7 +17,7 @@ export class State {
     )
 
     constructor() {
-        new PyYouwolClient().admin.system.webSocket
+        new Local.Client().admin.system.webSocket
             .startBackendStdOut$()
             .subscribe((m) => {
                 this.stdOut$.next({
@@ -26,7 +26,7 @@ export class State {
                     text: m.text,
                 })
             })
-        new PyYouwolClient().admin.system.webSocket
+        new Local.Client().admin.system.webSocket
             .backendResponse$()
             .subscribe((m) => {
                 this.response$.next(m.data)

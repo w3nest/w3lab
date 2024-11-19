@@ -1,6 +1,5 @@
-import { CdnSessionsStorage } from '@youwol/http-clients'
+import { CdnSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { setup } from '../../auto-generated'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { map } from 'rxjs/operators'
 import { firstValueFrom, Subject } from 'rxjs'
 import * as webpm from '@youwol/webpm-client'

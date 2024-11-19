@@ -1,7 +1,6 @@
 import { ChildrenLike, CSSAttribute, VirtualDOM } from '@youwol/rx-vdom'
 import type { ApplicationInfo } from '@youwol/os-core'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
-import { AssetsGateway } from '@youwol/http-clients'
+import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { shareReplay } from 'rxjs/operators'
 import { colabClassPrefix } from '../../common'
 

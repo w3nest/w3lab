@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { AssetsBackend } from '@youwol/http-clients'
+import { AssetsBackend } from '@w3nest/http-clients'
 import {
     openingApps$,
     ApplicationInfo,

@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import { AssetsBackend, AssetsGateway } from '@w3nest/http-clients'
 import { AssetPreview, Installer } from '@youwol/os-core'
 import { map } from 'rxjs/operators'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
@@ -17,7 +17,7 @@ export class OverViews implements VirtualDOM<'div'> {
                     permissions: { write: true, read: true, share: true },
                     cdnClient: undefined,
                     fluxView: undefined,
-                    assetsGtwClient: new AssetsGateway.Client(),
+                    assetsGtwClient: new AssetsGateway.Client() as any,
                 }).filter((preview) => preview.applicable())
             }),
         )

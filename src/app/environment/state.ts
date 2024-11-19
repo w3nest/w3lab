@@ -3,13 +3,14 @@ import {
     raiseHTTPErrors,
     send$,
     WebSocketResponse$,
-} from '@youwol/http-primitives'
-import * as pyYw from '@youwol/local-youwol-client'
+    Local,
+    Label,
+} from '@w3nest/http-clients'
+
 import { Observable } from 'rxjs'
 import { map, mergeMap, shareReplay } from 'rxjs/operators'
 
 import * as Browser from './browser'
-import { Label } from '@youwol/local-youwol-client'
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
@@ -22,9 +23,8 @@ export class CommandEvents {
      */
     log$: WebSocketResponse$<unknown, Label>
 
-    constructor(public readonly command: pyYw.Routers.Environment.Command) {
-        this.log$ =
-            new pyYw.PyYouwolClient().admin.customCommands.webSocket.log$({})
+    constructor(public readonly command: Local.Routers.Environment.Command) {
+        this.log$ = new Local.Client().admin.customCommands.webSocket.log$({})
     }
 
     static fullId(flowId: string, stepId: string) {
@@ -39,12 +39,12 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly client = new pyYw.PyYouwolClient().admin.environment
+    public readonly client = new Local.Client().admin.environment
 
     /**
      * @group Observables
      */
-    public readonly environment$: Observable<pyYw.Routers.Environment.EnvironmentStatusResponse>
+    public readonly environment$: Observable<Local.Routers.Environment.EnvironmentStatusResponse>
 
     /**
      * @group State
@@ -65,7 +65,7 @@ export class State {
      * @group Observables
      */
     public readonly customDispatches$: Observable<{
-        [k: string]: pyYw.Routers.Environment.CustomDispatch[]
+        [k: string]: Local.Routers.Environment.CustomDispatch[]
     }>
 
     constructor(params: { appState: AppState }) {
@@ -80,7 +80,7 @@ export class State {
         this.browserState = new Browser.State({ appState: this.appState })
     }
 
-    openCommand(command: pyYw.Routers.Environment.Command) {
+    openCommand(command: Local.Routers.Environment.Command) {
         if (!this.commandsEvent[command.name]) {
             this.commandsEvent[command.name] = new CommandEvents(command)
         }

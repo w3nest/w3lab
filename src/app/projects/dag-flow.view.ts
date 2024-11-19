@@ -7,7 +7,7 @@ import {
     sugiyama,
 } from 'd3-dag'
 import { combineLatest, merge } from 'rxjs'
-import * as pyYw from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { instanceOfStepStatus, State } from './state'
 import { map } from 'rxjs/operators'
 import { RxHTMLElement, VirtualDOM } from '@youwol/rx-vdom'
@@ -28,7 +28,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly project: pyYw.Routers.Projects.Project
+    public readonly project: Local.Routers.Projects.Project
 
     /**
      * @group States
@@ -202,7 +202,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     constructor(params: {
-        project: pyYw.Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         projectsState: State
         flowId: string
     }) {
@@ -355,7 +355,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     applyStyle(
-        selected: { flowId: string; step: pyYw.Routers.Projects.PipelineStep },
+        selected: { flowId: string; step: Local.Routers.Projects.PipelineStep },
         event: {
             stepId
             status
@@ -404,7 +404,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         )
 
         const factoryPending: Record<
-            pyYw.Routers.Projects.PipelineStepEventKind,
+            Local.Routers.Projects.PipelineStepEventKind,
             string
         > = {
             runStarted: '',
@@ -428,7 +428,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 }
 
-function parseDag(project: pyYw.Routers.Projects.Project, flowId: string) {
+function parseDag(project: Local.Routers.Projects.Project, flowId: string) {
     const flow = project.pipeline.flows.find((f) => f.name == flowId)
     const availableSteps = project.pipeline.steps.map((s) => s.id)
     const includedSteps = new Set(

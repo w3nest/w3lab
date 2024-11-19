@@ -8,7 +8,7 @@ import {
 } from 'rxjs'
 import { filter, switchMap, take } from 'rxjs/operators'
 import { setup } from '../../auto-generated'
-import { CdnSessionsStorage } from '@youwol/http-clients'
+import { CdnSessionsStorage } from '@w3nest/http-clients'
 import * as webpm from '@youwol/webpm-client'
 
 export type HomePageMode = 'view' | 'edit'

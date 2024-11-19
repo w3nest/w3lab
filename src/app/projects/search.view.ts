@@ -2,7 +2,7 @@ import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { State } from './state'
 import { map } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { Router } from '@youwol/mkdocs-ts'
 import { icon } from './icons'
 
@@ -110,7 +110,7 @@ export class SearchView implements VirtualDOM<'div'> {
                 children: {
                     policy: 'replace',
                     source$: selected$,
-                    vdomMap: (projects: Routers.Projects.Project[]) => {
+                    vdomMap: (projects: Local.Routers.Projects.Project[]) => {
                         return projects.map((p) => ({
                             tag: 'a',
                             class: 'd-flex align-items-center m-2',

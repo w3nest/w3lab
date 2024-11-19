@@ -5,10 +5,9 @@ import { Navigation, parseMd, Router } from '@youwol/mkdocs-ts'
 import { debounceTime, distinctUntilChanged } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators'
 import { lazyResolver } from '../index'
-import { PyYouwolClient, Routers } from '@youwol/local-youwol-client'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { example1, example2, example3 } from './examples'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Pyodide',
@@ -85,7 +84,7 @@ export class RuntimesView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ appState }: { appState: AppState }) {
-        const client = new PyYouwolClient().python
+        const client = new Local.Client().python
         client.getStatus$().subscribe((d) => console.log('Status', d))
         this.children = [
             {
@@ -105,7 +104,7 @@ export class RuntimesView implements VirtualDOM<'div'> {
                     vdomMap: ({
                         runtimes,
                     }: {
-                        runtimes: Routers.Python.Runtime[]
+                        runtimes: Local.Routers.Python.Runtime[]
                     }) => {
                         return runtimes.map((r) => {
                             return new ExpandableGroupView({
@@ -149,7 +148,7 @@ export class PackagesTableView implements VirtualDOM<'div'> {
         maxHeight: '50vh',
     }
     public readonly class = 'mx-auto overflow-auto'
-    constructor(packages: Routers.Python.Package[]) {
+    constructor(packages: Local.Routers.Python.Package[]) {
         this.children = [
             {
                 tag: 'thead',

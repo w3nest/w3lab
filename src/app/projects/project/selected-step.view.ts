@@ -7,9 +7,10 @@ import {
 import { State } from '../state'
 import {
     ContextMessage,
-    PyYouwolClient,
-    Routers,
-} from '@youwol/local-youwol-client'
+    Local,
+    raiseHTTPErrors,
+    onHTTPErrors,
+} from '@w3nest/http-clients'
 import { filter, map, take } from 'rxjs/operators'
 import {
     BehaviorSubject,
@@ -20,7 +21,6 @@ import {
     Subject,
 } from 'rxjs'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
-import { raiseHTTPErrors, onHTTPErrors } from '@youwol/http-primitives'
 import * as webpmClient from '@youwol/webpm-client'
 import { DataView } from '../../common'
 
@@ -36,7 +36,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
     }: {
         flowId: string
         projectsState: State
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
     }) {
         const events = projectsState.projectEvents[project.id]
         const selected$ = events.selectedStep$.pipe(
@@ -52,7 +52,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
 
         const factory: Record<
             Mode,
-            (step: Routers.Projects.PipelineStep) => AnyVirtualDOM
+            (step: Local.Routers.Projects.PipelineStep) => AnyVirtualDOM
         > = {
             run: () =>
                 new RunOutputsView({
@@ -81,7 +81,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
                 vdomMap: ({
                     step,
                 }: {
-                    step: Routers.Projects.PipelineStep
+                    step: Local.Routers.Projects.PipelineStep
                 }) => {
                     return new ExpandableGroupView({
                         expanded: true,
@@ -124,10 +124,10 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
         projectsState,
         status$,
     }: {
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         status$: Observable<
-            | Routers.Projects.PipelineStepEventKind
-            | Routers.Projects.PipelineStepStatusResponse
+            | Local.Routers.Projects.PipelineStepEventKind
+            | Local.Routers.Projects.PipelineStepStatusResponse
         >
         projectsState: State
         mode$: Subject<Mode>
@@ -163,7 +163,7 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             },
         }
         const sep: AnyVirtualDOM = { tag: 'i', class: 'mx-2' }
-        const config$ = new PyYouwolClient().admin.projects
+        const config$ = new Local.Client().admin.projects
             .getStepView$({
                 projectId: project.id,
                 stepId,
@@ -202,12 +202,12 @@ export class ConfigView implements VirtualDOM<'div'> {
         flowId,
         onExecute,
     }: {
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         stepId: string
         flowId: string
         onExecute: () => void
     }) {
-        const projectsRouter = new PyYouwolClient().admin.projects
+        const projectsRouter = new Local.Client().admin.projects
         this.children = [
             {
                 source$: projectsRouter
@@ -272,14 +272,14 @@ export class ManifestView implements VirtualDOM<'div'> {
         project,
         status$,
     }: {
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         status$: Observable<
-            | Routers.Projects.PipelineStepEventKind
-            | Routers.Projects.PipelineStepStatusResponse
+            | Local.Routers.Projects.PipelineStepEventKind
+            | Local.Routers.Projects.PipelineStepStatusResponse
         >
     }) {
         const fingerPrint = (
-            manifest: Routers.Projects.Manifest,
+            manifest: Local.Routers.Projects.Manifest,
         ): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3',
@@ -297,7 +297,7 @@ export class ManifestView implements VirtualDOM<'div'> {
             ],
         })
         const sources = (
-            manifest: Routers.Projects.Manifest,
+            manifest: Local.Routers.Projects.Manifest,
         ): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3',
@@ -314,7 +314,7 @@ export class ManifestView implements VirtualDOM<'div'> {
             ],
         })
         const outputs = (
-            manifest: Routers.Projects.Manifest,
+            manifest: Local.Routers.Projects.Manifest,
         ): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3 w-100',
@@ -350,7 +350,7 @@ export class ManifestView implements VirtualDOM<'div'> {
                 vdomMap: ({
                     manifest,
                 }: {
-                    manifest?: Routers.Projects.Manifest
+                    manifest?: Local.Routers.Projects.Manifest
                 }) => {
                     return {
                         tag: 'div',
@@ -398,8 +398,8 @@ export class RunOutputsView implements VirtualDOM<'div'> {
     }: {
         messages$: Observable<ContextMessage>
         status$: Observable<
-            | Routers.Projects.PipelineStepEventKind
-            | Routers.Projects.PipelineStepStatusResponse
+            | Local.Routers.Projects.PipelineStepEventKind
+            | Local.Routers.Projects.PipelineStepStatusResponse
         >
     }) {
         this.children = [

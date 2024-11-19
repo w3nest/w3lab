@@ -1,5 +1,5 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { State } from './state'
 
 /**
@@ -25,7 +25,7 @@ export class DispatchListView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: environmentState.customDispatches$,
             vdomMap: (dispatches: {
-                [k: string]: Routers.Environment.CustomDispatch[]
+                [k: string]: Local.Routers.Environment.CustomDispatch[]
             }) => {
                 return Object.entries(dispatches).map(([type, items]) => {
                     return {
@@ -87,14 +87,16 @@ export class DispatchItemView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly dispatch: Routers.Environment.CustomDispatch
+    public readonly dispatch: Local.Routers.Environment.CustomDispatch
 
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: ChildrenLike
 
-    constructor(params: { dispatch: Routers.Environment.CustomDispatch }) {
+    constructor(params: {
+        dispatch: Local.Routers.Environment.CustomDispatch
+    }) {
         Object.assign(this, params)
         this.children = [
             {

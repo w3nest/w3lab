@@ -1,10 +1,11 @@
-import { AssetsGateway, ExplorerBackend } from '@youwol/http-clients'
 import {
     HTTPResponse$,
     raiseHTTPErrors,
     RequestEvent,
     send$,
-} from '@youwol/http-primitives'
+    AssetsGateway,
+    ExplorerBackend,
+} from '@w3nest/http-clients'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 import {

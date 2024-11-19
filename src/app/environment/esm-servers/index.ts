@@ -1,6 +1,6 @@
 import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
 import { AppState } from '../../app-state'
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { EsmServerView } from './esm-server.view'
@@ -20,7 +20,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
 function lazyResolver(
     path: string,
-    env: Routers.Environment.EnvironmentStatusResponse,
+    env: Local.Routers.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
 ) {
@@ -95,7 +95,9 @@ class EsmServersListView implements VirtualDOM<'div'> {
             source$: appState.environment$.pipe(
                 map((env) => env.youwolEnvironment.proxiedEsmServers),
             ),
-            vdomMap: (esmServers: Routers.Environment.ProxiedEsmServer[]) => {
+            vdomMap: (
+                esmServers: Local.Routers.Environment.ProxiedEsmServer[],
+            ) => {
                 if (esmServers.length === 0) {
                     return [{ tag: 'div', innerText: 'No servers running.' }]
                 }

@@ -1,8 +1,8 @@
-import { Routers } from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { NavIconSvg } from '../common'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
-export function icon(project: Routers.Projects.Project): AnyVirtualDOM {
+export function icon(project: Local.Routers.Projects.Project): AnyVirtualDOM {
     const filenames = {
         typescript: 'icon-TS.svg',
         python: 'icon-python.svg',

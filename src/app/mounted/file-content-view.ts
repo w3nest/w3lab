@@ -1,6 +1,5 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { PyYouwolClient } from '@youwol/local-youwol-client'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ObjectJs } from '@youwol/rx-tree-views'
 import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
 import { HeaderView } from './explorer.view'
@@ -24,7 +23,7 @@ export class FileContentView implements VirtualDOM<'div'> {
         full: string
         router: Router
     }) {
-        const file$ = new PyYouwolClient().admin.system
+        const file$ = new Local.Client().admin.system
             .getFileContent$({
                 path: full,
             })

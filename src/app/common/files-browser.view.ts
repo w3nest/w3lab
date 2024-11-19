@@ -1,7 +1,7 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
-import * as pyYw from '@youwol/local-youwol-client'
+import { Local, raiseHTTPErrors } from '@w3nest/http-clients'
 import { AttributeView } from './utils-view'
 
 /**
@@ -46,7 +46,7 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
     /**
      * @group Observables
      */
-    public readonly items$: Observable<unknown>
+    public readonly items$: Observable<Local.Routers.System.QueryFolderContentResponse>
 
     constructor(params: {
         startingFolder: string
@@ -54,10 +54,11 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
         style?
     }) {
         Object.assign(this, params)
-        const client = new pyYw.PyYouwolClient().admin.system
+        const client = new Local.Client().admin.system
         this.folderSelected$ = new BehaviorSubject<string>(this.startingFolder)
         this.items$ = this.folderSelected$.pipe(
             mergeMap((path) => client.queryFolderContent$({ path })),
+            raiseHTTPErrors(),
         )
         this.children = [
             originLocationView(this.startingFolder, this.originFolderIndex),
@@ -68,7 +69,10 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
                 children: {
                     policy: 'replace',
                     source$: this.items$,
-                    vdomMap: ({ files, folders }) => {
+                    vdomMap: ({
+                        files,
+                        folders,
+                    }: Local.Routers.System.QueryFolderContentResponse) => {
                         const filesVDom = files.map((name) => fileView(name))
                         const foldersVDom = folders.map((name) =>
                             folderView(this.folderSelected$, name),

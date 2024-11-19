@@ -5,11 +5,14 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from '@youwol/rx-vdom'
-import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import {
+    AssetsBackend,
+    AssetsGateway,
+    raiseHTTPErrors,
+} from '@w3nest/http-clients'
 import { map, share, skip } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
 
 type AccessInfo = AssetsBackend.QueryAccessInfoResponse
 type Asset = AssetsBackend.GetAssetResponse

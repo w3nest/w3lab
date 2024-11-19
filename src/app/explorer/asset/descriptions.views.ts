@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import { AssetsBackend, AssetsGateway } from '@w3nest/http-clients'
 import { ExplorerState } from '../explorer.state'
 import { BehaviorSubject, skip } from 'rxjs'
 import { MdWidgets, parseMd } from '@youwol/mkdocs-ts'

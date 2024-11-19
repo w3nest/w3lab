@@ -4,8 +4,8 @@ import {
     AssetsGateway,
     AssetsBackend,
     AssetsGateway as Gtw,
-} from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+    raiseHTTPErrors,
+} from '@w3nest/http-clients'
 import * as webpmClient from '@youwol/webpm-client'
 import * as rxVdom from '@youwol/rx-vdom'
 import {
@@ -538,7 +538,8 @@ export function getActions$(
                               node: node,
                               explorer: state,
                               cdnClient: webpmClient,
-                              assetsGtwClient: new AssetsGateway.Client(),
+                              assetsGtwClient:
+                                  new AssetsGateway.Client() as any,
                               fluxView: rxVdom,
                           })
                           .map((action) => {

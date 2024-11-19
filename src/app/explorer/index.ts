@@ -5,8 +5,7 @@ import {
     Views,
     CatchAllNav,
 } from '@youwol/mkdocs-ts'
-import { Accounts, AssetsGateway } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
 import { combineLatest, forkJoin, Observable, of } from 'rxjs'

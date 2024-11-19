@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs'
-import { AssetsGateway, CdnBackend } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
+import { AssetsGateway, CdnBackend,
+    raiseHTTPErrors } from '@w3nest/http-clients'
 
 import { mergeMap, share } from 'rxjs/operators'
 

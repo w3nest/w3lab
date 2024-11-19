@@ -1,9 +1,8 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Routers } from '@youwol/local-youwol-client'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
 import { DagFlowView } from './dag-flow.view'
 import { State } from './state'
-import { filterCtxMessage, raiseHTTPErrors } from '@youwol/http-primitives'
+import { filterCtxMessage, raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import {
     ComponentCrossLinksView,
     FilesBrowserView,
@@ -20,7 +19,7 @@ import { tryLibScript } from '../components/js-wasm/package.views'
 
 function extraProjectLinks(
     appState: AppState,
-    project: Routers.Projects.Project,
+    project: Local.Routers.Projects.Project,
 ) {
     if (!['application', 'library'].includes(project.pipeline.target.family)) {
         return []
@@ -77,7 +76,7 @@ export class ProjectView implements VirtualDOM<'div'> {
         appState,
     }: {
         router: Router
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         appState: AppState
     }) {
         const projectsState = appState.projectsState
@@ -187,7 +186,7 @@ export class FlowView implements VirtualDOM<'div'> {
     }: {
         flowId: string
         projectsState: State
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
     }) {
         this.children = [
             {
@@ -209,7 +208,7 @@ export class ArtifactsView implements VirtualDOM<'div'> {
     }: {
         projectsState: State
         router: Router
-        project: Routers.Projects.Project
+        project: Local.Routers.Projects.Project
         flowId: string
     }) {
         const event$ = projectsState.projectEvents[project.id].messages$.pipe(
@@ -233,7 +232,7 @@ export class ArtifactsView implements VirtualDOM<'div'> {
             vdomMap: ({
                 artifacts,
             }: {
-                artifacts: Routers.Projects.GetArtifactResponse[]
+                artifacts: Local.Routers.Projects.GetArtifactResponse[]
             }) => {
                 return artifacts.map((artifact) => {
                     return new ArtifactView({ artifact, router })
@@ -249,7 +248,7 @@ export class ArtifactView implements VirtualDOM<'div'> {
         artifact,
         router,
     }: {
-        artifact: Routers.Projects.Artifact
+        artifact: Local.Routers.Projects.Artifact
         router: Router
     }) {
         this.children = [
@@ -295,9 +294,9 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
                     policy: 'replace',
                     source$: projectsState.appState.environment$,
                     vdomMap: (
-                        environment: Routers.Environment.EnvironmentStatusResponse,
+                        environment: Local.Routers.Environment.EnvironmentStatusResponse,
                     ) => {
-                        return environment.configuration.projects.templates.map(
+                        return environment.youwolEnvironment.projects.templates.map(
                             (projectTemplate) =>
                                 new ExpandableGroupView({
                                     title: projectTemplate.type,
@@ -317,9 +316,9 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
 }
 
 type Failures =
-    | Routers.Projects.FailurePipelineNotFound[]
-    | Routers.Projects.FailureDirectoryNotFound[]
-    | Routers.Projects.FailureImportException[]
+    | Local.Routers.Projects.FailurePipelineNotFound[]
+    | Local.Routers.Projects.FailureDirectoryNotFound[]
+    | Local.Routers.Projects.FailureImportException[]
 
 export class FailuresView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -337,7 +336,7 @@ export class FailuresView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: appState.projectsState.projectsFailures$,
             vdomMap: (
-                failures: Routers.Projects.ProjectsLoadingResults['failures'],
+                failures: Local.Routers.Projects.ProjectsLoadingResults['failures'],
             ) => [
                 new FailuresCategoryView({
                     appState: appState,

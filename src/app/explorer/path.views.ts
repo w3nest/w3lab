@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { ExplorerBackend } from '@youwol/http-clients'
+import { ExplorerBackend } from '@w3nest/http-clients'
 import { Router } from '@youwol/mkdocs-ts'
 import { ExplorerState } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'

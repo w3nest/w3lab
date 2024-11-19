@@ -6,9 +6,8 @@ import {
 } from '@youwol/rx-vdom'
 import { State } from '../state'
 
-import { AssetsBackend, CdnBackend } from '@youwol/http-clients'
-import { raiseHTTPErrors } from '@youwol/http-primitives'
-import * as pyYw from '@youwol/local-youwol-client'
+import { Local, AssetsBackend, CdnBackend,
+    raiseHTTPErrors } from '@w3nest/http-clients'
 import {
     combineLatest,
     from,
@@ -95,7 +94,7 @@ export class PackageView implements VirtualDOM<'div'> {
                                         this.packageId
                                     ].info$,
                                 vdomMap: (
-                                    packageInfo: pyYw.Routers.LocalCdn.CdnPackage,
+                                    packageInfo: Local.Routers.LocalCdn.CdnPackage,
                                 ) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]
@@ -131,7 +130,7 @@ export class PackageDetailsView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly package: pyYw.Routers.LocalCdn.CdnPackage
+    public readonly package: Local.Routers.LocalCdn.CdnPackage
 
     /**
      * @group Immutable DOM Constants
@@ -218,7 +217,7 @@ export class VersionsView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly package: pyYw.Routers.LocalCdn.CdnPackage
+    public readonly package: Local.Routers.LocalCdn.CdnPackage
 
     /**
      * @group Observables
@@ -227,7 +226,7 @@ export class VersionsView implements VirtualDOM<'div'> {
 
     constructor(params: {
         cdnState: State
-        package: pyYw.Routers.LocalCdn.CdnPackage
+        package: Local.Routers.LocalCdn.CdnPackage
         selectedVersion$: Subject<string>
     }) {
         Object.assign(this, params)

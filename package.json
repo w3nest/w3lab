@@ -25,9 +25,7 @@
     },
     "dependencies": {
         "@floating-ui/dom": "^1.6.3",
-        "@youwol/http-clients": "^3.0.0",
-        "@youwol/http-primitives": "^0.2.5",
-        "@youwol/local-youwol-client": "^0.3.2",
+        "@w3nest/http-clients": "file:.local-dependencies/w3nest-http-clients-0.1.0-wip-1732003727.tgz",
         "@youwol/mkdocs-ts": "^0.6.3",
         "@youwol/os-core": "^0.2.0",
         "@youwol/rx-code-mirror-editors": "^0.5.0",
@@ -74,9 +72,7 @@
     "webpm": {
         "dependencies": {
             "@floating-ui/dom": "^1.6.3",
-            "@youwol/http-clients": "^3.0.0",
-            "@youwol/http-primitives": "^0.2.5",
-            "@youwol/local-youwol-client": "^0.3.2",
+            "@w3nest/http-clients": "^0.1.0",
             "@youwol/mkdocs-ts": "^0.6.3",
             "@youwol/os-core": "^0.2.0",
             "@youwol/rx-code-mirror-editors": "^0.5.0",
@@ -88,5 +84,8 @@
             "rxjs": "^7.5.6"
         },
         "aliases": []
+    },
+    "resolutions": {
+        "@w3nest/http-clients": "file:.local-dependencies/w3nest-http-clients-0.1.0-wip-1732003727.tgz"
     }
 }

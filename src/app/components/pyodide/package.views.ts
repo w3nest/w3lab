@@ -1,7 +1,7 @@
 import { VirtualDOM, ChildLike } from '@youwol/rx-vdom'
 import { State } from '../state'
 
-import * as pyYw from '@youwol/local-youwol-client'
+import { Local } from '@w3nest/http-clients'
 import { ReplaySubject } from 'rxjs'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
 import { VersionsView } from '../js-wasm/package.views'
@@ -62,7 +62,7 @@ export class PyodideView implements VirtualDOM<'div'> {
                                     this.cdnState.packagesEvent[this.packageId]
                                         .info$,
                                 vdomMap: (
-                                    packageInfo: pyYw.Routers.LocalCdn.CdnPackage,
+                                    packageInfo: Local.Routers.LocalCdn.CdnPackage,
                                 ) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]
