@@ -28,7 +28,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ name, router }: { name: string; router: Router }) {
-        const client = new Local.Client().admin.localCdn
+        const client = new Local.Client().api.localCdn
 
         this.children = [
             {

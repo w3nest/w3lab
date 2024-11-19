@@ -81,7 +81,7 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
                 source$: notification$,
                 vdomMap: (notif: AssetDownloadEvent) => {
                     return new LogsExplorerView({
-                        rootLogs$: new Local.Client().admin.system
+                        rootLogs$: new Local.Client().api.system
                             .queryLogs$({
                                 parentId: notif.contextId,
                             })

@@ -229,7 +229,7 @@ class UninstallButton implements VirtualDOM<'div'> {
                         .pipe(
                             take(1),
                             switchMap((version) =>
-                                new Local.Client().admin.system.uninstallBackend$(
+                                new Local.Client().api.system.uninstallBackend$(
                                     { name: backend, version },
                                 ),
                             ),

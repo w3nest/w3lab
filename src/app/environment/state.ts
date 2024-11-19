@@ -24,7 +24,7 @@ export class CommandEvents {
     log$: WebSocketResponse$<unknown, Label>
 
     constructor(public readonly command: Local.Routers.Environment.Command) {
-        this.log$ = new Local.Client().admin.customCommands.webSocket.log$({})
+        this.log$ = new Local.Client().api.customCommands.webSocket.log$({})
     }
 
     static fullId(flowId: string, stepId: string) {
@@ -39,7 +39,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly client = new Local.Client().admin.environment
+    public readonly client = new Local.Client().api.environment
 
     /**
      * @group Observables

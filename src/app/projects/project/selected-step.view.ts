@@ -157,7 +157,7 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             },
         }
         const sep: AnyVirtualDOM = { tag: 'i', class: 'mx-2' }
-        const config$ = new Local.Client().admin.projects
+        const config$ = new Local.Client().api.projects
             .getStepView$({
                 projectId: project.id,
                 stepId,
@@ -198,7 +198,7 @@ export class ConfigView implements VirtualDOM<'div'> {
         stepId: string
         onExecute: () => void
     }) {
-        const projectsRouter = new Local.Client().admin.projects
+        const projectsRouter = new Local.Client().api.projects
         this.children = [
             {
                 source$: projectsRouter

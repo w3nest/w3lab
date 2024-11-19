@@ -47,7 +47,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly cdnClient = new Local.Client().admin.localCdn
+    public readonly cdnClient = new Local.Client().api.localCdn
 
     /**
      * @group States

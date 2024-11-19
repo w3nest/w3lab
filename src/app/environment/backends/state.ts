@@ -17,7 +17,7 @@ export class State {
     )
 
     constructor() {
-        new Local.Client().admin.system.webSocket
+        new Local.Client().api.system.webSocket
             .startBackendStdOut$()
             .subscribe((m) => {
                 this.stdOut$.next({
@@ -26,7 +26,7 @@ export class State {
                     text: m.text,
                 })
             })
-        new Local.Client().admin.system.webSocket
+        new Local.Client().api.system.webSocket
             .backendResponse$()
             .subscribe((m) => {
                 this.response$.next(m.data)

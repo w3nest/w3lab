@@ -69,7 +69,7 @@ export class AppState {
     /**
      * @group Immutable Constants
      */
-    public readonly environmentClient = new Local.Client().admin.environment
+    public readonly environmentClient = new Local.Client().api.environment
 
     /**
      * @group Observables

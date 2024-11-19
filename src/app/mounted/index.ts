@@ -126,7 +126,7 @@ function lazyResolver(
 
     const fromDecoded = from != '' ? decodeHRef(from) : ''
 
-    return new Local.Client().admin.system
+    return new Local.Client().api.system
         .queryFolderContent$({
             path: `${decodeHdPath(origin)}/${fromDecoded}`,
         })

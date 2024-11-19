@@ -312,13 +312,13 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                                 },
                             ],
                             onclick: () => {
-                                new Local.Client().admin.environment
+                                new Local.Client().api.environment
                                     .login$({
                                         body: { authId, envId },
                                     })
                                     .pipe(
                                         mergeMap(() => {
-                                            return new Local.Client().admin.environment.getStatus$()
+                                            return new Local.Client().api.environment.getStatus$()
                                         }),
                                     )
                                     .subscribe(() => {})

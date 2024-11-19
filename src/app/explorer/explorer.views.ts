@@ -127,7 +127,7 @@ export class OpenFolderInHostView implements VirtualDOM<'button'> {
     public readonly onclick: () => undefined
     constructor(params: { folder: string }) {
         this.onclick = () => {
-            const client = new Local.Client().admin.system
+            const client = new Local.Client().api.system
             console.log('Open folder in explorer', params.folder)
             client
                 .openFolder$({ body: { path: params.folder } })

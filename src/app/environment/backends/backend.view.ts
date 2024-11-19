@@ -31,7 +31,7 @@ export class BackendView implements VirtualDOM<'div'> {
             ),
             debounceTime(500),
             mergeMap(() =>
-                new Local.Client().admin.system.queryBackendLogs$({
+                new Local.Client().api.system.queryBackendLogs$({
                     name: backend.name,
                     version: backend.version,
                 }),
@@ -154,7 +154,7 @@ export class TerminateButton implements VirtualDOM<'button'> {
                 tag: 'div',
                 innerText: 'Terminate',
                 onclick: () => {
-                    new Local.Client().admin.system
+                    new Local.Client().api.system
                         .terminateBackend$({
                             uid,
                         })

@@ -23,7 +23,7 @@ export class FileContentView implements VirtualDOM<'div'> {
         full: string
         router: Router
     }) {
-        const file$ = new Local.Client().admin.system
+        const file$ = new Local.Client().api.system
             .getFileContent$({
                 path: full,
             })

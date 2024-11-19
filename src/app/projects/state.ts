@@ -47,7 +47,7 @@ export class ProjectEvents {
     /**
      * @group Immutable Constants
      */
-    public readonly projectsClient = new Local.Client().admin.projects
+    public readonly projectsClient = new Local.Client().api.projects
 
     /**
      * @group Observables
@@ -179,7 +179,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly projectsClient = new Local.Client().admin.projects
+    public readonly projectsClient = new Local.Client().api.projects
 
     /**
      * @group Immutable Constants

@@ -49,7 +49,7 @@ Below is displayed the current configuration of the local YouWol server:
                             language: 'python',
                             content: appState.environment$.pipe(
                                 mergeMap(() =>
-                                    new Local.Client().admin.environment
+                                    new Local.Client().api.environment
                                         .getFileContent$()
                                         .pipe(raiseHTTPErrors()),
                                 ),

@@ -28,7 +28,7 @@ export class PageView implements VirtualDOM<'div'> {
                 views: {
                     logsView: () =>
                         new LogsExplorerView({
-                            rootLogs$: new Local.Client().admin.system
+                            rootLogs$: new Local.Client().api.system
                                 .queryRootLogs$({
                                     fromTimestamp: Date.now(),
                                     maxCount: 1000,

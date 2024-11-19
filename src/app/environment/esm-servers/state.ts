@@ -17,7 +17,7 @@ export class State {
 
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
-        const ws = new Local.Client().admin.environment.webSocket
+        const ws = new Local.Client().api.environment.webSocket
         ws.esmServerStdOut$().subscribe((message) => {
             const uid = message.attributes.proxyUid
             uid && this.getStdOut$(uid).next(message)
@@ -32,7 +32,7 @@ export class State {
                     traceIds.add(d.attributes.traceId)
                 }),
                 mergeMap((d) => {
-                    return new Local.Client().admin.system.queryLogs$({
+                    return new Local.Client().api.system.queryLogs$({
                         parentId: d.parentContextId,
                     })
                 }),

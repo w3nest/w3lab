@@ -53,13 +53,13 @@ export class BackendEvents {
     public readonly failedInstall$ = new ReplaySubject<BackendInstallFlow>()
 
     constructor() {
-        new Local.Client().admin.system.webSocket
+        new Local.Client().api.system.webSocket
             .installBackendEvent$()
             .subscribe((m) => {
                 this.install$.next(m.data)
             })
 
-        new Local.Client().admin.system.webSocket
+        new Local.Client().api.system.webSocket
             .installBackendStdOut$()
             .subscribe((m) => {
                 this.installStdOut$.next({
@@ -141,7 +141,7 @@ export class AssetEvents {
     private enqueuedRawIds: string[] = []
 
     constructor() {
-        new Local.Client().admin.system.webSocket
+        new Local.Client().api.system.webSocket
             .downloadEvent$()
             .subscribe(({ data, contextId }) => {
                 if (

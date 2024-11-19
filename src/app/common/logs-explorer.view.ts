@@ -42,7 +42,7 @@ export class LogsExplorerState {
         Object.assign(this, params)
 
         if (typeof params.rootLogs$ === 'string') {
-            this.rootLogs$ = new Local.Client().admin.system
+            this.rootLogs$ = new Local.Client().api.system
                 .queryLogs$({
                     parentId: params.rootLogs$,
                 })
@@ -58,7 +58,7 @@ export class LogsExplorerState {
                   this.rootLogsResponse = response
                   this.fetchingLogs$.next(false)
               })
-            : new Local.Client().admin.system
+            : new Local.Client().api.system
                   .queryLogs$({
                       parentId: this.stack$.value.slice(-1)[0].contextId,
                   })
@@ -76,7 +76,7 @@ export class LogsExplorerState {
     clear() {
         this.expandLog()
         this.fetchingLogs$.next(true)
-        new Local.Client().admin.system.clearLogs$().subscribe(() => {
+        new Local.Client().api.system.clearLogs$().subscribe(() => {
             this.refresh()
         })
     }
@@ -89,7 +89,7 @@ export class LogsExplorerState {
         }
         const stack = this.stack$.value
 
-        new Local.Client().admin.system
+        new Local.Client().api.system
             .queryLogs$({ parentId: log.contextId })
             .pipe(raiseHTTPErrors())
             .subscribe((response) => {

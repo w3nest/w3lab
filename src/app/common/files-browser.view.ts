@@ -54,7 +54,7 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
         style?
     }) {
         Object.assign(this, params)
-        const client = new Local.Client().admin.system
+        const client = new Local.Client().api.system
         this.folderSelected$ = new BehaviorSubject<string>(this.startingFolder)
         this.items$ = this.folderSelected$.pipe(
             mergeMap((path) => client.queryFolderContent$({ path })),
