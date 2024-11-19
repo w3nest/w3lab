@@ -21,12 +21,12 @@ function extraProjectLinks(
     appState: AppState,
     project: Local.Routers.Projects.Project,
 ) {
-    if (!['application', 'library'].includes(project.pipeline.target.family)) {
+    if (!['application', 'library'].includes(project.target.family)) {
         return []
     }
     if (
-        project.pipeline.target.family === 'application' &&
-        !project.pipeline.target['execution']?.standalone
+        project.target.family === 'application' &&
+        !project.target.execution?.standalone
     ) {
         return []
     }
@@ -43,7 +43,7 @@ function extraProjectLinks(
                 if (!version) {
                     return { icon: 'fas fa-play', enabled: false, nav: `` }
                 }
-                if (project.pipeline.target.family === 'application') {
+                if (project.target.family === 'application') {
                     return {
                         icon: 'fas fa-play',
                         enabled: true,
