@@ -14,7 +14,7 @@ externals_deps = {
     "@youwol/mkdocs-ts": "^0.6.3",
     "@youwol/rx-vdom": "^1.0.1",
     "bootstrap": "^5.3.0",
-    "@youwol/webpm-client": "^3.0.0",
+    "@w3nest/webpm-client": "^0.1.0",
     '@w3nest/http-clients': '^0.1.0',
     '@youwol/os-core': '^0.2.0',
     "@youwol/rx-tree-views": "^0.3.1",

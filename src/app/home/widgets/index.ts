@@ -9,7 +9,7 @@
  * <launchPad size='50px'>
  *    <app name="@youwol/mkdocs-ts-doc"></app>
  *    <app name="@youwol/rx-vdom-doc"></app>
- *    <app name="@youwol/webpm-client-doc"></app>
+ *    <app name="@w3nest/webpm-client-doc"></app>
  * </launchPad>
  *
  * ## {@link ProjectsDonutChart}

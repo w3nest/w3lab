@@ -7,7 +7,7 @@ import {
     ReplaySubject,
     Subject,
 } from 'rxjs'
-import { CdnEvent, install } from '@youwol/webpm-client'
+import { CdnEvent, install } from '@w3nest/webpm-client'
 import { map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import {
@@ -20,7 +20,7 @@ import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
 import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
 
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 import * as httpClients from '@w3nest/http-clients'
 
 const cmInstall = {

@@ -6,7 +6,7 @@ import {
     from,
     Observable,
 } from 'rxjs'
-import { install } from '@youwol/webpm-client'
+import { install } from '@w3nest/webpm-client'
 import { filter, map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import * as Home from './home'
 import * as Projects from './projects'

@@ -5,7 +5,7 @@ import { AssetsGateway, CdnBackend,
 import { mergeMap, share } from 'rxjs/operators'
 
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { getUrlBase } from '@youwol/webpm-client'
+import { getUrlBase } from '@w3nest/webpm-client'
 import { AssetLightDescription } from '@youwol/os-core'
 
 export class ExplorerState {

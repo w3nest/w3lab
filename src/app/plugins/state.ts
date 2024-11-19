@@ -2,8 +2,8 @@ import { CdnSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { setup } from '../../auto-generated'
 import { map } from 'rxjs/operators'
 import { firstValueFrom, Subject } from 'rxjs'
-import * as webpm from '@youwol/webpm-client'
-import type * as WebPM from '@youwol/webpm-client'
+import * as webpm from '@w3nest/webpm-client'
+import type * as WebPM from '@w3nest/webpm-client'
 import { AppState } from '../app-state'
 import { Navigation } from '@youwol/mkdocs-ts'
 
@@ -23,7 +23,7 @@ import { Navigation } from '@youwol/mkdocs-ts'
  * </code-snippet>
  *
  * The `webpm` argument is the installer instance.
- * See <a target="_blank" href='https://l.youwol.com/doc/@youwol/webpm-client'>WebPM documentation</a>.
+ * See <a target="_blank" href='https://l.youwol.com/doc/@w3nest/webpm-client'>WebPM documentation</a>.
  */
 export type PluginsLoader = ({
     webpm,

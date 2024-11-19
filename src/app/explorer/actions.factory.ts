@@ -6,7 +6,7 @@ import {
     AssetsGateway as Gtw,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 import * as rxVdom from '@youwol/rx-vdom'
 import {
     ExplorerNode,

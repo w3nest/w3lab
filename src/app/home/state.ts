@@ -9,7 +9,7 @@ import {
 import { filter, switchMap, take } from 'rxjs/operators'
 import { setup } from '../../auto-generated'
 import { CdnSessionsStorage } from '@w3nest/http-clients'
-import * as webpm from '@youwol/webpm-client'
+import * as webpm from '@w3nest/webpm-client'
 
 export type HomePageMode = 'view' | 'edit'
 

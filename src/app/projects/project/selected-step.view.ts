@@ -21,7 +21,7 @@ import {
     Subject,
 } from 'rxjs'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 import { DataView } from '../../common'
 
 type Mode = 'run' | 'config' | 'manifest'

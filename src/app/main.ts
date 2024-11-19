@@ -1,6 +1,6 @@
 require('./style.css')
 export {}
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 
 import { setup } from '../auto-generated'
 

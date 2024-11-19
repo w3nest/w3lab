@@ -3,12 +3,12 @@ const runTimeDependencies = {
     "externals": {
         "@floating-ui/dom": "^1.6.3",
         "@w3nest/http-clients": "^0.1.0",
+        "@w3nest/webpm-client": "^0.1.0",
         "@youwol/mkdocs-ts": "^0.6.3",
         "@youwol/os-core": "^0.2.0",
         "@youwol/rx-code-mirror-editors": "^0.5.0",
         "@youwol/rx-tree-views": "^0.3.1",
         "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/webpm-client": "^3.0.0",
         "bootstrap": "^5.3.0",
         "d3": "^7.7.0",
         "rxjs": "^7.5.6"
@@ -20,12 +20,12 @@ const runTimeDependencies = {
 const externals = {
     "@floating-ui/dom": "window['@floating-ui/dom_APIv1']",
     "@w3nest/http-clients": "window['@w3nest/http-clients_APIv01']",
+    "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
     "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv06']",
     "@youwol/os-core": "window['@youwol/os-core_APIv02']",
     "@youwol/rx-code-mirror-editors": "window['@youwol/rx-code-mirror-editors_APIv05']",
     "@youwol/rx-tree-views": "window['@youwol/rx-tree-views_APIv03']",
     "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
-    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
     "bootstrap": "window['bootstrap_APIv5']",
     "d3": "window['d3_APIv7']",
     "rxjs": "window['rxjs_APIv7']",
@@ -40,6 +40,10 @@ const exportedSymbols = {
     "@w3nest/http-clients": {
         "apiKey": "01",
         "exportedSymbol": "@w3nest/http-clients"
+    },
+    "@w3nest/webpm-client": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/webpm-client"
     },
     "@youwol/mkdocs-ts": {
         "apiKey": "06",
@@ -61,10 +65,6 @@ const exportedSymbols = {
         "apiKey": "1",
         "exportedSymbol": "@youwol/rx-vdom"
     },
-    "@youwol/webpm-client": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/webpm-client"
-    },
     "bootstrap": {
         "apiKey": "5",
         "exportedSymbol": "bootstrap"
@@ -85,7 +85,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "@youwol/mkdocs-ts",
         "@youwol/rx-vdom",
         "bootstrap",
-        "@youwol/webpm-client",
+        "@w3nest/webpm-client",
         "@w3nest/http-clients",
         "@youwol/os-core",
         "@youwol/rx-tree-views",

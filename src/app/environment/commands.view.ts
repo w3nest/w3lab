@@ -5,7 +5,7 @@ import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs'
 import { AttributeView, DashboardTitle } from '../common'
 import { catchError, map, mergeMap, take, withLatestFrom } from 'rxjs/operators'
 import { ObjectJs } from '@youwol/rx-tree-views'
-import { install } from '@youwol/webpm-client'
+import { install } from '@w3nest/webpm-client'
 import { ExpandableGroupView } from '../common/expandable-group.view'
 import { LogsExplorerView } from '../common/logs-explorer.view'
 
