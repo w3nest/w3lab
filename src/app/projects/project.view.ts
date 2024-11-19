@@ -153,19 +153,16 @@ Publishing a components means to publish all or a part of those artifacts.
                     },
                     flow: () =>
                         new FlowView({
-                            flowId: 'prod',
                             projectsState,
                             project,
                         }),
                     selectedStep: () =>
                         new SelectedStepView({
-                            flowId: 'prod',
                             projectsState,
                             project,
                         }),
                     artifacts: () =>
                         new ArtifactsView({
-                            flowId: 'prod',
                             router,
                             projectsState,
                             project,
@@ -180,18 +177,16 @@ export class FlowView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     constructor({
-        flowId,
         projectsState,
         project,
     }: {
-        flowId: string
         projectsState: State
         project: Local.Routers.Projects.Project
     }) {
         this.children = [
             {
                 tag: 'div',
-                children: [new DagFlowView({ project, projectsState, flowId })],
+                children: [new DagFlowView({ project, projectsState })],
             },
         ]
     }
@@ -209,7 +204,6 @@ export class ArtifactsView implements VirtualDOM<'div'> {
         projectsState: State
         router: Router
         project: Local.Routers.Projects.Project
-        flowId: string
     }) {
         const event$ = projectsState.projectEvents[project.id].messages$.pipe(
             filterCtxMessage({
@@ -224,7 +218,6 @@ export class ArtifactsView implements VirtualDOM<'div'> {
                 mergeMap(() =>
                     projectsState.projectsClient.getArtifacts$({
                         projectId: project.id,
-                        flowId: 'prod',
                     }),
                 ),
                 raiseHTTPErrors(),

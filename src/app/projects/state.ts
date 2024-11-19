@@ -57,13 +57,7 @@ export class ProjectEvents {
     /**
      * @group Observables
      */
-    public readonly selectedFlow$: BehaviorSubject<FlowId>
-
-    /**
-     * @group Observables
-     */
     public readonly selectedStep$: BehaviorSubject<{
-        flowId: string
         step: Local.Routers.Projects.PipelineStep | undefined
     }>
 
@@ -71,7 +65,6 @@ export class ProjectEvents {
      * @group Observables
      */
     public readonly configureStep$: Subject<{
-        flowId: string
         step: Local.Routers.Projects.PipelineStep | undefined
     }> = new Subject()
 
@@ -105,15 +98,10 @@ export class ProjectEvents {
         )
 
         this.selectedStep$ = new BehaviorSubject<{
-            flowId: string
             step: Local.Routers.Projects.PipelineStep | undefined
         }>({
-            flowId: this.project.pipeline.flows[0].name,
             step: undefined,
         })
-        this.selectedFlow$ = new BehaviorSubject(
-            this.project.pipeline.flows[0].name,
-        )
 
         this.projectsClient.webSocket
             .stepEvent$({ projectId: this.project.id })
@@ -126,7 +114,7 @@ export class ProjectEvents {
                 ),
             )
             .subscribe((data: Local.Routers.Projects.PipelineStepEvent) => {
-                this.getStep$(data.flowId, data.stepId).status$.next(data.event)
+                this.getStep$(data.stepId).status$.next(data.event)
             })
         this.messages$
             .pipe(
@@ -136,46 +124,30 @@ export class ProjectEvents {
                 }),
             )
             .subscribe((message: ContextMessage) => {
-                const flowId = message.attributes['flowId']
                 const stepId = message.attributes['stepId']
-                this.getStep$(flowId, stepId).log$.next(message)
+                this.getStep$(stepId).log$.next(message)
             })
 
         this.projectsClient.webSocket
-            .pipelineStepStatus$({
+            .ciStepStatus$({
                 projectId: this.project.id,
             })
             .pipe(map((message) => message.data))
             .subscribe((status) => {
-                this.getStep$(status.flowId, status.stepId).status$.next(status)
+                this.getStep$(status.stepId).status$.next(status)
             })
-
         this.projectStatusResponse$ = this.projectsClient.webSocket
             .projectStatus$()
             .pipe(shareReplay(1))
 
-        this.projectsClient
-            .getProjectStatus$({ projectId: project.id })
-            .subscribe()
-
-        this.selectedFlow$
-            .pipe(
-                mergeMap((flowId) => {
-                    return this.projectsClient.getPipelineStatus$({
-                        projectId: project.id,
-                        flowId,
-                    })
-                }),
-            )
-            .subscribe()
+        this.projectsClient.getCiStatus$({ projectId: project.id }).subscribe()
 
         this.selectedStep$
             .pipe(
                 filter(({ step }) => step != undefined),
-                mergeMap(({ flowId, step }) => {
-                    return this.projectsClient.getPipelineStepStatus$({
+                mergeMap(({ step }) => {
+                    return this.projectsClient.getCiStepStatus$({
                         projectId: project.id,
-                        flowId,
                         stepId: step.id,
                     })
                 }),
@@ -183,20 +155,15 @@ export class ProjectEvents {
             .subscribe()
     }
 
-    getStep$(flowId: string, stepId: string) {
-        const fullId = ProjectEvents.fullId(flowId, stepId)
-        if (this.step$[fullId]) {
-            return this.step$[fullId]
+    getStep$(stepId: string) {
+        if (this.step$[stepId]) {
+            return this.step$[stepId]
         }
-        this.step$[fullId] = {
+        this.step$[stepId] = {
             status$: new ReplaySubject(1),
             log$: new Subject(),
         }
-        return this.step$[fullId]
-    }
-
-    static fullId(flowId: string, stepId: string) {
-        return `${flowId}#${stepId}`
+        return this.step$[stepId]
     }
 }
 
@@ -307,15 +274,14 @@ export class State {
             })
     }
 
-    runStep(projectId: string, flowId: string, stepId: string) {
-        this.projectsClient.runStep$({ projectId, flowId, stepId }).subscribe()
+    runStep(projectId: string, stepId: string) {
+        this.projectsClient.runStep$({ projectId, stepId }).subscribe()
     }
 
-    configureStep(projectId: string, flowId: string, stepId: string) {
+    configureStep(projectId: string, stepId: string) {
         const events = this.projectEvents[projectId]
         const step = events.project.pipeline.steps.find((s) => s.id == stepId)
         this.projectEvents[projectId].configureStep$.next({
-            flowId: flowId,
             step,
         })
     }
@@ -352,19 +318,10 @@ export class State {
         const newHistoric = [...open, ...base]
         this.rawHistoric$.next(newHistoric)
     }
-    selectStep(
-        projectId: string,
-        flowId: string | undefined = undefined,
-        stepId: string | undefined = undefined,
-    ) {
+    selectStep(projectId: string, stepId: string | undefined = undefined) {
         const events = this.projectEvents[projectId]
         const step = events.project.pipeline.steps.find((s) => s.id == stepId)
-        if (events.selectedStep$.getValue().flowId != flowId) {
-            this.projectsClient
-                .getPipelineStatus$({ projectId, flowId })
-                .subscribe()
-        }
-        events.selectedStep$.next({ flowId, step })
+        events.selectedStep$.next(step ? { step } : undefined)
     }
 
     createProjectFromTemplate$({

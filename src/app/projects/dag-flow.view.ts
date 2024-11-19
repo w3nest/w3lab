@@ -38,11 +38,6 @@ export class DagFlowView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly flowId: string
-
-    /**
-     * @group Immutable Constants
-     */
     public readonly dag: {
         includedSteps: Set<string>
         data: { id: string; parentIds: string[] }[]
@@ -88,18 +83,14 @@ export class DagFlowView implements VirtualDOM<'div'> {
     public readonly defaultStyle = {
         group: {
             attributes: {
-                id: (d) => this.flowId + '_' + d.data.id,
+                id: (d) => d.data.id,
                 class: 'fv-pointer',
                 transform: ({ x, y }) => `translate(${y}, ${x})`,
             },
             style: {},
             on: {
                 click: (n, { data }) => {
-                    this.projectsState.selectStep(
-                        this.project.id,
-                        this.flowId,
-                        data.id,
-                    )
+                    this.projectsState.selectStep(this.project.id, data.id)
                     n.stopPropagation()
                 },
             },
@@ -172,11 +163,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
             on: {
                 click: (n, { data }) => {
                     n.stopPropagation()
-                    this.projectsState.runStep(
-                        this.project.id,
-                        this.flowId,
-                        data.id,
-                    )
+                    this.projectsState.runStep(this.project.id, data.id)
                 },
             },
         },
@@ -191,11 +178,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
             on: {
                 click: (n, { data }) => {
                     n.stopPropagation()
-                    this.projectsState.configureStep(
-                        this.project.id,
-                        this.flowId,
-                        data.id,
-                    )
+                    this.projectsState.configureStep(this.project.id, data.id)
                 },
             },
         },
@@ -204,10 +187,9 @@ export class DagFlowView implements VirtualDOM<'div'> {
     constructor(params: {
         project: Local.Routers.Projects.Project
         projectsState: State
-        flowId: string
     }) {
         Object.assign(this, params)
-        this.dag = parseDag(this.project, this.flowId)
+        this.dag = parseDag(this.project)
         this.connectedCallback = (elem: RxHTMLElement<'div'>) => {
             const svg = document.createElementNS(
                 'http://www.w3.org/2000/svg',
@@ -220,28 +202,26 @@ export class DagFlowView implements VirtualDOM<'div'> {
                 const d3Svg = d3.select(svg)
                 return combineLatest([
                     this.projectsState.projectEvents[this.project.id]
-                        .getStep$(this.flowId, stepId)
+                        .getStep$(stepId)
                         .status$.pipe(
                             map((status) => ({
                                 status,
                                 stepId,
                                 groupThumbnail: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} > g.thumbnail`,
+                                    `g#${stepId} > g.thumbnail`,
                                 ),
-                                circle: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} circle`,
-                                ),
+                                circle: d3Svg.select(`g#${stepId} circle`),
                                 title: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} .dag-flow-node-title`,
+                                    `g#${stepId} .dag-flow-node-title`,
                                 ),
                                 text: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} .dag-flow-node-status`,
+                                    `g#${stepId} .dag-flow-node-status`,
                                 ),
                                 settings: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} .dag-flow-node-settings`,
+                                    `g#${stepId} .dag-flow-node-settings`,
                                 ),
                                 menuActions: d3Svg.select(
-                                    `g#${this.flowId}_${stepId} > g.menu-actions`,
+                                    `g#${stepId} > g.menu-actions`,
                                 ),
                             })),
                         ),
@@ -287,9 +267,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         const { width, height } = layout(dag as Dag<never, never>)
         const svgSelection = d3
             .select(svg)
-            .on('click', () =>
-                this.projectsState.selectStep(this.project.id, this.flowId),
-            )
+            .on('click', () => this.projectsState.selectStep(this.project.id))
         svgSelection.attr('viewBox', [0, 0, height, width].join(' '))
 
         withDefaultStyleAttributes(
@@ -355,7 +333,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     applyStyle(
-        selected: { flowId: string; step: Local.Routers.Projects.PipelineStep },
+        selected: { step: Local.Routers.Projects.PipelineStep },
         event: {
             stepId
             status
@@ -428,8 +406,8 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 }
 
-function parseDag(project: Local.Routers.Projects.Project, flowId: string) {
-    const flow = project.pipeline.flows.find((f) => f.name == flowId)
+function parseDag(project: Local.Routers.Projects.Project) {
+    const flow = project.pipeline.flow
     const availableSteps = project.pipeline.steps.map((s) => s.id)
     const includedSteps = new Set(
         flow.dag.flatMap((branch) => {

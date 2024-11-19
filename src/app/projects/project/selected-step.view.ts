@@ -30,11 +30,9 @@ export class SelectedStepView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     constructor({
-        flowId,
         projectsState,
         project,
     }: {
-        flowId: string
         projectsState: State
         project: Local.Routers.Projects.Project
     }) {
@@ -43,10 +41,10 @@ export class SelectedStepView implements VirtualDOM<'div'> {
             filter(({ step }) => step !== undefined),
         )
         const status$ = selected$.pipe(
-            mergeMap(({ step }) => events.getStep$(flowId, step.id).status$),
+            mergeMap(({ step }) => events.getStep$(step.id).status$),
         )
         const log$ = selected$.pipe(
-            mergeMap(({ step }) => events.getStep$(flowId, step.id).log$),
+            mergeMap(({ step }) => events.getStep$(step.id).log$),
         )
         const mode$ = new BehaviorSubject<Mode>('run')
 
@@ -68,10 +66,9 @@ export class SelectedStepView implements VirtualDOM<'div'> {
                 new ConfigView({
                     project,
                     stepId: step.id,
-                    flowId,
                     onExecute: () => {
                         mode$.next('run')
-                        projectsState.runStep(project.id, flowId, step.id)
+                        projectsState.runStep(project.id, step.id)
                     },
                 }),
         }
@@ -91,7 +88,6 @@ export class SelectedStepView implements VirtualDOM<'div'> {
                             project,
                             projectsState,
                             stepId: step.id,
-                            flowId,
                             status$,
                         }),
                         content: () => ({
@@ -119,7 +115,6 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
     constructor({
         mode$,
         stepId,
-        flowId,
         project,
         projectsState,
         status$,
@@ -132,7 +127,6 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
         projectsState: State
         mode$: Subject<Mode>
         stepId: string
-        flowId: string
     }) {
         const button = (target: Mode, icon: string): AnyVirtualDOM => ({
             tag: 'i',
@@ -159,7 +153,7 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             },
             onclick: () => {
                 mode$.next('run')
-                projectsState.runStep(project.id, flowId, stepId)
+                projectsState.runStep(project.id, stepId)
             },
         }
         const sep: AnyVirtualDOM = { tag: 'i', class: 'mx-2' }
@@ -167,7 +161,6 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             .getStepView$({
                 projectId: project.id,
                 stepId,
-                flowId,
             })
             .pipe(onHTTPErrors(() => false))
         this.children = [
@@ -199,12 +192,10 @@ export class ConfigView implements VirtualDOM<'div'> {
     constructor({
         project,
         stepId,
-        flowId,
         onExecute,
     }: {
         project: Local.Routers.Projects.Project
         stepId: string
-        flowId: string
         onExecute: () => void
     }) {
         const projectsRouter = new Local.Client().admin.projects
@@ -214,7 +205,6 @@ export class ConfigView implements VirtualDOM<'div'> {
                     .getStepView$({
                         projectId: project.id,
                         stepId,
-                        flowId,
                     })
                     .pipe(
                         raiseHTTPErrors(),
@@ -223,7 +213,6 @@ export class ConfigView implements VirtualDOM<'div'> {
                                 new Function(js)()({
                                     triggerRun: triggerRunHandler,
                                     project,
-                                    flowId,
                                     stepId,
                                     projectsRouter,
                                     webpmClient,
@@ -244,7 +233,6 @@ export class ConfigView implements VirtualDOM<'div'> {
             projectsRouter
                 .updateStepConfiguration$({
                     projectId: project.id,
-                    flowId,
                     stepId,
                     body: configuration,
                 })
