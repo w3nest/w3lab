@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs'
-import { ExplorerBackend } from '@w3nest/http-clients'
+import { Explorer } from '@w3nest/http-clients'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
 export interface Origin {
@@ -43,7 +43,7 @@ export class ExplorerNode {
 
 export class DriveNode
     extends ExplorerNode
-    implements ExplorerBackend.GetDriveResponse
+    implements Explorer.GetDriveResponse
 {
     public readonly groupId: string
     public readonly driveId: string
@@ -63,7 +63,7 @@ export type FolderKind = 'regular' | 'home' | 'download' | 'system'
 
 export class FolderNode
     extends ExplorerNode
-    implements ExplorerBackend.GetFolderResponse
+    implements Explorer.GetFolderResponse
 {
     public readonly folderId: string
     public readonly groupId: string
@@ -72,7 +72,7 @@ export class FolderNode
     public readonly metadata: string
     public readonly kind: FolderKind
     constructor(
-        params: ExplorerBackend.GetFolderResponse & {
+        params: Explorer.GetFolderResponse & {
             origin?: Origin
         },
     ) {
@@ -106,16 +106,13 @@ export class TrashNode extends ExplorerNode {
 
 export function instanceOfRegularFolder(folder: ExplorerNode) {
     return (
-        ExplorerBackend.isInstanceOfFolderResponse(folder) &&
+        Explorer.isInstanceOfFolderResponse(folder) &&
         folder.folderId !== folder.driveId &&
         folder.kind === 'regular'
     )
 }
 
-export class ItemNode
-    extends ExplorerNode
-    implements ExplorerBackend.GetItemResponse
-{
+export class ItemNode extends ExplorerNode implements Explorer.GetItemResponse {
     public readonly id: string
     public readonly name: string
     public readonly groupId: string
@@ -129,7 +126,7 @@ export class ItemNode
 
     public readonly metadata: string
 
-    constructor(params: ExplorerBackend.GetItemResponse & { origin?: Origin }) {
+    constructor(params: Explorer.GetItemResponse & { origin?: Origin }) {
         super({ ...params, id: params.assetId })
         Object.assign(this, params)
     }

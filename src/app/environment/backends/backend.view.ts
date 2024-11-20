@@ -16,7 +16,7 @@ export class BackendView implements VirtualDOM<'div'> {
         router,
         appState,
     }: {
-        backend: Local.Routers.Environment.ProxiedBackend
+        backend: Local.Environment.ProxiedBackend
         appState: AppState
         router: Router
     }) {
@@ -115,13 +115,13 @@ class OutputsView implements VirtualDOM<'pre'> {
         logs$,
         reverse,
     }: {
-        logs$: Observable<Local.Routers.System.BackendLogsResponse>
+        logs$: Observable<Local.System.BackendLogsResponse>
         reverse?: boolean
     }) {
         this.children = {
             policy: 'replace',
             source$: logs$,
-            vdomMap: (resp: Local.Routers.System.BackendLogsResponse) => {
+            vdomMap: (resp: Local.System.BackendLogsResponse) => {
                 const outputs = reverse
                     ? resp.server_outputs.reverse()
                     : resp.server_outputs
@@ -188,9 +188,7 @@ export class StatusView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: backends$,
-                vdomMap: (
-                    backends: Local.Routers.Environment.ProxiedBackend[],
-                ) => {
+                vdomMap: (backends: Local.Environment.ProxiedBackend[]) => {
                     if (backends.find((b) => b.uid === uid)) {
                         return new TerminateButton({ uid, router })
                     }
@@ -208,9 +206,9 @@ export class StatusView implements VirtualDOM<'div'> {
 export class ConfigView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly backend: Local.Routers.Environment.ProxiedBackend
+    public readonly backend: Local.Environment.ProxiedBackend
 
-    constructor(params: { backend: Local.Routers.Environment.ProxiedBackend }) {
+    constructor(params: { backend: Local.Environment.ProxiedBackend }) {
         Object.assign(this, params)
         this.children = [
             new ExpandableGroupView({

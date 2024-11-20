@@ -34,7 +34,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
         project,
     }: {
         projectsState: State
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
     }) {
         const events = projectsState.projectEvents[project.id]
         const selected$ = events.selectedStep$.pipe(
@@ -50,7 +50,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
 
         const factory: Record<
             Mode,
-            (step: Local.Routers.Projects.PipelineStep) => AnyVirtualDOM
+            (step: Local.Projects.PipelineStep) => AnyVirtualDOM
         > = {
             run: () =>
                 new RunOutputsView({
@@ -75,11 +75,7 @@ export class SelectedStepView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: selected$,
-                vdomMap: ({
-                    step,
-                }: {
-                    step: Local.Routers.Projects.PipelineStep
-                }) => {
+                vdomMap: ({ step }: { step: Local.Projects.PipelineStep }) => {
                     return new ExpandableGroupView({
                         expanded: true,
                         icon: '',
@@ -119,10 +115,10 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
         projectsState,
         status$,
     }: {
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
         status$: Observable<
-            | Local.Routers.Projects.PipelineStepEventKind
-            | Local.Routers.Projects.PipelineStepStatusResponse
+            | Local.Projects.PipelineStepEventKind
+            | Local.Projects.PipelineStepStatusResponse
         >
         projectsState: State
         mode$: Subject<Mode>
@@ -194,7 +190,7 @@ export class ConfigView implements VirtualDOM<'div'> {
         stepId,
         onExecute,
     }: {
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
         stepId: string
         onExecute: () => void
     }) {
@@ -260,14 +256,14 @@ export class ManifestView implements VirtualDOM<'div'> {
         project,
         status$,
     }: {
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
         status$: Observable<
-            | Local.Routers.Projects.PipelineStepEventKind
-            | Local.Routers.Projects.PipelineStepStatusResponse
+            | Local.Projects.PipelineStepEventKind
+            | Local.Projects.PipelineStepStatusResponse
         >
     }) {
         const fingerPrint = (
-            manifest: Local.Routers.Projects.Manifest,
+            manifest: Local.Projects.Manifest,
         ): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3',
@@ -284,9 +280,7 @@ export class ManifestView implements VirtualDOM<'div'> {
                 },
             ],
         })
-        const sources = (
-            manifest: Local.Routers.Projects.Manifest,
-        ): AnyVirtualDOM => ({
+        const sources = (manifest: Local.Projects.Manifest): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3',
             children: [
@@ -301,9 +295,7 @@ export class ManifestView implements VirtualDOM<'div'> {
                 ),
             ],
         })
-        const outputs = (
-            manifest: Local.Routers.Projects.Manifest,
-        ): AnyVirtualDOM => ({
+        const outputs = (manifest: Local.Projects.Manifest): AnyVirtualDOM => ({
             tag: 'div',
             class: 'my-3 w-100',
             children: [
@@ -338,7 +330,7 @@ export class ManifestView implements VirtualDOM<'div'> {
                 vdomMap: ({
                     manifest,
                 }: {
-                    manifest?: Local.Routers.Projects.Manifest
+                    manifest?: Local.Projects.Manifest
                 }) => {
                     return {
                         tag: 'div',
@@ -386,8 +378,8 @@ export class RunOutputsView implements VirtualDOM<'div'> {
     }: {
         messages$: Observable<ContextMessage>
         status$: Observable<
-            | Local.Routers.Projects.PipelineStepEventKind
-            | Local.Routers.Projects.PipelineStepStatusResponse
+            | Local.Projects.PipelineStepEventKind
+            | Local.Projects.PipelineStepStatusResponse
         >
     }) {
         this.children = [

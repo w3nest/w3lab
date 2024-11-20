@@ -20,7 +20,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
 function lazyResolver(
     path: string,
-    env: Local.Routers.Environment.EnvironmentStatusResponse,
+    env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
 ) {
@@ -95,9 +95,7 @@ class EsmServersListView implements VirtualDOM<'div'> {
             source$: appState.environment$.pipe(
                 map((env) => env.youwolEnvironment.proxiedEsmServers),
             ),
-            vdomMap: (
-                esmServers: Local.Routers.Environment.ProxiedEsmServer[],
-            ) => {
+            vdomMap: (esmServers: Local.Environment.ProxiedEsmServer[]) => {
                 if (esmServers.length === 0) {
                     return [{ tag: 'div', innerText: 'No servers running.' }]
                 }

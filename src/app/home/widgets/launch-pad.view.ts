@@ -93,7 +93,7 @@ export class AppIcon implements VirtualDOM<'button'> {
         if (AppIcon._appMetadata$[appName]) {
             return AppIcon._appMetadata$[appName]
         }
-        AppIcon._appMetadata$[appName] = new AssetsGateway.Client().cdn
+        AppIcon._appMetadata$[appName] = new AssetsGateway.Client().webpm
             .getResource$<ApplicationInfo>({
                 libraryId: window.btoa(appName),
                 version: 'latest',
@@ -125,7 +125,7 @@ export class AppIcon implements VirtualDOM<'button'> {
                     return {
                         tag: 'a',
                         class: 'd-flex flex-column align-items-center',
-                        href: `/applications/${params.package}/${params.version}`,
+                        href: `/apps/${params.package}/${params.version}`,
                         target: '_blank',
                         children: [
                             {

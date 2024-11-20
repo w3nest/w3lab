@@ -73,7 +73,7 @@ class InstallManifestView implements VirtualDOM<'div'> {
             selectedVersion$
                 .pipe(
                     switchMap((version) =>
-                        new AssetsGateway.Client().cdn.getResource$({
+                        new AssetsGateway.Client().webpm.getResource$({
                             libraryId: packageId,
                             version,
                             restOfPath: '/install.manifest.txt',

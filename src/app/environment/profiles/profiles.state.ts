@@ -15,7 +15,7 @@ import {
     ChildApplicationAPI,
     Installer,
 } from '@youwol/os-core'
-import { CdnSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
+import { WebpmSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
 import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
@@ -108,7 +108,7 @@ export class ProfilesState {
      * @group HTTP
      * @private
      */
-    private cdnSessionStorage = new CdnSessionsStorage.Client()
+    private cdnSessionStorage = new WebpmSessionsStorage.Client()
 
     /**
      *
@@ -122,7 +122,7 @@ export class ProfilesState {
             { id: 'default', name: 'Default' },
         ])
 
-        new CdnSessionsStorage.Client()
+        new WebpmSessionsStorage.Client()
             .getData$({
                 packageName: '@youwol/platform',
                 dataName: 'profilesInfo',

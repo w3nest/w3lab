@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { ExplorerBackend } from '@w3nest/http-clients'
+import { Explorer } from '@w3nest/http-clients'
 import { Router } from '@youwol/mkdocs-ts'
 import { ExplorerState } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'
@@ -73,7 +73,7 @@ export class PathView implements VirtualDOM<'div'> {
         explorerState,
         displayCtxMenu,
     }: {
-        path: ExplorerBackend.GetPathFolderResponse
+        path: Explorer.GetPathFolderResponse
         router: Router
         explorerState: ExplorerState
         displayCtxMenu?: boolean
@@ -87,7 +87,7 @@ export class PathView implements VirtualDOM<'div'> {
         const folders = [...path.folders, path.item]
             .filter((e) => e != undefined)
             .map((entity) => {
-                const nav = ExplorerBackend.isInstanceOfItemResponse(entity)
+                const nav = Explorer.isInstanceOfItemResponse(entity)
                     ? `/explorer/${path.drive.groupId}/item_${entity.itemId}`
                     : `/explorer/${path.drive.groupId}/folder_${entity.folderId}`
                 return [
@@ -98,7 +98,7 @@ export class PathView implements VirtualDOM<'div'> {
             .flat()
             .slice(0, -1)
         const ctxMenu = new ContextMenuHandler({
-            node: ExplorerBackend.isInstanceOfItemResponse(target)
+            node: Explorer.isInstanceOfItemResponse(target)
                 ? new ItemNode(target)
                 : new FolderNode(target),
             explorerState: explorerState,

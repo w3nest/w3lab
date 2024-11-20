@@ -5,9 +5,9 @@ import {
     VirtualDOM,
 } from '@youwol/rx-vdom'
 import {
-    AssetsBackend,
+    Assets,
     AssetsGateway,
-    ExplorerBackend,
+    Explorer,
     Local,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
@@ -72,7 +72,7 @@ export class HeaderView implements VirtualDOM<'div'> {
 
             return {
                 source$: path$,
-                vdomMap: (path: ExplorerBackend.GetPathFolderResponse) =>
+                vdomMap: (path: Explorer.GetPathFolderResponse) =>
                     new PathView({
                         path,
                         router,
@@ -150,7 +150,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
         router,
         groupId,
     }: {
-        response: ExplorerBackend.QueryChildrenResponse
+        response: Explorer.QueryChildrenResponse
         path: string
         explorerState: ExplorerState
         router: Router
@@ -198,8 +198,8 @@ export class AssetView implements VirtualDOM<'div'> {
         path,
         writePermission,
     }: {
-        itemResponse: ExplorerBackend.ItemBase
-        asset: AssetsBackend.GetAssetResponse
+        itemResponse: Explorer.ItemBase
+        asset: Assets.GetAssetResponse
         explorerState: ExplorerState
         router: Router
         writePermission: boolean

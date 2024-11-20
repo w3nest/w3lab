@@ -62,7 +62,7 @@ export class PyodideView implements VirtualDOM<'div'> {
                                     this.cdnState.packagesEvent[this.packageId]
                                         .info$,
                                 vdomMap: (
-                                    packageInfo: Local.Routers.LocalCdn.CdnPackage,
+                                    packageInfo: Local.Components.CdnPackage,
                                 ) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]

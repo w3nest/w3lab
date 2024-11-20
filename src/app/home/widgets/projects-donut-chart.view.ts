@@ -12,12 +12,12 @@ import { Router } from '@youwol/mkdocs-ts'
  * This component is designed to be embedded in a `Markdown` page,
  * refer to {@link ProjectsDonutChart.fromHTMLElement}.
  */
-export class ProjectsDonutChart extends DonutChart<Local.Routers.Projects.Project> {
+export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {
     constructor(params: {
         appState: AppState
         width: string
         margin: number
-        sections: DonutChartSection<Local.Routers.Projects.Project>[]
+        sections: DonutChartSection<Local.Projects.Project>[]
     }) {
         super({
             ...params,

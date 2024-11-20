@@ -32,7 +32,7 @@ export class BackendInstallNotificationView extends ExpandableGroupView {
             tag: 'div',
             class: {
                 source$: done$,
-                vdomMap: (m: Local.Routers.System.InstallBackendEvent) => {
+                vdomMap: (m: Local.System.InstallBackendEvent) => {
                     return m.event == 'succeeded'
                         ? 'fas fa-check text-success'
                         : 'fas fa-times text-danger'

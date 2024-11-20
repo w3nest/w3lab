@@ -58,7 +58,7 @@ This section compiles the elements stored in the cache, which you can clear as n
                                         appState.environmentState.browserState
                                             .status$,
                                     vdomMap: (
-                                        status: Local.Routers.Environment.BrowserCacheStatusResponse,
+                                        status: Local.Environment.BrowserCacheStatusResponse,
                                     ) => {
                                         return new ItemsView({
                                             status,
@@ -83,7 +83,7 @@ class FileView implements VirtualDOM<'div'> {
             {
                 source$: appState.environmentState.browserState.status$,
                 vdomMap: (
-                    status: Local.Routers.Environment.BrowserCacheStatusResponse,
+                    status: Local.Environment.BrowserCacheStatusResponse,
                 ) => {
                     if (status.file && status.file !== 'None') {
                         return {
@@ -124,7 +124,7 @@ class ItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Local.Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const mode$ = new BehaviorSubject<'flat' | 'hierarchical'>('flat')
@@ -194,7 +194,7 @@ class FlatBrowserCacheItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Local.Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const formatted = formatPaths(
@@ -219,7 +219,7 @@ class FlatItemView implements VirtualDOM<'div'> {
         index,
         path,
     }: {
-        status: Local.Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Environment.BrowserCacheStatusResponse
         appState: AppState
         index: number
         path: string
@@ -274,7 +274,7 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
         status,
         appState,
     }: {
-        status: Local.Routers.Environment.BrowserCacheStatusResponse
+        status: Local.Environment.BrowserCacheStatusResponse
         appState: AppState
     }) {
         const formatted = formatPaths(
@@ -301,9 +301,7 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
                         return status.items[index]
                     }),
                 ),
-                vdomMap: (
-                    item?: Local.Routers.Environment.BrowserCacheItem,
-                ) => {
+                vdomMap: (item?: Local.Environment.BrowserCacheItem) => {
                     if (!item) {
                         return { tag: 'div' }
                     }
@@ -405,7 +403,7 @@ class ItemView implements VirtualDOM<'i'> {
         item,
         appState,
     }: {
-        item: Local.Routers.Environment.BrowserCacheItem
+        item: Local.Environment.BrowserCacheItem
         appState: AppState
     }) {
         this.children = [
@@ -530,7 +528,7 @@ function group(obj: object) {
 
 function formatPaths(paths: string[]) {
     const regexFormaters = [
-        /cdn-backend\/resources\/([^/]+)\/(.+)/,
+        /webpm\/resources\/([^/]+)\/(.+)/,
         /raw\/package\/([^/]+)\/(.+)/,
     ]
     return paths.map((path) => {

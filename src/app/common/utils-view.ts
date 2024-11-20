@@ -11,7 +11,7 @@ import { AppState } from '../app-state'
 import { take } from 'rxjs/operators'
 import {
     AssetsGateway,
-    ExplorerBackend,
+    Explorer,
     Local,
     onHTTPErrors,
 } from '@w3nest/http-clients'
@@ -42,7 +42,7 @@ export class NavIconSvg implements VirtualDOM<'div'> {
     public readonly class = 'me-2'
     public readonly style: CSSAttribute
     constructor({ filename }: { filename: string }) {
-        const basePath = `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}`
+        const basePath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}`
         this.style = {
             width: '20px',
             backgroundSize: 'cover',
@@ -514,7 +514,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
             sep,
             {
                 source$: appState.cdnState.status$,
-                vdomMap: (status: Local.Routers.LocalCdn.CdnStatusResponse) => {
+                vdomMap: (status: Local.Components.CdnStatusResponse) => {
                     const target = status.packages.find(
                         (p) => p.name === component,
                     )
@@ -547,14 +547,14 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         }),
                     ),
                     onHTTPErrors(() => undefined),
-                    mergeMap((resp?: ExplorerBackend.ItemBase) => {
+                    mergeMap((resp?: Explorer.ItemBase) => {
                         if (resp === undefined) {
                             return of(undefined)
                         }
                         return client.getPath$({ itemId })
                     }),
                 ),
-                vdomMap: (resp?: ExplorerBackend.PathBase) => {
+                vdomMap: (resp?: Explorer.PathBase) => {
                     let nav = ''
                     if (resp) {
                         const folders = resp.folders.reduce(
@@ -588,7 +588,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
             sep,
             {
                 source$: appState.projectsState.projects$,
-                vdomMap: (projects: Local.Routers.Projects.Project[]) => {
+                vdomMap: (projects: Local.Projects.Project[]) => {
                     const project = projects.find(
                         (p) => p.name.split('~')[0] === component,
                     )

@@ -46,7 +46,7 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
     /**
      * @group Observables
      */
-    public readonly items$: Observable<Local.Routers.System.QueryFolderContentResponse>
+    public readonly items$: Observable<Local.System.QueryFolderContentResponse>
 
     constructor(params: {
         startingFolder: string
@@ -72,7 +72,7 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
                     vdomMap: ({
                         files,
                         folders,
-                    }: Local.Routers.System.QueryFolderContentResponse) => {
+                    }: Local.System.QueryFolderContentResponse) => {
                         const filesVDom = files.map((name) => fileView(name))
                         const foldersVDom = folders.map((name) =>
                             folderView(this.folderSelected$, name),

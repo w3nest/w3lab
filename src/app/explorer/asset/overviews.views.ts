@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { AssetsBackend, AssetsGateway } from '@w3nest/http-clients'
+import { Assets, AssetsGateway } from '@w3nest/http-clients'
 import { AssetPreview, Installer } from '@youwol/os-core'
 import { map } from 'rxjs/operators'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
@@ -9,7 +9,7 @@ export class OverViews implements VirtualDOM<'div'> {
     public readonly tag = 'div'
 
     public readonly children: ChildrenLike
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         const views$ = Installer.getInstallManifest$().pipe(
             map(({ assetPreviews }) => {
                 return assetPreviews({

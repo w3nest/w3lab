@@ -262,7 +262,7 @@ export function colabButton(elem: HTMLElement): AnyVirtualDOM {
 function docLink(name: string, nav: string, text: string): AnyVirtualDOM {
     return {
         tag: 'a',
-        href: `/applications/@youwol/${name}/latest?nav=${nav}`,
+        href: `/apps/@youwol/${name}/latest?nav=${nav}`,
         target: '_blank',
         innerText: text,
     }

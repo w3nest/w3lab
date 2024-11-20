@@ -150,7 +150,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
         origin,
         router,
     }: {
-        response: Local.Routers.System.QueryFolderContentResponse
+        response: Local.System.QueryFolderContentResponse
         path: string
         origin: string
         router: Router

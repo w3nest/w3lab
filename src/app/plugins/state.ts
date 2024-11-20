@@ -1,4 +1,4 @@
-import { CdnSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
+import { WebpmSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { setup } from '../../auto-generated'
 import { map } from 'rxjs/operators'
 import { firstValueFrom, Subject } from 'rxjs'
@@ -84,7 +84,7 @@ export class State {
     public readonly status$ = new Subject<Status | undefined>()
 
     jsContent$() {
-        const client = new CdnSessionsStorage.Client()
+        const client = new WebpmSessionsStorage.Client()
         return client
             .getData$({
                 packageName: setup.name,
@@ -106,7 +106,7 @@ export class State {
         try {
             const fct: PluginsLoader = new Function(source)()
             const plugins = await fct({ webpm })
-            const client = new CdnSessionsStorage.Client()
+            const client = new WebpmSessionsStorage.Client()
             await firstValueFrom(
                 client.postData$({
                     packageName: setup.name,

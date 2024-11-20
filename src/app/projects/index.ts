@@ -141,9 +141,7 @@ The following projects have failed to load:
                         children: {
                             policy: 'replace',
                             source$: projectsState.projects$,
-                            vdomMap: (
-                                projects: Local.Routers.Projects.Project[],
-                            ) =>
+                            vdomMap: (projects: Local.Projects.Project[]) =>
                                 projects.map((p) =>
                                     parseMd({
                                         src: `*  [${p.name}](@nav/projects/${p.id})`,
@@ -162,8 +160,8 @@ The following projects have failed to load:
 
 function lazyResolver(
     path: string,
-    env: Local.Routers.Environment.EnvironmentStatusResponse,
-    projects: Local.Routers.Projects.Project[],
+    env: Local.Environment.EnvironmentStatusResponse,
+    projects: Local.Projects.Project[],
     appState: AppState,
 ) {
     const parts = path.split('/').filter((d) => d != '')

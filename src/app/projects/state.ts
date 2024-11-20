@@ -15,14 +15,14 @@ import {
     ContextMessage,
     Label,
     Local,
-    CdnSessionsStorage,
+    WebpmSessionsStorage,
 } from '@w3nest/http-clients'
 import { getProjectNav$ } from '../common/utils-nav'
 import { setup } from '../../auto-generated'
 
 function projectLoadingIsSuccess(
     result: unknown,
-): result is Local.Routers.Projects.ProjectsLoadingResults {
+): result is Local.Projects.ProjectsLoadingResults {
     return result['failure'] === undefined
 }
 
@@ -30,7 +30,7 @@ export type FlowId = string
 
 export function instanceOfStepStatus(
     data: unknown,
-): data is Local.Routers.Projects.PipelineStepStatusResponse {
+): data is Local.Projects.PipelineStepStatusResponse {
     return [
         'projectId',
         'flowId',
@@ -58,14 +58,14 @@ export class ProjectEvents {
      * @group Observables
      */
     public readonly selectedStep$: BehaviorSubject<{
-        step: Local.Routers.Projects.PipelineStep | undefined
+        step: Local.Projects.PipelineStep | undefined
     }>
 
     /**
      * @group Observables
      */
     public readonly configureStep$: Subject<{
-        step: Local.Routers.Projects.PipelineStep | undefined
+        step: Local.Projects.PipelineStep | undefined
     }> = new Subject()
 
     /**
@@ -74,8 +74,8 @@ export class ProjectEvents {
     public readonly step$: {
         [k: string]: {
             status$: ReplaySubject<
-                | Local.Routers.Projects.PipelineStepEventKind
-                | Local.Routers.Projects.PipelineStepStatusResponse
+                | Local.Projects.PipelineStepEventKind
+                | Local.Projects.PipelineStepStatusResponse
             >
             log$: Subject<ContextMessage>
         }
@@ -85,11 +85,11 @@ export class ProjectEvents {
      * @group Observables
      */
     public readonly projectStatusResponse$: WebSocketResponse$<
-        Local.Routers.Projects.ProjectStatus,
+        Local.Projects.ProjectStatus,
         Label
     >
 
-    constructor(public readonly project: Local.Routers.Projects.Project) {
+    constructor(public readonly project: Local.Projects.Project) {
         this.messages$ = Local.Client.ws.log$.pipe(
             filterCtxMessage({
                 withAttributes: { projectId: this.project.id },
@@ -98,7 +98,7 @@ export class ProjectEvents {
         )
 
         this.selectedStep$ = new BehaviorSubject<{
-            step: Local.Routers.Projects.PipelineStep | undefined
+            step: Local.Projects.PipelineStep | undefined
         }>({
             step: undefined,
         })
@@ -108,12 +108,12 @@ export class ProjectEvents {
             .pipe(
                 map((message) => message.data),
                 filter(
-                    (data: Local.Routers.Projects.PipelineStepEvent) =>
+                    (data: Local.Projects.PipelineStepEvent) =>
                         data.event == 'runStarted' ||
                         data.event == 'statusCheckStarted',
                 ),
             )
-            .subscribe((data: Local.Routers.Projects.PipelineStepEvent) => {
+            .subscribe((data: Local.Projects.PipelineStepEvent) => {
                 this.getStep$(data.stepId).status$.next(data.event)
             })
         this.messages$
@@ -189,31 +189,31 @@ export class State {
     /**
      * @group Observables
      */
-    public readonly projectsLoading$: Observable<Local.Routers.Projects.ProjectsLoadingResults>
+    public readonly projectsLoading$: Observable<Local.Projects.ProjectsLoadingResults>
 
     /**
      * @group Observables
      */
-    public readonly projects$: Observable<Local.Routers.Projects.Project[]>
+    public readonly projects$: Observable<Local.Projects.Project[]>
 
     /**
      * @group Observables
      */
     public readonly projectsFailures$: Observable<
-        Local.Routers.Projects.ProjectsLoadingResults['failures']
+        Local.Projects.ProjectsLoadingResults['failures']
     >
 
     /**
      * @group Observables
      */
     public readonly openProjects$ = new BehaviorSubject<
-        Local.Routers.Projects.Project[]
+        Local.Projects.Project[]
     >([])
 
-    public readonly historic$: Observable<Local.Routers.Projects.Project[]>
+    public readonly historic$: Observable<Local.Projects.Project[]>
     private readonly rawHistoric$ = new BehaviorSubject<string[]>([])
 
-    private readonly storageClient = new CdnSessionsStorage.Client()
+    private readonly storageClient = new WebpmSessionsStorage.Client()
     private static readonly STORAGE_KEY = 'colab-projects-v0'
 
     constructor(params: { appState: AppState }) {
@@ -286,7 +286,7 @@ export class State {
         })
     }
 
-    openProject(project: Local.Routers.Projects.Project) {
+    openProject(project: Local.Projects.Project) {
         this.updatePersistedHistoric({ open: [project.name] })
         if (!this.projectEvents[project.id]) {
             this.projectEvents[project.id] = new ProjectEvents(project)

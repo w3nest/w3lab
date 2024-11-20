@@ -51,9 +51,7 @@ export class InstancesListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (
-                env: Local.Routers.Environment.EnvironmentStatusResponse,
-            ) => {
+            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
                 return env.youwolEnvironment.proxiedBackends
                     .filter((backend) => backend.partitionId === partitionId)
                     .map((backend) => {

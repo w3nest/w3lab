@@ -40,11 +40,11 @@ be found <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html" 
 
 To help you get started, here are a few examples:
 - See how you can draw a noisy sine wave using numpy 
-<a href="/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">here</a>.
+<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">here</a>.
 - The same sine wave example, but plotted with matplotlib, is available 
-<a href="/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example2)}" target="_blank">here</a>.
+<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example2)}" target="_blank">here</a>.
 - Explore parallelizing Python computations using a thread pool 
-<a href="/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example3)}" target="_blank">here</a>.
+<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example3)}" target="_blank">here</a>.
 
 For further details, check out the [Pyodide documentation](https://pyodide.org/en/stable/usage/quickstart.html).
 
@@ -104,7 +104,7 @@ export class RuntimesView implements VirtualDOM<'div'> {
                     vdomMap: ({
                         runtimes,
                     }: {
-                        runtimes: Local.Routers.Python.Runtime[]
+                        runtimes: Local.Python.Runtime[]
                     }) => {
                         return runtimes.map((r) => {
                             return new ExpandableGroupView({
@@ -148,7 +148,7 @@ export class PackagesTableView implements VirtualDOM<'div'> {
         maxHeight: '50vh',
     }
     public readonly class = 'mx-auto overflow-auto'
-    constructor(packages: Local.Routers.Python.Package[]) {
+    constructor(packages: Local.Python.Package[]) {
         this.children = [
             {
                 tag: 'thead',

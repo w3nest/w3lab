@@ -151,7 +151,7 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
                 ),
                 vdomMap: ([sessionInfo, env]: [
                     Accounts.SessionDetails,
-                    Local.Routers.Environment.EnvironmentStatusResponse,
+                    Local.Environment.EnvironmentStatusResponse,
                 ]) => {
                     return {
                         tag: 'div',
@@ -188,7 +188,7 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
     }
 
     private currentConnection(
-        env: Local.Routers.Environment.EnvironmentStatusResponse,
+        env: Local.Environment.EnvironmentStatusResponse,
     ): AnyVirtualDOM {
         return {
             tag: 'div',
@@ -219,8 +219,8 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
         remote,
         connection,
     }: {
-        remote: Local.Routers.Environment.CloudEnvironment
-        connection: Local.Routers.Environment.Connection
+        remote: Local.Environment.CloudEnvironment
+        connection: Local.Environment.Connection
     }) {
         const browserAuths = remote.authentications.filter(
             (auth) => auth.type === 'BrowserAuth',
@@ -276,7 +276,7 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
     private authsSection(
         type: 'Browser' | 'Direct',
         envId: string,
-        connection: Local.Routers.Environment.Connection,
+        connection: Local.Environment.Connection,
         auths: { authId: string }[],
     ): AnyVirtualDOM {
         return {
@@ -408,9 +408,7 @@ export class BackendServingView implements VirtualDOM<'a'> {
                 source$: state.environment$.pipe(
                     map((env) => env.youwolEnvironment.proxiedBackends),
                 ),
-                vdomMap: (
-                    proxieds: Local.Routers.Environment.ProxiedBackend[],
-                ) => {
+                vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
                     return proxieds.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-network-wired me-1' }
@@ -454,9 +452,7 @@ export class EsmServingView implements VirtualDOM<'a'> {
                 source$: state.environment$.pipe(
                     map((env) => env.youwolEnvironment.proxiedEsmServers),
                 ),
-                vdomMap: (
-                    proxieds: Local.Routers.Environment.ProxiedBackend[],
-                ) => {
+                vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
                     return proxieds.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-laptop-code me-1' }

@@ -31,9 +31,7 @@ export class CommandsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: environmentState.environment$,
-            vdomMap: (
-                env: Local.Routers.Environment.EnvironmentStatusResponse,
-            ) => {
+            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
                 return Object.entries(env.configuration.commands).map(
                     ([_type, command]) =>
                         new ExpandableGroupView({
@@ -96,11 +94,11 @@ export class CommandView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly command: Local.Routers.Environment.Command
+    public readonly command: Local.Environment.Command
 
     constructor(params: {
         environmentState: State
-        command: Local.Routers.Environment.Command
+        command: Local.Environment.Command
     }) {
         Object.assign(this, params)
         let method: Method = 'GET'
@@ -179,7 +177,7 @@ export class ExecuteView implements VirtualDOM<'div'> {
 
     constructor(params: {
         environmentState: State
-        command: Local.Routers.Environment.Command
+        command: Local.Environment.Command
         method: Method
         url: string
     }) {
@@ -460,7 +458,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly command: Local.Routers.Environment.Command
+    public readonly command: Local.Environment.Command
     /**
      * @group Immutable DOM Constants
      */
@@ -476,7 +474,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
 
     constructor(params: {
         environmentState: State
-        command: Local.Routers.Environment.Command
+        command: Local.Environment.Command
     }) {
         Object.assign(this, params)
         this.environmentState.openCommand(this.command)

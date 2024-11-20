@@ -74,7 +74,7 @@ export class AppState {
     /**
      * @group Observables
      */
-    public readonly environment$: Observable<Local.Routers.Environment.EnvironmentStatusResponse>
+    public readonly environment$: Observable<Local.Environment.EnvironmentStatusResponse>
 
     /**
      * @group Observables
@@ -208,7 +208,7 @@ export class AppState {
 
         this.router = new Router({
             navigation: this.navigation,
-            basePath: `/applications/${setup.name}/${setup.version}`,
+            basePath: `/apps/${setup.name}/${setup.version}`,
             redirects: (target) => this.getRedirects(target),
         })
         // A workaround for now, it simplifies e.g. defining MD widgets where only the router is known

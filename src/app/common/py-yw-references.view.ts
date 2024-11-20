@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { parseMd, Router } from '@youwol/mkdocs-ts'
 
 export function pyYwDocLink(title: string, path: string) {
-    const basePath = '/applications/@youwol/py-youwol-doc/latest?nav='
+    const basePath = '/apps/@youwol/py-youwol-doc/latest?nav='
     const href = `${basePath}${path}`
     return `<a href='${href}' target='_blank'>${title}</a>`
 }
@@ -13,7 +13,7 @@ export class PyYwReferencesView implements VirtualDOM<'div'> {
         router: Router
         items: { title: string; description: string; path: string }[]
     }) {
-        const basePath = '/applications/@youwol/py-youwol-doc/latest?nav='
+        const basePath = '/apps/@youwol/py-youwol-doc/latest?nav='
         this.children = [
             parseMd({
                 src: `

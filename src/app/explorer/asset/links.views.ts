@@ -1,9 +1,5 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import {
-    AssetsBackend,
-    AssetsGateway,
-    ExplorerBackend,
-} from '@w3nest/http-clients'
+import { Assets, AssetsGateway, Explorer } from '@w3nest/http-clients'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { PathView } from '../path.views'
 import { Router } from '@youwol/mkdocs-ts'
@@ -18,7 +14,7 @@ export class LinkView implements VirtualDOM<'div'> {
         explorerState,
         router,
     }: {
-        item: ExplorerBackend.ItemBase
+        item: Explorer.ItemBase
         explorerState: ExplorerState
         router: Router
     }) {
@@ -26,7 +22,7 @@ export class LinkView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: client.getPath$({ itemId: item.itemId }),
-                vdomMap: (path: ExplorerBackend.GetPathFolderResponse) => {
+                vdomMap: (path: Explorer.GetPathFolderResponse) => {
                     return new PathView({
                         path,
                         router,
@@ -47,7 +43,7 @@ export class LinksView implements VirtualDOM<'div'> {
         explorerState,
         router,
     }: {
-        asset: AssetsBackend.GetAssetResponse
+        asset: Assets.GetAssetResponse
         explorerState: ExplorerState
         router: Router
     }) {
@@ -68,7 +64,7 @@ export class LinksView implements VirtualDOM<'div'> {
                                 class: 'fas fa-spinner fa-spin',
                             },
                             vdomMap: (
-                                resp: ExplorerBackend.QueryItemsByAssetIdResponse,
+                                resp: Explorer.QueryItemsByAssetIdResponse,
                             ) => {
                                 const original = resp.items.find(
                                     (item) => item.itemId === item.assetId,

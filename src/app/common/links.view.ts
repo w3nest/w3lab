@@ -3,7 +3,7 @@ import { parseMd, Router } from '@youwol/mkdocs-ts'
 import { mergeMap, of } from 'rxjs'
 import {
     AssetsGateway,
-    ExplorerBackend,
+    Explorer,
     onHTTPErrors,
     Local,
 } from '@w3nest/http-clients'
@@ -28,7 +28,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ name, router }: { name: string; router: Router }) {
-        const client = new Local.Client().api.localCdn
+        const client = new Local.Client().api.components
 
         this.children = [
             {
@@ -39,9 +39,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                     .pipe(
                         onHTTPErrors(() => undefined),
                         mergeMap(
-                            (
-                                resp?: Local.Routers.LocalCdn.GetPackageResponse,
-                            ) => {
+                            (resp?: Local.Components.GetPackageResponse) => {
                                 if (resp === undefined) {
                                     return of(undefined)
                                 }
@@ -49,7 +47,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                             },
                         ),
                     ),
-                vdomMap: (resp?: Local.Routers.LocalCdn.GetPackageResponse) => {
+                vdomMap: (resp?: Local.Components.GetPackageResponse) => {
                     if (resp == undefined || resp.versions.length == 0) {
                         return parseMd({
                             src: 'The project has not been published in your components database yet.',
@@ -88,14 +86,14 @@ export class ExplorerLinkView implements VirtualDOM<'div'> {
                     })
                     .pipe(
                         onHTTPErrors(() => undefined),
-                        mergeMap((resp?: ExplorerBackend.ItemBase) => {
+                        mergeMap((resp?: Explorer.ItemBase) => {
                             if (resp === undefined) {
                                 return of(undefined)
                             }
                             return client.getPath$({ itemId })
                         }),
                     ),
-                vdomMap: (resp?: ExplorerBackend.PathBase) => {
+                vdomMap: (resp?: Explorer.PathBase) => {
                     if (resp == undefined) {
                         return parseMd({
                             src: 'The project has not been published in your explorer yet.',

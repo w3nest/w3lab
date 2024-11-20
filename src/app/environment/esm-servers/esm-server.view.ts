@@ -19,7 +19,7 @@ export class EsmServerView implements VirtualDOM<'div'> {
         appState,
         router,
     }: {
-        esmServer: Local.Routers.Environment.ProxiedEsmServer
+        esmServer: Local.Environment.ProxiedEsmServer
         appState: AppState
         router: Router
     }) {

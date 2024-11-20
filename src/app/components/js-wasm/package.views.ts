@@ -6,7 +6,7 @@ import {
 } from '@youwol/rx-vdom'
 import { State } from '../state'
 
-import { Local, AssetsBackend, CdnBackend,
+import { Local, Assets, Webpm,
     raiseHTTPErrors } from '@w3nest/http-clients'
 import {
     combineLatest,
@@ -94,7 +94,7 @@ export class PackageView implements VirtualDOM<'div'> {
                                         this.packageId
                                     ].info$,
                                 vdomMap: (
-                                    packageInfo: Local.Routers.LocalCdn.CdnPackage,
+                                    packageInfo: Local.Components.CdnPackage,
                                 ) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]
@@ -130,7 +130,7 @@ export class PackageDetailsView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly package: Local.Routers.LocalCdn.CdnPackage
+    public readonly package: Local.Components.CdnPackage
 
     /**
      * @group Immutable DOM Constants
@@ -217,7 +217,7 @@ export class VersionsView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly package: Local.Routers.LocalCdn.CdnPackage
+    public readonly package: Local.Components.CdnPackage
 
     /**
      * @group Observables
@@ -226,7 +226,7 @@ export class VersionsView implements VirtualDOM<'div'> {
 
     constructor(params: {
         cdnState: State
-        package: Local.Routers.LocalCdn.CdnPackage
+        package: Local.Components.CdnPackage
         selectedVersion$: Subject<string>
     }) {
         Object.assign(this, params)
@@ -271,7 +271,7 @@ export class FilesView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: combineLatest([
-                    new AssetsBackend.AssetsClient()
+                    new Assets.AssetsClient()
                         .getAsset$({
                             assetId: window.btoa(packageId),
                         })
@@ -311,7 +311,7 @@ export class LinksView implements VirtualDOM<'div'> {
             {
                 source$: selectedVersion$.pipe(
                     mergeMap((version) =>
-                        new CdnBackend.Client()
+                        new Webpm.Client()
                             .getResource$({
                                 libraryId: packageId,
                                 version,
@@ -338,7 +338,7 @@ export class LinksView implements VirtualDOM<'div'> {
                         children: resp.links.map((link) => {
                             const href =
                                 link.kind === 'artifactFile'
-                                    ? `/api/cdn-backend/resources/${packageId}/${version}/${link.url}`
+                                    ? `/api/webpm/resources/${packageId}/${version}/${link.url}`
                                     : link.url
                             return {
                                 tag: 'li',
@@ -378,7 +378,7 @@ export class LinkLaunchAppLib implements VirtualDOM<'div'> {
                     switchMap((version) => {
                         return from(
                             fetch(
-                                `/api/assets-gateway/cdn-backend/resources/${packageId}/${version}/.yw_metadata.json`,
+                                `/api/assets-gateway/webpm/resources/${packageId}/${version}/.yw_metadata.json`,
                             )
                                 .then((resp) => resp.json())
                                 .then((resp) => ({
@@ -441,7 +441,7 @@ export class LinkLaunchAppView implements VirtualDOM<'div'> {
                                 tag: 'a',
                                 target: '_blank',
                                 class: 'link-success',
-                                href: `/applications/${packageName}/${version}`,
+                                href: `/apps/${packageName}/${version}`,
                                 innerText: 'here',
                             }
                         },
@@ -487,7 +487,7 @@ export class LinkTryLibView implements VirtualDOM<'div'> {
         router: Router
     }) {
         const uri = encodeURIComponent(tryLibScript(packageName, version))
-        const href = `/applications/@youwol/js-playground/latest?content=${uri}`
+        const href = `/apps/@youwol/js-playground/latest?content=${uri}`
         this.children = [
             parseMd({
                 src: `

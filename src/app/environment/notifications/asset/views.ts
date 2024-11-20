@@ -24,7 +24,7 @@ export class AssetDownloadNotificationView extends ExpandableGroupView {
             tag: 'div',
             class: {
                 source$: message$,
-                vdomMap: (m: Local.Routers.System.DownloadEvent) => {
+                vdomMap: (m: Local.System.DownloadEvent) => {
                     const factory = {
                         succeeded: 'fa-check text-success',
                         failed: 'fa-times text-danger',

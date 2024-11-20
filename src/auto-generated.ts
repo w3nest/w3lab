@@ -107,7 +107,7 @@ export const setup = {
         assetId:'QHczbmVzdC9jby1sYWI=',
     version:'0.7.0-wip',
     shortDescription:"The W3Nest's collaborative laboratory application.",
-    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc',
+    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@w3nest/co-lab',
     sourceGithub:'https://github.com/w3nest/co-lab',
     userGuide:'https://l.youwol.com/doc/@w3nest/co-lab',

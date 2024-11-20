@@ -4,7 +4,7 @@ import {
     RequestEvent,
     send$,
     AssetsGateway,
-    ExplorerBackend,
+    Explorer,
 } from '@w3nest/http-clients'
 import { BehaviorSubject, Observable } from 'rxjs'
 
@@ -33,7 +33,7 @@ export class ExplorerState {
     setRouter(router: Router) {
         this.router = router
     }
-    getItemData(item: ExplorerBackend.ItemBase) {
+    getItemData(item: Explorer.ItemBase) {
         if (!this.itemData[item.itemId]) {
             this.itemData[item.itemId] = new ItemNode(item)
         }
@@ -57,7 +57,7 @@ export class ExplorerState {
         response$,
     }: {
         parentNode: FolderNode
-        response$: Observable<ExplorerBackend.GetItemResponse>
+        response$: Observable<Explorer.GetItemResponse>
         progress$?: Observable<RequestEvent>
         pendingName: string
     }) {
@@ -217,10 +217,7 @@ export class ExplorerState {
             (acc, [k, v]) => `${acc}&${k}=${v}`,
             '',
         )
-        window.open(
-            `/applications/${cdnPackage}/latest?${queryParams}`,
-            '_blank',
-        )
+        window.open(`/apps/${cdnPackage}/latest?${queryParams}`, '_blank')
     }
 
     private isInstanceItemNode(d: unknown): d is ItemNode {

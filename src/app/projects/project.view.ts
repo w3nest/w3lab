@@ -19,7 +19,7 @@ import { tryLibScript } from '../components/js-wasm/package.views'
 
 function extraProjectLinks(
     appState: AppState,
-    project: Local.Routers.Projects.Project,
+    project: Local.Projects.Project,
 ) {
     if (!['application', 'library'].includes(project.target.family)) {
         return []
@@ -47,7 +47,7 @@ function extraProjectLinks(
                     return {
                         icon: 'fas fa-play',
                         enabled: true,
-                        nav: `/applications/${project.name}/${project.version}`,
+                        nav: `/apps/${project.name}/${project.version}`,
                         hrefKind: 'external' as const,
                     }
                 }
@@ -58,7 +58,7 @@ function extraProjectLinks(
                 return {
                     icon: 'fas fa-play',
                     enabled: true,
-                    nav: `/applications/@youwol/js-playground/latest?content=${uri}`,
+                    nav: `/apps/@youwol/js-playground/latest?content=${uri}`,
                     hrefKind: 'external' as const,
                 }
             }),
@@ -76,7 +76,7 @@ export class ProjectView implements VirtualDOM<'div'> {
         appState,
     }: {
         router: Router
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
         appState: AppState
     }) {
         const projectsState = appState.projectsState
@@ -181,7 +181,7 @@ export class FlowView implements VirtualDOM<'div'> {
         project,
     }: {
         projectsState: State
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
     }) {
         this.children = [
             {
@@ -203,7 +203,7 @@ export class ArtifactsView implements VirtualDOM<'div'> {
     }: {
         projectsState: State
         router: Router
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
     }) {
         const event$ = projectsState.projectEvents[project.id].messages$.pipe(
             filterCtxMessage({
@@ -225,7 +225,7 @@ export class ArtifactsView implements VirtualDOM<'div'> {
             vdomMap: ({
                 artifacts,
             }: {
-                artifacts: Local.Routers.Projects.GetArtifactResponse[]
+                artifacts: Local.Projects.GetArtifactResponse[]
             }) => {
                 return artifacts.map((artifact) => {
                     return new ArtifactView({ artifact, router })
@@ -241,7 +241,7 @@ export class ArtifactView implements VirtualDOM<'div'> {
         artifact,
         router,
     }: {
-        artifact: Local.Routers.Projects.Artifact
+        artifact: Local.Projects.Artifact
         router: Router
     }) {
         this.children = [
@@ -287,7 +287,7 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
                     policy: 'replace',
                     source$: projectsState.appState.environment$,
                     vdomMap: (
-                        environment: Local.Routers.Environment.EnvironmentStatusResponse,
+                        environment: Local.Environment.EnvironmentStatusResponse,
                     ) => {
                         return environment.youwolEnvironment.projects.templates.map(
                             (projectTemplate) =>
@@ -309,9 +309,9 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
 }
 
 type Failures =
-    | Local.Routers.Projects.FailurePipelineNotFound[]
-    | Local.Routers.Projects.FailureDirectoryNotFound[]
-    | Local.Routers.Projects.FailureImportException[]
+    | Local.Projects.FailurePipelineNotFound[]
+    | Local.Projects.FailureDirectoryNotFound[]
+    | Local.Projects.FailureImportException[]
 
 export class FailuresView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -329,7 +329,7 @@ export class FailuresView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: appState.projectsState.projectsFailures$,
             vdomMap: (
-                failures: Local.Routers.Projects.ProjectsLoadingResults['failures'],
+                failures: Local.Projects.ProjectsLoadingResults['failures'],
             ) => [
                 new FailuresCategoryView({
                     appState: appState,

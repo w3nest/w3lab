@@ -24,7 +24,7 @@ export const navigation = (appState: AppState): Navigation => ({
 })
 
 export function formatChildren(
-    { packages }: Local.Routers.LocalCdn.CdnStatusResponse,
+    { packages }: Local.Components.CdnStatusResponse,
     target: Target,
 ) {
     return packages
@@ -45,12 +45,12 @@ export function formatChildren(
 }
 
 export function lazyResolver(
-    status: Local.Routers.LocalCdn.CdnStatusResponse,
+    status: Local.Components.CdnStatusResponse,
     appState: AppState,
-    target: Local.Routers.LocalCdn.WebpmLibraryType,
+    target: Local.Components.WebpmLibraryType,
 ) {
     const htmlFactory: Record<
-        Local.Routers.LocalCdn.WebpmLibraryType,
+        Local.Components.WebpmLibraryType,
         (p: {
             appState: AppState
             cdnState: State
@@ -118,7 +118,7 @@ Executables can be:
 
 To help you get started, here are a few examples:
 - Electronic density computations using PySCF: 
-<a href="/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">here</a>.
+<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">here</a>.
 </info>
 `,
                 router: router,

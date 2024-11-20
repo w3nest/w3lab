@@ -8,7 +8,7 @@ export class State {
         {}
 
     public readonly dispatchLogs$: {
-        [k: string]: ReplaySubject<Local.Routers.System.LogResponse>
+        [k: string]: ReplaySubject<Local.System.LogResponse>
     } = {}
 
     public readonly appState: AppState

@@ -28,7 +28,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly project: Local.Routers.Projects.Project
+    public readonly project: Local.Projects.Project
 
     /**
      * @group States
@@ -185,7 +185,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     constructor(params: {
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
         projectsState: State
     }) {
         Object.assign(this, params)
@@ -333,7 +333,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     applyStyle(
-        selected: { step: Local.Routers.Projects.PipelineStep },
+        selected: { step: Local.Projects.PipelineStep },
         event: {
             stepId
             status
@@ -382,7 +382,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         )
 
         const factoryPending: Record<
-            Local.Routers.Projects.PipelineStepEventKind,
+            Local.Projects.PipelineStepEventKind,
             string
         > = {
             runStarted: '',
@@ -406,7 +406,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 }
 
-function parseDag(project: Local.Routers.Projects.Project) {
+function parseDag(project: Local.Projects.Project) {
     const flow = project.pipeline.flow
     const availableSteps = project.pipeline.steps.map((s) => s.id)
     const includedSteps = new Set(

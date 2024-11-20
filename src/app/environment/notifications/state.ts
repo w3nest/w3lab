@@ -2,7 +2,7 @@ import { BehaviorSubject, merge, ReplaySubject } from 'rxjs'
 import { Local } from '@w3nest/http-clients'
 import { filter } from 'rxjs/operators'
 
-export type BackendInstallEvent = Local.Routers.System.InstallBackendEvent
+export type BackendInstallEvent = Local.System.InstallBackendEvent
 
 export type Error = {
     kind: 'BackendInstall' | 'AssetDownload'
@@ -102,7 +102,7 @@ export class BackendEvents {
     }
 }
 
-export type AssetDownloadEvent = Local.Routers.System.DownloadEvent & {
+export type AssetDownloadEvent = Local.System.DownloadEvent & {
     contextId: string
 }
 
@@ -129,14 +129,14 @@ export class AssetEvents {
      * The assets currently downloading (started but not yet done).
      */
     public readonly downloading$ = new BehaviorSubject<
-        Local.Routers.System.DownloadEvent[]
+        Local.System.DownloadEvent[]
     >([])
 
     /**
      * Emit each time an asset failed to download.
      */
     public readonly failedDownload$ =
-        new ReplaySubject<Local.Routers.System.DownloadEvent>()
+        new ReplaySubject<Local.System.DownloadEvent>()
 
     private enqueuedRawIds: string[] = []
 

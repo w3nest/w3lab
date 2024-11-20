@@ -2,7 +2,7 @@ import { ReplaySubject } from 'rxjs'
 import { Backend } from '../../environment/notifications'
 import { Local } from '@w3nest/http-clients'
 
-type BackendResponse = Local.Routers.System.BackendResponse
+type BackendResponse = Local.System.BackendResponse
 export class State {
     /**
      * All install events.

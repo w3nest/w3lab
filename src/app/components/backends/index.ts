@@ -51,7 +51,7 @@ by clicking on this <a target="_blank" href="/backends/demo_yw_backend/*/docs">l
 When consuming a backend from JavaScript, a default client is provided to streamline the process of accessing its API.
 You can explore an interactive example showcasing the installation and usage of custom backends from JavaScript by 
 following this 
-<a href="/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">link</a>.
+<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">link</a>.
 </info>
 
 

@@ -21,7 +21,7 @@ function fromMd({
     placeholders?: { [_: string]: string }
 }) {
     return fromMarkdown({
-        url: `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}/assets/${file}`,
+        url: `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets/${file}`,
         placeholders,
     })
 }
@@ -89,7 +89,7 @@ export const navigation = (appState: AppState): Navigation => ({
             name: 'Start YouWol',
             tableOfContent: Views.tocView,
             html: fromMarkdown({
-                url: `/applications/@youwol/py-youwol-doc/*/assets/how-to.start-youwol.md`,
+                url: `/apps/@youwol/py-youwol-doc/*/assets/how-to.start-youwol.md`,
             }),
         },
         '/config': {
@@ -129,14 +129,14 @@ export const navigation = (appState: AppState): Navigation => ({
             name: 'youwol',
             decoration: decoration('fa-box-open', appState),
             entryModule: 'youwol',
-            docBasePath: '/applications/@youwol/py-youwol-doc/*/assets/api',
+            docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
             configuration: configuration,
         }),
         '/yw-clients': CodeApiModule.codeApiEntryNode({
             name: 'yw_clients',
             decoration: decoration('fa-box-open', appState),
             entryModule: 'yw_clients',
-            docBasePath: '/applications/@youwol/py-youwol-doc/*/assets/api',
+            docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
             configuration: configuration,
         }),
         '/co-lab': CodeApiModule.codeApiEntryNode({

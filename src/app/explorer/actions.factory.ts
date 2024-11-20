@@ -2,7 +2,7 @@ import { forkJoin, Observable, of } from 'rxjs'
 import { map, switchMap, take } from 'rxjs/operators'
 import {
     AssetsGateway,
-    AssetsBackend,
+    Assets,
     AssetsGateway as Gtw,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
@@ -55,7 +55,7 @@ export interface GroupPermissions {
 
 export interface OverallPermissions {
     group: GroupPermissions
-    item?: AssetsBackend.PermissionsResp
+    item?: Assets.PermissionsResp
 }
 
 export type ActionConstructor = (
@@ -467,20 +467,20 @@ export const launchPackage$ = (
     rawId: string,
 ): Observable<LaunchPackageData | undefined> => {
     return fromFetch(
-        `/api/assets-gateway/cdn-backend/resources/${rawId}/latest/.yw_metadata.json`,
+        `/api/assets-gateway/webpm/resources/${rawId}/latest/.yw_metadata.json`,
     ).pipe(
         switchMap((resp) => resp.json()),
         map((resp: { family: string; execution?: { standalone: boolean } }) => {
             const packageName = window.atob(rawId)
             if (resp.family === 'application' && resp.execution?.standalone) {
-                const href = `/applications/${packageName}/latest`
+                const href = `/apps/${packageName}/latest`
                 return { type: 'app', href }
             }
             if (resp.family === 'library') {
                 const uri = encodeURIComponent(
                     tryLibScript(packageName, 'latest'),
                 )
-                const href = `/applications/@youwol/js-playground/latest?content=${uri}`
+                const href = `/apps/@youwol/js-playground/latest?content=${uri}`
                 return { type: 'lib', href }
             }
             return undefined

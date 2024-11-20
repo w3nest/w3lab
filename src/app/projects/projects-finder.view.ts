@@ -16,7 +16,7 @@ export class ProjectsFinderView implements VirtualDOM<'div'> {
     }: {
         router: Router
         appState: AppState
-        finder: Local.Routers.Environment.ProjectFinders
+        finder: Local.Environment.ProjectFinders
     }) {
         const ignored = finder.lookUpIgnore
             .filter((pattern) => !pattern.includes('/.'))

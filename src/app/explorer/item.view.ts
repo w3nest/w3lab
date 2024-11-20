@@ -4,7 +4,7 @@ import {
     CSSAttribute,
     VirtualDOM,
 } from '@youwol/rx-vdom'
-import { ExplorerBackend } from '@w3nest/http-clients'
+import { Explorer } from '@w3nest/http-clients'
 import {
     ApplicationInfo,
     OpenWithParametrization,
@@ -31,7 +31,7 @@ export class ItemView implements VirtualDOM<'a'> {
         explorerState,
     }: {
         groupId: string
-        item: ExplorerBackend.GetItemResponse
+        item: Explorer.GetItemResponse
         explorerState: ExplorerState
     }) {
         this.style = {
@@ -72,7 +72,7 @@ export class TrashedItemView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = `colab-TrashedItemView mkdocs-text-0 d-flex align-items-center my-1 px-1`
     public readonly children: ChildrenLike
-    constructor({ item }: { item: ExplorerBackend.GetItemResponse }) {
+    constructor({ item }: { item: Explorer.GetItemResponse }) {
         this.children = [
             new ItemIconView({ item }),
             { tag: 'span', class: 'mx-1' },
@@ -96,7 +96,7 @@ export class FolderView implements VirtualDOM<'a'> {
         explorerState,
     }: {
         groupId: string
-        folder: ExplorerBackend.GetFolderResponse
+        folder: Explorer.GetFolderResponse
         explorerState: ExplorerState
     }) {
         this.style = {
@@ -136,7 +136,7 @@ export class TrashedFolderView implements VirtualDOM<'div'> {
     public readonly style = {
         fontWeight: 'bolder' as const,
     }
-    constructor({ folder }: { folder: ExplorerBackend.GetFolderResponse }) {
+    constructor({ folder }: { folder: Explorer.GetFolderResponse }) {
         this.children = [
             new FolderIconView({ folder }),
             { tag: 'span', class: 'mx-1' },
@@ -161,7 +161,7 @@ export class FolderIconView implements VirtualDOM<'div'> {
             class: 'fas fa-folder mkdocs-text-0',
         },
     ]
-    constructor({ folder }: { folder: ExplorerBackend.GetFolderResponse }) {
+    constructor({ folder }: { folder: Explorer.GetFolderResponse }) {
         if (folder.folderId.endsWith('_download')) {
             this.children = [
                 {
@@ -206,8 +206,8 @@ export class ItemIconView implements VirtualDOM<'div'> {
         | undefined
     >
 
-    constructor({ item }: { item: ExplorerBackend.GetItemResponse }) {
-        this.defaultOpeningApp$ = ExplorerBackend.isInstanceOfItemResponse(item)
+    constructor({ item }: { item: Explorer.GetItemResponse }) {
+        this.defaultOpeningApp$ = Explorer.isInstanceOfItemResponse(item)
             ? defaultOpeningApp$(item)
             : of(undefined)
         const defaultView = {

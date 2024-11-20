@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs'
 import { Local } from '@w3nest/http-clients'
 import { map, shareReplay } from 'rxjs/operators'
 
-type LocalCdnRouter = Local.Routers.LocalCdn.LocalCdnRouter
+type ComponentsRouter = Local.Components.ComponentsRouter
 
 /**
  * @category Event
@@ -13,7 +13,7 @@ export class PackageEvents {
     /**
      * @group Immutable Constants
      */
-    public readonly client: LocalCdnRouter
+    public readonly client: ComponentsRouter
 
     /**
      * @group Immutable DOM Constants
@@ -23,9 +23,9 @@ export class PackageEvents {
     /**
      * @group Observables
      */
-    public readonly info$: Observable<Local.Routers.LocalCdn.CdnPackage>
+    public readonly info$: Observable<Local.Components.CdnPackage>
 
-    constructor(params: { packageId: string; client: LocalCdnRouter }) {
+    constructor(params: { packageId: string; client: ComponentsRouter }) {
         Object.assign(this, params)
         this.info$ = this.client.webSocket
             .package$({
@@ -47,7 +47,7 @@ export class State {
     /**
      * @group Immutable Constants
      */
-    public readonly cdnClient = new Local.Client().api.localCdn
+    public readonly cdnClient = new Local.Client().api.components
 
     /**
      * @group States
@@ -62,7 +62,7 @@ export class State {
     /**
      * @group Observables
      */
-    public readonly status$: Observable<Local.Routers.LocalCdn.CdnStatusResponse>
+    public readonly status$: Observable<Local.Components.CdnStatusResponse>
 
     /**
      * @group Observables

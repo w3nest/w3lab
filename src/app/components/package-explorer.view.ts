@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs'
-import { AssetsGateway, CdnBackend,
+import { AssetsGateway, Webpm,
     raiseHTTPErrors } from '@w3nest/http-clients'
 
 import { mergeMap, share } from 'rxjs/operators'
@@ -11,10 +11,10 @@ import { AssetLightDescription } from '@youwol/os-core'
 export class ExplorerState {
     public readonly asset: AssetLightDescription
     public readonly version: string
-    public readonly items$: Observable<CdnBackend.QueryExplorerResponse>
+    public readonly items$: Observable<Webpm.QueryExplorerResponse>
     public readonly selectedFolder$ = new BehaviorSubject<string>('')
 
-    public readonly client = new AssetsGateway.Client().cdn
+    public readonly client = new AssetsGateway.Client().webpm
 
     constructor(params: { asset: AssetLightDescription; version: string }) {
         Object.assign(this, params)
@@ -42,13 +42,13 @@ export class FolderView implements VirtualDOM<'div'> {
     static ClassSelector = 'folder-view'
     public readonly class = `${FolderView.ClassSelector} d-flex align-items-center fv-pointer fv-hover-text-focus`
     public readonly children: ChildrenLike
-    public readonly folder: CdnBackend.FolderResponse
+    public readonly folder: Webpm.FolderResponse
     public readonly state: ExplorerState
     public readonly ondblclick: () => void
 
     constructor(params: {
         state: ExplorerState
-        folder: CdnBackend.FolderResponse
+        folder: Webpm.FolderResponse
     }) {
         Object.assign(this, params)
         this.children = [
@@ -79,11 +79,11 @@ export class FileView implements VirtualDOM<'div'> {
     static ClassSelector = 'file-view'
     public readonly class = `${FileView.ClassSelector} d-flex align-items-center fv-pointer fv-hover-text-focus`
     public readonly children: ChildrenLike
-    public readonly file: CdnBackend.FileResponse
+    public readonly file: Webpm.FileResponse
     public readonly state: ExplorerState
 
     constructor(params: {
-        file: CdnBackend.FileResponse
+        file: Webpm.FileResponse
         state: ExplorerState
     }) {
         Object.assign(this, params)
@@ -162,7 +162,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
             },
             {
                 source$: this.state.items$,
-                vdomMap: ({ files, folders }: CdnBackend.QueryExplorerResponse) => {
+                vdomMap: ({ files, folders }: Webpm.QueryExplorerResponse) => {
                     return {
                         tag: 'div',
                         class: 'd-flex flex-column',

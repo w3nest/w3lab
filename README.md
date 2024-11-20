@@ -3,15 +3,15 @@
 The W3Nest's collaborative laboratory application.
 
 This library is part of the hybrid cloud/local ecosystem
-[YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
+[YouWol](https://platform.youwol.com/apps/@youwol/platform/latest).
 
 ## Links
 
-[Running app.](https://platform.youwol.com/applications/@w3nest/co-lab/latest)
+[Running app.](https://platform.youwol.com/apps/@w3nest/co-lab/latest)
 
 [Online user-guide](https://l.youwol.com/doc/@w3nest/co-lab)
 
-[Developers documentation](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc)
+[Developers documentation](https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc)
 
 [Package on npm](https://www.npmjs.com/package/@w3nest/co-lab)
 
@@ -89,7 +89,7 @@ Additional information on the `Configuration` class can be found in the "Configu
 [Py-YouWol guide](https://l.youwol.com/doc/py-youwol).
 
 Once Py-YouWol is running with the updated configuration,
-the application can be accessed from [here](http://localhost:2000/applications/@w3nest/co-lab/latest)
+the application can be accessed from [here](http://localhost:2000/apps/@w3nest/co-lab/latest)
 (providing py-youwol running using the default port `2000`).
 
 ---

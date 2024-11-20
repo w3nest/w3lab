@@ -4,7 +4,7 @@ import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { mergeMap, shareReplay } from 'rxjs/operators'
 
 export class State {
-    public readonly status$: Observable<Local.Routers.Environment.BrowserCacheStatusResponse>
+    public readonly status$: Observable<Local.Environment.BrowserCacheStatusResponse>
     private refresh$ = new Subject<unknown>()
     constructor({ appState }: { appState: AppState }) {
         this.status$ = merge(appState.environment$, this.refresh$).pipe(

@@ -37,7 +37,7 @@ class PipelineFactory(IPipelineFactory):
         return await pipeline(config, context)
 
 
-assets_dir = f"/api/assets-gateway/cdn-backend/resources/{asset_id}/{version}/assets"
+assets_dir = f"/api/assets-gateway/webpm/resources/{asset_id}/{version}/assets"
 app_icon = f"url('{assets_dir}/co-lab-light.png')"
 
 

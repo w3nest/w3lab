@@ -31,7 +31,7 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: this.appState.projectsState.historic$,
-                vdomMap: (projects: Local.Routers.Projects.Project[]) => {
+                vdomMap: (projects: Local.Projects.Project[]) => {
                     return {
                         tag: 'div',
                         class: 'w-100',
@@ -98,7 +98,7 @@ export class ProjectHistoricItemView implements VirtualDOM<'div'> {
         appState,
     }: {
         appState: AppState
-        project: Local.Routers.Projects.Project
+        project: Local.Projects.Project
     }) {
         this.children = [
             {

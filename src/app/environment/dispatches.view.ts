@@ -25,7 +25,7 @@ export class DispatchListView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: environmentState.customDispatches$,
             vdomMap: (dispatches: {
-                [k: string]: Local.Routers.Environment.CustomDispatch[]
+                [k: string]: Local.Environment.CustomDispatch[]
             }) => {
                 return Object.entries(dispatches).map(([type, items]) => {
                     return {
@@ -87,16 +87,14 @@ export class DispatchItemView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly dispatch: Local.Routers.Environment.CustomDispatch
+    public readonly dispatch: Local.Environment.CustomDispatch
 
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: ChildrenLike
 
-    constructor(params: {
-        dispatch: Local.Routers.Environment.CustomDispatch
-    }) {
+    constructor(params: { dispatch: Local.Environment.CustomDispatch }) {
         Object.assign(this, params)
         this.children = [
             {

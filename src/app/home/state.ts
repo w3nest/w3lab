@@ -8,7 +8,7 @@ import {
 } from 'rxjs'
 import { filter, switchMap, take } from 'rxjs/operators'
 import { setup } from '../../auto-generated'
-import { CdnSessionsStorage } from '@w3nest/http-clients'
+import { WebpmSessionsStorage } from '@w3nest/http-clients'
 import * as webpm from '@w3nest/webpm-client'
 
 export type HomePageMode = 'view' | 'edit'
@@ -36,7 +36,7 @@ export class State {
     )
 
     public readonly dataName = 'home.md'
-    public readonly storageClient = new CdnSessionsStorage.Client()
+    public readonly storageClient = new WebpmSessionsStorage.Client()
 
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)

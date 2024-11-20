@@ -23,7 +23,7 @@ export class CommandEvents {
      */
     log$: WebSocketResponse$<unknown, Label>
 
-    constructor(public readonly command: Local.Routers.Environment.Command) {
+    constructor(public readonly command: Local.Environment.Command) {
         this.log$ = new Local.Client().api.customCommands.webSocket.log$({})
     }
 
@@ -44,7 +44,7 @@ export class State {
     /**
      * @group Observables
      */
-    public readonly environment$: Observable<Local.Routers.Environment.EnvironmentStatusResponse>
+    public readonly environment$: Observable<Local.Environment.EnvironmentStatusResponse>
 
     /**
      * @group State
@@ -65,7 +65,7 @@ export class State {
      * @group Observables
      */
     public readonly customDispatches$: Observable<{
-        [k: string]: Local.Routers.Environment.CustomDispatch[]
+        [k: string]: Local.Environment.CustomDispatch[]
     }>
 
     constructor(params: { appState: AppState }) {
@@ -80,7 +80,7 @@ export class State {
         this.browserState = new Browser.State({ appState: this.appState })
     }
 
-    openCommand(command: Local.Routers.Environment.Command) {
+    openCommand(command: Local.Environment.Command) {
         if (!this.commandsEvent[command.name]) {
             this.commandsEvent[command.name] = new CommandEvents(command)
         }

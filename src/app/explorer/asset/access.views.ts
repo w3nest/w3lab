@@ -5,42 +5,36 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from '@youwol/rx-vdom'
-import {
-    AssetsBackend,
-    AssetsGateway,
-    raiseHTTPErrors,
-} from '@w3nest/http-clients'
+import { Assets, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, share, skip } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 
-type AccessInfo = AssetsBackend.QueryAccessInfoResponse
-type Asset = AssetsBackend.GetAssetResponse
+type AccessInfo = Assets.QueryAccessInfoResponse
+type Asset = Assets.GetAssetResponse
 
 export class ExposedGroupState {
     public readonly groupName: string
     public readonly groupId: string
-    public readonly asset: AssetsBackend.GetAssetResponse
-    public readonly permissions: AssetsBackend.GetPermissionsResponse
-    public readonly data: AssetsBackend.ExposingGroup
-    public readonly groupAccess$: BehaviorSubject<AssetsBackend.ExposingGroup>
+    public readonly asset: Assets.GetAssetResponse
+    public readonly permissions: Assets.GetPermissionsResponse
+    public readonly data: Assets.ExposingGroup
+    public readonly groupAccess$: BehaviorSubject<Assets.ExposingGroup>
     public readonly loading$ = new BehaviorSubject<boolean>(false)
     public readonly client = new AssetsGateway.Client().assets
 
     constructor(params: {
-        asset: AssetsBackend.GetAssetResponse
-        permissions: AssetsBackend.GetPermissionsResponse
-        data: AssetsBackend.ExposingGroup
+        asset: Assets.GetAssetResponse
+        permissions: Assets.GetPermissionsResponse
+        data: Assets.ExposingGroup
     }) {
         Object.assign(this, params)
         this.groupId = this.data.groupId
         this.groupName = this.data.name
-        this.groupAccess$ = new BehaviorSubject<AssetsBackend.ExposingGroup>(
-            this.data,
-        )
+        this.groupAccess$ = new BehaviorSubject<Assets.ExposingGroup>(this.data)
     }
 
-    update(body: AssetsBackend.UpsertAccessPolicyBody) {
+    update(body: Assets.UpsertAccessPolicyBody) {
         this.loading$.next(true)
         this.client
             .upsertAccessPolicy$({
@@ -71,7 +65,7 @@ export class ExposedGroupState {
                     name: this.groupName,
                     groupId: this.groupId,
                     access: groupAccess,
-                } as AssetsBackend.ExposingGroup)
+                } as Assets.ExposingGroup)
                 this.loading$.next(false)
             })
     }
@@ -192,7 +186,7 @@ export class ExposedGroupView implements VirtualDOM<'div'> {
         this.connectedCallback = (elem) => {
             elem.ownSubscriptions(
                 bodyPost$.subscribe((body) =>
-                    state.update(body as AssetsBackend.UpsertAccessPolicyBody),
+                    state.update(body as Assets.UpsertAccessPolicyBody),
                 ),
             )
         }
@@ -224,8 +218,8 @@ export class AssetPermissionsView implements VirtualDOM<'div'> {
             {
                 source$: combineLatest([accessInfo$, permission$]),
                 vdomMap: ([accessInfo, permissions]: [
-                    AssetsBackend.QueryAccessInfoResponse,
-                    AssetsBackend.GetPermissionsResponse,
+                    Assets.QueryAccessInfoResponse,
+                    Assets.GetPermissionsResponse,
                 ]) => {
                     return {
                         tag: 'div',
@@ -330,13 +324,13 @@ export class GroupsPermissionsView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike = []
 
     public readonly asset: Asset
-    public readonly permissions: AssetsBackend.GetPermissionsResponse
+    public readonly permissions: Assets.GetPermissionsResponse
     public readonly accessInfo: AccessInfo
 
     constructor(params: {
         accessInfo: AccessInfo
         asset: Asset
-        permissions: AssetsBackend.GetPermissionsResponse
+        permissions: Assets.GetPermissionsResponse
     }) {
         Object.assign(this, params)
 
@@ -420,7 +414,7 @@ export class AccessView implements VirtualDOM<'div'> {
     public readonly class = 'test'
     public readonly children: ChildrenLike
 
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         this.children = [
             new ExpandableGroupView({
                 title: 'Access',
@@ -440,7 +434,7 @@ export class WritePermission implements VirtualDOM<'div'> {
     public readonly class = 'w-100 d-flex justify-content-center'
     public readonly children: ChildrenLike
 
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         const client = new AssetsGateway.Client().assets
         const unlocked: AnyVirtualDOM = {
             tag: 'div',
@@ -474,7 +468,7 @@ export class WritePermission implements VirtualDOM<'div'> {
             {
                 source$: client.getPermissions$({ assetId: asset.assetId }),
                 vdomMap: (
-                    permission: AssetsBackend.GetPermissionsResponse,
+                    permission: Assets.GetPermissionsResponse,
                 ): AnyVirtualDOM => {
                     return permission.write ? unlocked : locked
                 },

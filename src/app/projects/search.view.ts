@@ -110,7 +110,7 @@ export class SearchView implements VirtualDOM<'div'> {
                 children: {
                     policy: 'replace',
                     source$: selected$,
-                    vdomMap: (projects: Local.Routers.Projects.Project[]) => {
+                    vdomMap: (projects: Local.Projects.Project[]) => {
                         return projects.map((p) => ({
                             tag: 'a',
                             class: 'd-flex align-items-center m-2',

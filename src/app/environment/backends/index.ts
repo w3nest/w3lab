@@ -15,7 +15,7 @@ import { ExpandableGroupView } from '../../common/expandable-group.view'
 
 export * from './state'
 
-function backendName(backend: Local.Routers.Environment.ProxiedBackend) {
+function backendName(backend: Local.Environment.ProxiedBackend) {
     return `${backend.name}#${backend.version}`
 }
 
@@ -33,7 +33,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
 function lazyResolver(
     path: string,
-    env: Local.Routers.Environment.EnvironmentStatusResponse,
+    env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
 ) {
@@ -141,9 +141,7 @@ export class PartitionsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (
-                env: Local.Routers.Environment.EnvironmentStatusResponse,
-            ) => {
+            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
                 const backends = env.youwolEnvironment.proxiedBackends
                 if (backends.length === 0) {
                     return [

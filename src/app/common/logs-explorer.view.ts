@@ -21,22 +21,19 @@ export const labelLogIcons = {
 export class LogsExplorerState {
     public readonly title: string
     public readonly t0$ = new BehaviorSubject(Date.now())
-    public readonly rootLogs$: Observable<Local.Routers.System.QueryLogsResponse>
+    public readonly rootLogs$: Observable<Local.System.QueryLogsResponse>
 
-    public readonly logs$ =
-        new ReplaySubject<Local.Routers.System.LogsResponse>(1)
+    public readonly logs$ = new ReplaySubject<Local.System.LogsResponse>(1)
 
     public readonly fetchingLogs$ = new BehaviorSubject<boolean>(false)
 
-    public readonly stack$ = new BehaviorSubject<
-        Local.Routers.System.LogResponse[]
-    >([])
+    public readonly stack$ = new BehaviorSubject<Local.System.LogResponse[]>([])
 
-    private rootLogsResponse: Local.Routers.System.LogsResponse
+    private rootLogsResponse: Local.System.LogsResponse
     public delta = {}
 
     constructor(params: {
-        rootLogs$: Observable<Local.Routers.System.QueryLogsResponse> | string
+        rootLogs$: Observable<Local.System.QueryLogsResponse> | string
         title: string
     }) {
         Object.assign(this, params)
@@ -69,7 +66,7 @@ export class LogsExplorerState {
                   })
     }
 
-    elapsedTime(log: Local.Routers.System.LogResponse): number | undefined {
+    elapsedTime(log: Local.System.LogResponse): number | undefined {
         return log.labels.includes('Label.STARTED') && this.delta[log.contextId]
     }
 
@@ -81,7 +78,7 @@ export class LogsExplorerState {
         })
     }
 
-    expandLog(log?: Local.Routers.System.LogResponse) {
+    expandLog(log?: Local.System.LogResponse) {
         if (!log) {
             this.stack$.next([])
             this.logs$.next(this.rootLogsResponse)
@@ -125,7 +122,7 @@ export class LogsExplorerView implements VirtualDOM<'div'> {
         fontSize: 'smaller',
     }
     constructor(params: {
-        rootLogs$: Observable<Local.Routers.System.QueryLogsResponse> | string
+        rootLogs$: Observable<Local.System.QueryLogsResponse> | string
         title: string
         showHeaderMenu?: boolean
     }) {
@@ -147,7 +144,7 @@ export class LogsExplorerView implements VirtualDOM<'div'> {
 
 const stepIntoIcon = (
     state: LogsExplorerState,
-    log?: Local.Routers.System.LogResponse,
+    log?: Local.System.LogResponse,
 ): AnyVirtualDOM => ({
     tag: 'div',
     class: 'fas fa-sign-in-alt fv-text-focus fv-pointer',
@@ -245,7 +242,7 @@ class StackView implements VirtualDOM<'div'> {
 
     constructor(params: { state: LogsExplorerState }) {
         Object.assign(this, params)
-        const items = (stack: Local.Routers.System.LogResponse[]) =>
+        const items = (stack: Local.System.LogResponse[]) =>
             [
                 rootElemStackView(this.state),
                 ...stack.map((log) => {
@@ -261,7 +258,7 @@ class StackView implements VirtualDOM<'div'> {
                 children: {
                     source$: this.state.stack$,
                     policy: 'replace',
-                    vdomMap: (stack: Local.Routers.System.LogResponse[]) => {
+                    vdomMap: (stack: Local.System.LogResponse[]) => {
                         return items(stack).map((item, i) => {
                             return {
                                 tag: 'div',
@@ -285,10 +282,10 @@ class LogView implements VirtualDOM<'div'> {
     public readonly class = 'w-100'
     public readonly children: ChildrenLike
     public readonly state: LogsExplorerState
-    public readonly log: Local.Routers.System.LogResponse
+    public readonly log: Local.System.LogResponse
     constructor(params: {
         state: LogsExplorerState
-        log: Local.Routers.System.LogResponse
+        log: Local.System.LogResponse
     }) {
         Object.assign(this, params)
         this.children = [
@@ -316,10 +313,10 @@ class LogLabelsView {
     public readonly children: ChildrenLike
     public readonly connectedCallback: (elem: HTMLElement) => void
     public readonly state: LogsExplorerState
-    public readonly log: Local.Routers.System.LogResponse
+    public readonly log: Local.System.LogResponse
 
     constructor(params: {
-        log: Local.Routers.System.LogResponse
+        log: Local.System.LogResponse
         state: LogsExplorerState
     }) {
         Object.assign(this, params, labelsStyle)
@@ -364,12 +361,12 @@ class LogTitleView implements VirtualDOM<'div'> {
         minWidth: '50%',
     }
     public readonly state: LogsExplorerState
-    public readonly log: Local.Routers.System.LogResponse
+    public readonly log: Local.System.LogResponse
     public readonly children: ChildrenLike
 
     constructor(params: {
         state: LogsExplorerState
-        log: Local.Routers.System.LogResponse
+        log: Local.System.LogResponse
     }) {
         Object.assign(this, params)
         const isMethodCall = this.log.labels.includes('Label.STARTED')
@@ -428,12 +425,12 @@ class LogDetailsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'py-2 overflow-auto'
     public readonly children: ChildrenLike
-    public readonly log: Local.Routers.System.LogResponse
+    public readonly log: Local.System.LogResponse
     public readonly style = {
         fontSize: 'small',
         fontWeight: 'normal' as const,
     }
-    constructor(params: { log: Local.Routers.System.LogResponse }) {
+    constructor(params: { log: Local.System.LogResponse }) {
         Object.assign(this, params)
         const attributes: AnyVirtualDOM[] = Object.entries(
             this.log.attributes,
@@ -494,7 +491,7 @@ class LogsListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: this.state.logs$,
-            vdomMap: (response: Local.Routers.System.LogsResponse) =>
+            vdomMap: (response: Local.System.LogsResponse) =>
                 response.logs.map((log) => {
                     return new LogView({ state: this.state, log })
                 }),

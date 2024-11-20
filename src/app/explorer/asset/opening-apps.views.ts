@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { AssetsBackend } from '@w3nest/http-clients'
+import { Assets } from '@w3nest/http-clients'
 import {
     openingApps$,
     ApplicationInfo,
@@ -18,7 +18,7 @@ export class OpeningAppsViews implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         this.children = [
             {
                 source$: openingApps$(asset),
@@ -43,7 +43,7 @@ export class OpeningAppsViews implements VirtualDOM<'div'> {
                                 (acc, [k, v]) => `${acc}&${k}=${v}`,
                                 '',
                             )
-                            const url = `/applications/${app.appInfo.cdnPackage}/latest?${queryParams}`
+                            const url = `/apps/${app.appInfo.cdnPackage}/latest?${queryParams}`
 
                             return {
                                 tag: 'a',
@@ -77,10 +77,10 @@ export class PackageLogoView implements VirtualDOM<'div'> {
     public readonly class = 'd-flex justify-content-center'
     public readonly children: ChildrenLike
     public readonly style = {}
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         if (asset.kind === 'package') {
             const source$ = fromFetch(
-                `/api/assets-gateway/cdn-backend/resources/${asset.rawId}/latest/.yw_metadata.json`,
+                `/api/assets-gateway/webpm/resources/${asset.rawId}/latest/.yw_metadata.json`,
             ).pipe(switchMap((resp) => resp.json()))
 
             this.children = [
@@ -136,7 +136,7 @@ export class LaunchView implements VirtualDOM<'div'> {
     public readonly class = 'w-100 d-flex justify-content-center'
     public readonly children: ChildrenLike
 
-    constructor({ asset }: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         const labelView = (
             href: string,
             innerText: string,
