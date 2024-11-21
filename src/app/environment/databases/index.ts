@@ -47,7 +47,7 @@ This folder persist the artifacts & manifests created when working with projects
                             path: appState.environment$.pipe(
                                 map(
                                     (env) =>
-                                        env.configuration.pathsBook[
+                                        env.pathsBook[
                                             elem.getAttribute('type')
                                         ],
                                 ),

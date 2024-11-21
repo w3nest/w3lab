@@ -183,7 +183,7 @@ export class AppState {
 
         this.projectsState.projects$.subscribe(() => {})
         this.confChanged$ = this.environment$.pipe(
-            map((env) => env.youwolEnvironment.pathsBook.config),
+            map((env) => env.pathsBook.config),
             distinctUntilChanged(),
             tap((path) => console.log('Configuration changed', path)),
         )
@@ -196,7 +196,7 @@ export class AppState {
         })
 
         this.session$ = this.environment$.pipe(
-            map((env) => env['youwolEnvironment'].currentConnection),
+            map((env) => env.currentConnection),
             distinctUntilChanged(
                 (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
             ),

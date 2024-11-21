@@ -168,7 +168,7 @@ function lazyResolver(
     if (parts.length === 0) {
         return {
             tableOfContent: Views.tocView,
-            children: env.youwolEnvironment.projects.finders
+            children: env.projects.finders
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((p) => {
                     return {
@@ -207,7 +207,7 @@ function lazyResolver(
                     }
                 }),
             html: ({ router }) => {
-                const finder = env.youwolEnvironment.projects.finders.find(
+                const finder = env.projects.finders.find(
                     (f) => f.fromPath === prefix,
                 )
                 return new ProjectsFinderView({

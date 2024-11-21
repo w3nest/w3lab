@@ -52,7 +52,7 @@ export class InstancesListView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: appState.environment$,
             vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
-                return env.youwolEnvironment.proxiedBackends
+                return env.proxiedBackends.store
                     .filter((backend) => backend.partitionId === partitionId)
                     .map((backend) => {
                         return {

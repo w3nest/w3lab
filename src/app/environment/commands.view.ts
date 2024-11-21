@@ -32,7 +32,7 @@ export class CommandsListView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: environmentState.environment$,
             vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
-                return Object.entries(env.configuration.commands).map(
+                return Object.entries(env.commands).map(
                     ([_type, command]) =>
                         new ExpandableGroupView({
                             title: command.name,

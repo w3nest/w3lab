@@ -48,7 +48,7 @@ export class State {
 
         this.appState.environment$.subscribe((env) => {
             Object.keys(this.stdOuts$).forEach((uid) => {
-                if (!env.youwolEnvironment.proxiedEsmServers[uid]) {
+                if (!env.proxiedEsmServers[uid]) {
                     this.stdOuts$[uid].complete()
                     delete this.stdOuts$[uid]
                 }

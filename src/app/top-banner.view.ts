@@ -193,8 +193,8 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
         return {
             tag: 'div',
             class: 'px-4',
-            children: env.youwolEnvironment.remotes.map((remote) => {
-                const connection = env.youwolEnvironment.currentConnection
+            children: env.remotes.map((remote) => {
+                const connection = env.currentConnection
                 return new CloudEnvironmentView({ remote, connection })
             }),
         }
@@ -406,7 +406,7 @@ export class BackendServingView implements VirtualDOM<'a'> {
         this.children = [
             {
                 source$: state.environment$.pipe(
-                    map((env) => env.youwolEnvironment.proxiedBackends),
+                    map((env) => env.proxiedBackends),
                 ),
                 vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
                     return proxieds.length == 0
@@ -450,7 +450,7 @@ export class EsmServingView implements VirtualDOM<'a'> {
         this.children = [
             {
                 source$: state.environment$.pipe(
-                    map((env) => env.youwolEnvironment.proxiedEsmServers),
+                    map((env) => env.proxiedEsmServers),
                 ),
                 vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
                     return proxieds.length == 0

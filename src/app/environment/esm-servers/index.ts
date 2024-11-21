@@ -26,7 +26,7 @@ function lazyResolver(
 ) {
     const parts = path.split('/').filter((d) => d != '')
     if (parts.length === 0) {
-        const children = env.youwolEnvironment['proxiedEsmServers'].map(
+        const children = env.proxiedEsmServers.store.map(
             ({ package: packageName, uid }) => {
                 return {
                     name: packageName,
@@ -47,7 +47,7 @@ function lazyResolver(
         }
     }
 
-    const esmServer = env.youwolEnvironment['proxiedEsmServers'].find(
+    const esmServer = env.proxiedEsmServers.store.find(
         ({ uid }) => uid === parts[0],
     )
     return {
@@ -93,7 +93,7 @@ class EsmServersListView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: appState.environment$.pipe(
-                map((env) => env.youwolEnvironment.proxiedEsmServers),
+                map((env) => env.proxiedEsmServers),
             ),
             vdomMap: (esmServers: Local.Environment.ProxiedEsmServer[]) => {
                 if (esmServers.length === 0) {

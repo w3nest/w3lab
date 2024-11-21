@@ -36,9 +36,7 @@ Below is displayed the current configuration of the local YouWol server:
                     configPath: () => {
                         return new HdPathBookView({
                             path: appState.environment$.pipe(
-                                map(
-                                    (env) => env.configuration.pathsBook.config,
-                                ),
+                                map((env) => env.pathsBook.config),
                             ),
                             appState,
                             type: 'file',

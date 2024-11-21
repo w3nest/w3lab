@@ -20,8 +20,8 @@ export function getProjectNav$({
                 (p) => p.name.split('~')[0] === projectName,
             )
             if (project) {
-                const finder = env.youwolEnvironment.projects.finders.find(
-                    (f) => project.path.startsWith(f.fromPath),
+                const finder = env.projects.finders.find((f) =>
+                    project.path.startsWith(f.fromPath),
                 )
                 return `/projects/${window.btoa(finder.fromPath)}/${project.id}`
             }

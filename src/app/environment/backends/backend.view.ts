@@ -183,13 +183,17 @@ export class StatusView implements VirtualDOM<'div'> {
         router: Router
     }) {
         const backends$ = appState.environment$.pipe(
-            map((resp) => resp.youwolEnvironment.proxiedBackends),
+            map((resp) => resp.proxiedBackends),
         )
         this.children = [
             {
                 source$: backends$,
-                vdomMap: (backends: Local.Environment.ProxiedBackend[]) => {
-                    if (backends.find((b) => b.uid === uid)) {
+                vdomMap: ({
+                    store,
+                }: {
+                    store: Local.Environment.ProxiedBackend[]
+                }) => {
+                    if (store.find((b) => b.uid === uid)) {
                         return new TerminateButton({ uid, router })
                     }
                     return new MdWidgets.NoteView({

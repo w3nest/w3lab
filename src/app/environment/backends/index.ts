@@ -40,9 +40,7 @@ function lazyResolver(
     const parts = path.split('/').filter((d) => d != '')
     if (parts.length === 0) {
         const partitions = new Set(
-            env.youwolEnvironment.proxiedBackends.map(
-                (backend) => backend.partitionId,
-            ),
+            env.proxiedBackends.store.map((backend) => backend.partitionId),
         )
         const children = [...partitions].map((partition) => {
             return {
@@ -62,7 +60,7 @@ function lazyResolver(
         }
     }
     if (parts.length === 1) {
-        const children = env.youwolEnvironment.proxiedBackends
+        const children = env.proxiedBackends.store
             .filter((backend) => backend.partitionId == parts[0])
             .map((backend) => {
                 return {
@@ -89,7 +87,7 @@ function lazyResolver(
             html: () => new PartitionView({ partitionId: parts[0], appState }),
         }
     }
-    const backend = env.youwolEnvironment.proxiedBackends.find(
+    const backend = env.proxiedBackends.store.find(
         (backend) => backend.uid === parts[1],
     )
     return {
@@ -142,8 +140,8 @@ export class PartitionsListView implements VirtualDOM<'div'> {
             policy: 'replace',
             source$: appState.environment$,
             vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
-                const backends = env.youwolEnvironment.proxiedBackends
-                if (backends.length === 0) {
+                const backends = env.proxiedBackends
+                if (backends.store.length === 0) {
                     return [
                         new MdWidgets.NoteView({
                             level: 'info',
@@ -153,10 +151,10 @@ export class PartitionsListView implements VirtualDOM<'div'> {
                     ]
                 }
                 const partitions = new Set(
-                    backends.map((backend) => backend.partitionId),
+                    backends.store.map((backend) => backend.partitionId),
                 )
                 return [...partitions].map((partitionId) => {
-                    const count = backends.filter(
+                    const count = backends.store.filter(
                         (backend) => backend.partitionId === partitionId,
                     ).length
                     return new ExpandableGroupView({

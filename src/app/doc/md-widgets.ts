@@ -152,7 +152,7 @@ export function projectNav(
         switchMap((p) => {
             return appState.environment$.pipe(
                 map((env) =>
-                    env.youwolEnvironment.projects.finders.find((finder) =>
+                    env.projects.finders.find((finder) =>
                         p.path.startsWith(finder.fromPath),
                     ),
                 ),

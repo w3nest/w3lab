@@ -289,7 +289,7 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
                     vdomMap: (
                         environment: Local.Environment.EnvironmentStatusResponse,
                     ) => {
-                        return environment.youwolEnvironment.projects.templates.map(
+                        return environment.projects.templates.map(
                             (projectTemplate) =>
                                 new ExpandableGroupView({
                                     title: projectTemplate.type,
