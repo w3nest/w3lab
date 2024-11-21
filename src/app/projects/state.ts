@@ -321,7 +321,7 @@ export class State {
     selectStep(projectId: string, stepId: string | undefined = undefined) {
         const events = this.projectEvents[projectId]
         const step = events.project.pipeline.steps.find((s) => s.id == stepId)
-        events.selectedStep$.next(step ? { step } : undefined)
+        events.selectedStep$.next(step ? { step } : { step: undefined })
     }
 
     createProjectFromTemplate$({
