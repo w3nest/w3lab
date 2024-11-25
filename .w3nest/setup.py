@@ -16,7 +16,6 @@ externals_deps = {
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.0",
     '@w3nest/http-clients': '^0.1.1',
-    '@youwol/os-core': '^0.2.0',
     "@w3nest/rx-tree-views": "^0.1.0",
     "@w3nest/rx-code-mirror-editors": "^0.1.0",
     "@floating-ui/dom": "^1.6.3",

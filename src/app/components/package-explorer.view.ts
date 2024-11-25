@@ -1,22 +1,21 @@
 import { BehaviorSubject, Observable } from 'rxjs'
-import { AssetsGateway, Webpm,
+import { AssetsGateway, Webpm, Assets,
     raiseHTTPErrors } from '@w3nest/http-clients'
 
 import { mergeMap, share } from 'rxjs/operators'
 
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { getUrlBase } from '@w3nest/webpm-client'
-import { AssetLightDescription } from '@youwol/os-core'
 
 export class ExplorerState {
-    public readonly asset: AssetLightDescription
+    public readonly asset: Assets.GetAssetResponse
     public readonly version: string
     public readonly items$: Observable<Webpm.QueryExplorerResponse>
     public readonly selectedFolder$ = new BehaviorSubject<string>('')
 
     public readonly client = new AssetsGateway.Client().webpm
 
-    constructor(params: { asset: AssetLightDescription; version: string }) {
+    constructor(params: { asset: Assets.GetAssetResponse; version: string }) {
         Object.assign(this, params)
 
         this.items$ = this.selectedFolder$.pipe(
@@ -125,8 +124,9 @@ export class ExplorerView implements VirtualDOM<'div'> {
     public readonly class = `${ExplorerView.ClassSelector} border rounded p-3 h-100 overflow-auto`
     public readonly state: ExplorerState
     public readonly children: ChildrenLike
+    public readonly asset: Assets.GetAssetResponse
 
-    constructor(params: { asset: AssetLightDescription; version: string }) {
+    constructor(params: { asset: Assets.GetAssetResponse; version: string }) {
         Object.assign(this, params)
         this.state = new ExplorerState(params)
 

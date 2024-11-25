@@ -1,6 +1,5 @@
 import { AttributeLike, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
 import { Explorer } from '@w3nest/http-clients'
-import { OpenWithParametrization, defaultOpeningApp$ } from '@youwol/os-core'
 import { Observable, of } from 'rxjs'
 import { ExplorerState, ItemCut } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'
@@ -190,35 +189,14 @@ export class ItemIconView implements VirtualDOM<'div'> {
         width: '25px',
     }
     public readonly children: ChildrenLike
-    public readonly defaultOpeningApp$: Observable<
-        | {
-              appInfo: ApplicationInfo
-              parametrization: OpenWithParametrization
-          }
-        | undefined
-    >
 
     constructor({ item }: { item: Explorer.GetItemResponse }) {
-        this.defaultOpeningApp$ = Explorer.isInstanceOfItemResponse(item)
-            ? (defaultOpeningApp$(item) as any)
-            : of(undefined)
         const defaultView = {
             tag: 'img' as const,
             src: '../assets/undefined_icon_file.svg',
             style: { width: '100%', height: '100%' },
         }
-        this.children = [
-            {
-                source$: this.defaultOpeningApp$,
-                vdomMap: (appData: {
-                    appInfo: ApplicationInfo
-                    parametrization: OpenWithParametrization
-                }) => {
-                    return appData?.appInfo?.graphics?.fileIcon || defaultView
-                },
-                untilFirst: defaultView,
-            },
-        ]
+        this.children = [defaultView]
     }
 }
 

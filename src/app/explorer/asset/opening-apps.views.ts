@@ -1,76 +1,10 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets } from '@w3nest/http-clients'
-import {
-    openingApps$,
-    OpenWithParametrization,
-    evaluateParameters,
-} from '@youwol/os-core'
+
 import { fromFetch } from 'rxjs/fetch'
 import { switchMap } from 'rxjs/operators'
 import { launchPackage$, LaunchPackageData } from '../actions.factory'
 import { ApplicationInfo } from '../../common/patches'
-
-type openingApp = {
-    appInfo: ApplicationInfo
-    parametrization: OpenWithParametrization
-}
-export class OpeningAppsViews implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly children: ChildrenLike
-
-    constructor({ asset }: { asset: Assets.GetAssetResponse }) {
-        this.children = [
-            {
-                source$: openingApps$(asset),
-                untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
-                vdomMap: (apps: openingApp[]) => {
-                    if (apps.length === 0) {
-                        return {
-                            tag: 'div',
-                            innerText:
-                                'No application available to open the asset.',
-                        }
-                    }
-                    return {
-                        tag: 'div',
-                        class: 'd-flex flex-wrap',
-                        children: apps.map((app) => {
-                            const params = evaluateParameters(
-                                asset,
-                                app.parametrization,
-                            )
-                            const queryParams = Object.entries(params).reduce(
-                                (acc, [k, v]) => `${acc}&${k}=${v}`,
-                                '',
-                            )
-                            const url = `/apps/${app.appInfo.cdnPackage}/latest?${queryParams}`
-
-                            return {
-                                tag: 'a',
-                                href: url,
-                                target: '_blank',
-                                class: 'd-flex flex-column align-items-center rounded p-2 mx-2 mkdocs-hover-bg-1 fv-pointer',
-                                children: [
-                                    new CustomIconView(
-                                        app.appInfo.graphics.appIcon,
-                                    ),
-                                    {
-                                        tag: 'div',
-                                        class: 'my-1',
-                                    },
-                                    {
-                                        tag: 'div',
-                                        innerText: app.appInfo.displayName,
-                                    },
-                                ],
-                            }
-                        }),
-                    }
-                },
-            },
-        ]
-    }
-}
 
 export class PackageLogoView implements VirtualDOM<'div'> {
     public readonly tag = 'div'

@@ -16,7 +16,6 @@ import {
     Subject,
     switchMap,
 } from 'rxjs'
-import { AssetLightDescription } from '@youwol/os-core'
 import { parseMd, Router } from 'mkdocs-ts'
 import { ExplorerView } from '../package-explorer.view'
 import { map, mergeMap } from 'rxjs/operators'
@@ -279,14 +278,10 @@ export class FilesView implements VirtualDOM<'div'> {
                     selectedVersion$,
                 ]),
                 vdomMap: ([assetResponse, version]: [
-                    AssetLightDescription,
+                    Assets.GetAssetResponse,
                     string,
                 ]): AnyVirtualDOM => {
-                    const asset = {
-                        ...assetResponse,
-                        rawId: packageId,
-                    } as AssetLightDescription
-                    return new ExplorerView({ asset, version })
+                    return new ExplorerView({ asset: assetResponse, version })
                 },
             },
         ]

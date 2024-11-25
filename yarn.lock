@@ -1535,51 +1535,6 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@youwol/http-clients@^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@youwol/http-clients/-/http-clients-3.0.1.tgz#b1ea113d7ce0c1addd9795b61c8c4b2c3ea81cb0"
-  integrity sha512-HyBhKE9lMDb5VweF9+jzA9F3Bnd+nNq9a970yJPwWAW28oM4Csebv0vlPhPIj4IgwXKzP5AZh4lTccAICIoDsQ==
-  dependencies:
-    "@youwol/http-primitives" "^0.2.0"
-    rxjs "^7.5.6"
-
-"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.4":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@youwol/http-primitives/-/http-primitives-0.2.6.tgz#e314810904a28dddb99174a6102626157ac7575c"
-  integrity sha512-IYQwEgElZyrmsaet/ZZ8nGgu3sWDEc9HmUWRpV0eJMmhSzmIxWWDzHF9QIiiBDqtrQimS/9NM+pBUaWYhw7KSw==
-  dependencies:
-    rxjs "^7.5.6"
-
-"@youwol/os-core@^0.2.0":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@youwol/os-core/-/os-core-0.2.1.tgz#dc54e0c8cf10df98c91178cdc0a86e6bc998a553"
-  integrity sha512-h7itWv/83XiZCfqB4Kz02SAbbHDe10ZpZADYEwXe7OEzfu/ALf9TcYdgcDClX1727/+CvyVZ9OjoZddpbph8pw==
-  dependencies:
-    "@youwol/http-clients" "^3.0.0"
-    "@youwol/http-primitives" "^0.2.0"
-    "@youwol/rx-vdom" "^1.0.1"
-    "@youwol/webpm-client" "^3.0.0"
-    rxjs "^7.5.6"
-    uuid "^8.3.2"
-
-"@youwol/rx-vdom@^1.0.1":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@youwol/rx-vdom/-/rx-vdom-1.0.3.tgz#34d48a63a2ecb86681da86ead03c18a442d1a31e"
-  integrity sha512-Nu09fypVNOPQjPklOvs4ZOeAtzrWOMO5tw3zQAc/UO0Q89jPB//ksaemJTV/LRCsmwLoVCKI5m5aw4nbIto/BA==
-  dependencies:
-    "@ungap/custom-elements" "1.2.0"
-    conditional-type-checks "^1.0.6"
-    csstype "^2.6.0"
-
-"@youwol/webpm-client@^3.0.0":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@youwol/webpm-client/-/webpm-client-3.0.7.tgz#5d94a14585882b84c8c2af283ff073248f2aef51"
-  integrity sha512-kXr7me9tfuW8w3YPARLl6d1lCBPTwSBC9go1aih8A3XkGy4VNG2UmSDIqcjAR5I33u8oQkcFZ3Vl+g6eeK1dTA==
-  dependencies:
-    "@youwol/http-primitives" "^0.2.4"
-    rxjs "^7.5.6"
-    semver "^7.3.4"
-
 abab@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"

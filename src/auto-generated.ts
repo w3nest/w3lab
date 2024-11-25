@@ -6,7 +6,6 @@ const runTimeDependencies = {
         "@w3nest/rx-code-mirror-editors": "^0.1.0",
         "@w3nest/rx-tree-views": "^0.1.0",
         "@w3nest/webpm-client": "^0.1.0",
-        "@youwol/os-core": "^0.2.0",
         "bootstrap": "^5.3.0",
         "d3": "^7.7.0",
         "mkdocs-ts": "^0.1.1",
@@ -23,7 +22,6 @@ const externals = {
     "@w3nest/rx-code-mirror-editors": "window['@w3nest/rx-code-mirror-editors_APIv01']",
     "@w3nest/rx-tree-views": "window['@w3nest/rx-tree-views_APIv01']",
     "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
-    "@youwol/os-core": "window['@youwol/os-core_APIv02']",
     "bootstrap": "window['bootstrap_APIv5']",
     "d3": "window['d3_APIv7']",
     "mkdocs-ts": "window['mkdocs-ts_APIv01']",
@@ -52,10 +50,6 @@ const exportedSymbols = {
     "@w3nest/webpm-client": {
         "apiKey": "01",
         "exportedSymbol": "@w3nest/webpm-client"
-    },
-    "@youwol/os-core": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/os-core"
     },
     "bootstrap": {
         "apiKey": "5",
@@ -87,7 +81,6 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "bootstrap",
         "@w3nest/webpm-client",
         "@w3nest/http-clients",
-        "@youwol/os-core",
         "@w3nest/rx-tree-views",
         "@w3nest/rx-code-mirror-editors",
         "@floating-ui/dom",

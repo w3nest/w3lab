@@ -2,7 +2,6 @@ import { AppState } from '../app-state'
 import { parseMd, Router, Views, Navigation } from 'mkdocs-ts'
 
 import * as YwConfiguration from './yw-configuration'
-import * as Profiles from './profiles'
 import * as Databases from './databases'
 import * as Backends from './backends'
 import * as EsmServers from './esm-servers'
@@ -21,7 +20,6 @@ export const navigation = (appState: AppState): Navigation => ({
     decoration: { icon: { tag: 'i', class: 'fas fa-tasks me-2' } },
     html: ({ router }) => new PageView({ appState, router }),
     '/yw-configuration': YwConfiguration.navigation(appState),
-    '/profiles': Profiles.navigation(appState),
     '/databases': Databases.navigation(appState),
     '/browser': Browser.navigation(appState),
     '/logs': Logs.navigation(appState),

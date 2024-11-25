@@ -28,11 +28,7 @@ import { AccessView, WritePermission } from './asset/access.views'
 import { DescriptionView } from './asset/descriptions.views'
 import { LinksView } from './asset/links.views'
 import { OverViews } from './asset/overviews.views'
-import {
-    LaunchView,
-    OpeningAppsViews,
-    PackageLogoView,
-} from './asset/opening-apps.views'
+import { LaunchView, PackageLogoView } from './asset/opening-apps.views'
 
 export function headerViewWrapper(headerView: AnyVirtualDOM): AnyVirtualDOM {
     return {
@@ -210,13 +206,6 @@ export class AssetView implements VirtualDOM<'div'> {
 <launch></launch>
 <writePermission></writePermission>
 
-
----
-
-**Opening applications:**
-
-<openingApps></openingApps>
-
 ---
 
 
@@ -252,7 +241,6 @@ export class AssetView implements VirtualDOM<'div'> {
                             router: router,
                         }),
                     launch: () => new LaunchView({ asset }),
-                    openingApps: () => new OpeningAppsViews({ asset }),
                     description: () =>
                         new DescriptionView({
                             asset: asset,

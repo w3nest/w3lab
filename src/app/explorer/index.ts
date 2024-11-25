@@ -2,9 +2,8 @@ import { Navigation, parseMd, Router, Views, CatchAllNav } from 'mkdocs-ts'
 import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
-import { combineLatest, forkJoin, Observable, of } from 'rxjs'
+import { forkJoin, Observable, of } from 'rxjs'
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { Installer, PreferencesFacade } from '@youwol/os-core'
 import { ExplorerState } from './explorer.state'
 import { groupNavNodeInput } from './utils'
 
@@ -42,13 +41,6 @@ export const navigation = ({
 export class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-
-    static readonly warmUp = () => {
-        combineLatest([
-            Installer.getApplicationsInfo$(),
-            PreferencesFacade.getPreferences$(),
-        ]).subscribe()
-    }
 
     constructor({ router }: { router: Router }) {
         this.children = [

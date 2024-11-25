@@ -1,7 +1,6 @@
 import { forkJoin, Observable, of } from 'rxjs'
 import { map, switchMap, take } from 'rxjs/operators'
 import {
-    AssetsGateway,
     Assets,
     AssetsGateway as Gtw,
     raiseHTTPErrors,
@@ -17,13 +16,6 @@ import {
     TrashNode,
 } from './nodes'
 
-import {
-    isLocalYouwol,
-    Installer,
-    evaluateMatch,
-    evaluateParameters,
-    openingApps$,
-} from '@youwol/os-core'
 import { AnyVirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
 import { fromFetch } from 'rxjs/fetch'
@@ -194,12 +186,7 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         section: 'IO',
         enabled: () => true,
         applicable: () => {
-            return (
-                isLocalYouwol() &&
-                node instanceof ItemNode &&
-                node.origin &&
-                node.origin.local
-            )
+            return node instanceof ItemNode && node.origin && node.origin.local
         },
         exe: () => {
             state.uploadAsset(node as ItemNode)
@@ -522,35 +509,8 @@ export function getActions$(
             ? launchPackage$(node.rawId)
             : of(undefined)
 
-    return forkJoin([
-        launch$,
-        permissions$,
-        Installer.getInstallManifest$().pipe(take(1)),
-        node instanceof ItemNode ? openingApps$(node).pipe(take(1)) : of([]),
-    ]).pipe(
-        map(([launch, permissions, installManifest, openingApps]) => {
-            // following 'node as any' is because of TrashNode; installManifest do not define actions for it anyway
-            const customActions: Action[] = []
-            // node instanceof TrashNode
-            //     ? []
-            //     : installManifest
-            //           .contextMenuActions({
-            //               node: node,
-            //               explorer: state,
-            //               cdnClient: webpmClient,
-            //               assetsGtwClient:
-            //                   new AssetsGateway.Client() as any,
-            //               fluxView: rxVdom,
-            //           })
-            //           .map((action) => {
-            //               return {
-            //                   ...action,
-            //                   enabled: () => true,
-            //                   sourceEventNode: node,
-            //                   section: 'CustomActions',
-            //               }
-            //           })
-
+    return forkJoin([launch$, permissions$]).pipe(
+        map(([launch, permissions]) => {
             const launchAction: Action = launch && {
                 sourceEventNode: node,
                 icon: {
@@ -569,39 +529,10 @@ export function getActions$(
                 },
             }
 
-            const openWithActions: Action[] = openingApps.map(
-                ({ appInfo, parametrization }) => ({
-                    sourceEventNode: node,
-                    icon: { tag: 'div', class: 'fas fa-folder-open' },
-                    name: `${appInfo.displayName} ${
-                        parametrization.name || ''
-                    }`,
-                    section: 'Open',
-                    enabled: () => true,
-                    applicable: () => {
-                        return evaluateMatch(node as ItemNode, parametrization)
-                    },
-                    exe: () => {
-                        state.launchApplication({
-                            cdnPackage: appInfo.cdnPackage,
-                            parameters: evaluateParameters(
-                                node as ItemNode,
-                                parametrization,
-                            ),
-                        })
-                    },
-                }),
-            )
-
             const nativeActions = Object.values(GENERIC_ACTIONS).map((action) =>
                 action(state, node, permissions),
             )
-            return [
-                launchAction,
-                ...nativeActions,
-                ...customActions,
-                ...openWithActions,
-            ].filter((a) => {
+            return [launchAction, ...nativeActions].filter((a) => {
                 return a?.applicable()
             })
         }),
