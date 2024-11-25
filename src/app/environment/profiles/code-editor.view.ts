@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Common, TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { Common, TsCodeEditorModule } from '@w3nest/rx-code-mirror-editors'
 
 import CodeMirror from 'codemirror'
 import { ProfilesState } from './profiles.state'

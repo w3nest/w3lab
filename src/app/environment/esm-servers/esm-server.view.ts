@@ -1,6 +1,6 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Local } from '@w3nest/http-clients'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { parseMd, Router } from 'mkdocs-ts'
 import {
     ComponentCrossLinksView,
     LogsExplorerView,

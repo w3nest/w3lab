@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { State as ProjectsState } from './state'
 import { HTTPError, dispatchHTTPErrors, Local } from '@w3nest/http-clients'
 import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
@@ -7,7 +7,7 @@ import { delay, map, shareReplay, tap } from 'rxjs/operators'
 import { classesButton } from '../common'
 import { setup } from '../../auto-generated'
 
-declare type CodeEditorModule = typeof import('@youwol/rx-code-mirror-editors')
+declare type CodeEditorModule = typeof import('@w3nest/rx-code-mirror-editors')
 
 /**
  * Lazy loading of the module `@youwol/fv-code-mirror-editors`
@@ -19,7 +19,7 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
         from(
             install({
                 modules: [
-                    `@youwol/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/rx-code-mirror-editors']} as codeMirrorEditors`,
+                    `@w3nest/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@w3nest/rx-code-mirror-editors']} as codeMirrorEditors`,
                 ],
                 scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
                 css: [

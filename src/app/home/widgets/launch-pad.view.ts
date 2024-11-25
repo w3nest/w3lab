@@ -1,8 +1,8 @@
-import { ChildrenLike, CSSAttribute, VirtualDOM } from '@youwol/rx-vdom'
-import type { ApplicationInfo } from '@youwol/os-core'
+import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
 import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { shareReplay } from 'rxjs/operators'
 import { colabClassPrefix } from '../../common'
+import { ApplicationInfo } from '../../common/patches'
 
 /**
  * Represents a view that displays a collection of application links, arranged in a flexible grid layout.
@@ -41,8 +41,8 @@ export class LaunchPadView implements VirtualDOM<'div'> {
      *
      * <code-snippet language='html'>
      * <launchPad size='50px'>
-     *    <app name="@youwol/mkdocs-ts-doc"></app>
-     *    <app name="@youwol/rx-vdom-doc"></app>
+     *    <app name="mkdocs-ts-doc"></app>
+     *    <app name="rx-vdom-doc"></app>
      *    <app name="@w3nest/webpm-client-doc"></app>
      * </launchPad>
      * </code-snippet>
@@ -135,7 +135,10 @@ export class AppIcon implements VirtualDOM<'button'> {
                                     width: params.size,
                                     height: params.size,
                                 },
-                                children: [appInfo.graphics.appIcon],
+                                children: [
+                                    appInfo.graphics
+                                        .appIcon as unknown as AnyVirtualDOM,
+                                ],
                             },
                             {
                                 tag: 'i',
@@ -144,6 +147,7 @@ export class AppIcon implements VirtualDOM<'button'> {
                             {
                                 tag: 'div',
                                 class: '',
+
                                 innerText: params.label || appInfo.displayName,
                             },
                         ],

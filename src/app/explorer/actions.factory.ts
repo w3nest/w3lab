@@ -7,7 +7,7 @@ import {
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
 import * as webpmClient from '@w3nest/webpm-client'
-import * as rxVdom from '@youwol/rx-vdom'
+import * as rxVdom from 'rx-vdom'
 import {
     ExplorerNode,
     DriveNode,
@@ -24,7 +24,7 @@ import {
     evaluateParameters,
     openingApps$,
 } from '@youwol/os-core'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
 import { fromFetch } from 'rxjs/fetch'
 import { tryLibScript } from '../components/js-wasm/package.views'
@@ -530,26 +530,26 @@ export function getActions$(
     ]).pipe(
         map(([launch, permissions, installManifest, openingApps]) => {
             // following 'node as any' is because of TrashNode; installManifest do not define actions for it anyway
-            const customActions: Action[] =
-                node instanceof TrashNode
-                    ? []
-                    : installManifest
-                          .contextMenuActions({
-                              node: node,
-                              explorer: state,
-                              cdnClient: webpmClient,
-                              assetsGtwClient:
-                                  new AssetsGateway.Client() as any,
-                              fluxView: rxVdom,
-                          })
-                          .map((action) => {
-                              return {
-                                  ...action,
-                                  enabled: () => true,
-                                  sourceEventNode: node,
-                                  section: 'CustomActions',
-                              }
-                          })
+            const customActions: Action[] = []
+            // node instanceof TrashNode
+            //     ? []
+            //     : installManifest
+            //           .contextMenuActions({
+            //               node: node,
+            //               explorer: state,
+            //               cdnClient: webpmClient,
+            //               assetsGtwClient:
+            //                   new AssetsGateway.Client() as any,
+            //               fluxView: rxVdom,
+            //           })
+            //           .map((action) => {
+            //               return {
+            //                   ...action,
+            //                   enabled: () => true,
+            //                   sourceEventNode: node,
+            //                   section: 'CustomActions',
+            //               }
+            //           })
 
             const launchAction: Action = launch && {
                 sourceEventNode: node,

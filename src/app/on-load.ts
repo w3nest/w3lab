@@ -1,5 +1,5 @@
-import { render } from '@youwol/rx-vdom'
-import { GlobalMarkdownViews } from '@youwol/mkdocs-ts'
+import { render } from 'rx-vdom'
+import { GlobalMarkdownViews } from 'mkdocs-ts'
 
 import { AppState } from './app-state'
 import { Observable } from 'rxjs'

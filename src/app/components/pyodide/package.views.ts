@@ -1,9 +1,9 @@
-import { VirtualDOM, ChildLike } from '@youwol/rx-vdom'
+import { VirtualDOM, ChildLike } from 'rx-vdom'
 import { State } from '../state'
 
 import { Local } from '@w3nest/http-clients'
 import { ReplaySubject } from 'rxjs'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { parseMd, Router } from 'mkdocs-ts'
 import { VersionsView } from '../js-wasm/package.views'
 
 /**

@@ -1,15 +1,9 @@
-import {
-    Navigation,
-    parseMd,
-    Router,
-    Views,
-    CatchAllNav,
-} from '@youwol/mkdocs-ts'
+import { Navigation, parseMd, Router, Views, CatchAllNav } from 'mkdocs-ts'
 import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
 import { combineLatest, forkJoin, Observable, of } from 'rxjs'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Installer, PreferencesFacade } from '@youwol/os-core'
 import { ExplorerState } from './explorer.state'
 import { groupNavNodeInput } from './utils'

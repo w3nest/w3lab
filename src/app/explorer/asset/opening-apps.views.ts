@@ -1,14 +1,14 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets } from '@w3nest/http-clients'
 import {
     openingApps$,
-    ApplicationInfo,
     OpenWithParametrization,
     evaluateParameters,
 } from '@youwol/os-core'
 import { fromFetch } from 'rxjs/fetch'
 import { switchMap } from 'rxjs/operators'
 import { launchPackage$, LaunchPackageData } from '../actions.factory'
+import { ApplicationInfo } from '../../common/patches'
 
 type openingApp = {
     appInfo: ApplicationInfo

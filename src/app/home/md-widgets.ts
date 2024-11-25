@@ -1,5 +1,5 @@
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
-import { Router } from '@youwol/mkdocs-ts'
+import { AnyVirtualDOM } from 'rx-vdom'
+import { Router } from 'mkdocs-ts'
 import {
     ProjectsDonutChart,
     LaunchPadView,

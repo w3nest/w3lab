@@ -1,5 +1,5 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd } from '@youwol/mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { parseMd } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
 import { TerminateButton } from './backend.view'

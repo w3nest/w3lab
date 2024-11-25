@@ -1,6 +1,6 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState } from '../../app-state'
-import { parseMd, Router, MdWidgets } from '@youwol/mkdocs-ts'
+import { parseMd, Router, MdWidgets } from 'mkdocs-ts'
 import { debounceTime, merge, Observable, of } from 'rxjs'
 import { filter, map, mergeMap, shareReplay } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'

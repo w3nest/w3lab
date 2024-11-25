@@ -1,5 +1,5 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Router } from '@youwol/mkdocs-ts'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { Router } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { classFolderFileBase } from '../explorer/item.view'
 import { decodeHdPath, encodeHdPath, encodeHRef } from './index'

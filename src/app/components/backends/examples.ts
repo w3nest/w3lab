@@ -12,7 +12,7 @@ export const example1 = `
           -  demo_yw_backend is the backend used here
         */
         const {rxDom, client} = await webpm.install({
-            esm:['@youwol/rx-vdom as rxDom'],
+            esm:['rx-vdom as rxDom'],
             backends:['demo_yw_backend#^0.1.0 as client'],
             displayLoadingScreen: true,
         })

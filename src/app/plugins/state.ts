@@ -5,7 +5,7 @@ import { firstValueFrom, Subject } from 'rxjs'
 import * as webpm from '@w3nest/webpm-client'
 import type * as WebPM from '@w3nest/webpm-client'
 import { AppState } from '../app-state'
-import { Navigation } from '@youwol/mkdocs-ts'
+import { Navigation } from 'mkdocs-ts'
 
 /**
  * Signature for the plugins loader implementation.
@@ -52,7 +52,7 @@ export type PluginTrait = {
      * @param params.colabState State of the **colab** application.
      * @param params.basePath The base path from which the plugin is exposed within the navigation tree.
      * @returns A navigation object.
-     *     See  <a target="_blank" href='https://l.youwol.com/doc/@youwol/mkdocs-ts'>mkdocs-ts documentation</a>.
+     *     See  <a target="_blank" href='https://l.youwol.com/doc/mkdocs-ts'>mkdocs-ts documentation</a>.
      */
     navigation: (params: {
         colabState: AppState

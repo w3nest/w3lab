@@ -1,5 +1,5 @@
-import { VirtualDOM } from '@youwol/rx-vdom'
-import { Router } from '@youwol/mkdocs-ts'
+import { VirtualDOM } from 'rx-vdom'
+import { Router } from 'mkdocs-ts'
 
 export const buttonsFactory: Record<string, VirtualDOM<'button'>> = {
     HomeEdit: {

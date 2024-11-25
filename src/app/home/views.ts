@@ -1,6 +1,6 @@
-import { ChildrenLike, VirtualDOM, AnyVirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM, AnyVirtualDOM } from 'rx-vdom'
 
-import { MdWidgets } from '@youwol/mkdocs-ts'
+import { MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'

@@ -1,8 +1,8 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway } from '@w3nest/http-clients'
 import { ExplorerState } from '../explorer.state'
 import { BehaviorSubject, skip } from 'rxjs'
-import { MdWidgets, parseMd } from '@youwol/mkdocs-ts'
+import { MdWidgets, parseMd } from 'mkdocs-ts'
 import { filter, switchMap } from 'rxjs/operators'
 
 export class DescriptionView implements VirtualDOM<'div'> {

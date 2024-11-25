@@ -1,4 +1,4 @@
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 export const installIcon: (statusIcon: AnyVirtualDOM) => AnyVirtualDOM = (
     status: AnyVirtualDOM,

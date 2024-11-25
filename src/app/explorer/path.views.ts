@@ -1,6 +1,6 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Explorer } from '@w3nest/http-clients'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 import { ExplorerState } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'
 import { FolderNode, ItemNode } from './nodes'

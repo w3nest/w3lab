@@ -4,7 +4,7 @@ import {
     CSSAttribute,
     RxHTMLElement,
     VirtualDOM,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { Assets, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, share, skip } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'

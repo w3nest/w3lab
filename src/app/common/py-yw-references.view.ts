@@ -1,5 +1,5 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { parseMd, Router } from 'mkdocs-ts'
 
 export function pyYwDocLink(title: string, path: string) {
     const basePath = '/apps/@youwol/py-youwol-doc/latest?nav='

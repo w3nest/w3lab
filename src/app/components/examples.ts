@@ -11,7 +11,7 @@ export const example1 = `
         //-------------
         const {rxDom, client, pyodide, rxjs} = await webpm.install({
             modules:[
-                '@youwol/rx-vdom as rxDom', 
+                'rx-vdom as rxDom', 
                 'three#0.128.0 as THREE', 
                 'three-trackballcontrols#0.0.8 as TrackballControls',
                 'rxjs#7.5.6 as rxjs',

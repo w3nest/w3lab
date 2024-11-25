@@ -1,4 +1,4 @@
-import { ChildrenLike, RxAttribute, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, RxAttribute, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
 
 export class DisconnectedView implements VirtualDOM<'div'> {

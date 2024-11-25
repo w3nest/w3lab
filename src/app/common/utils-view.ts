@@ -1,10 +1,5 @@
-import {
-    ChildrenLike,
-    VirtualDOM,
-    CSSAttribute,
-    AnyVirtualDOM,
-} from '@youwol/rx-vdom'
-import { fromMarkdown, parseMd, Router } from '@youwol/mkdocs-ts'
+import { ChildrenLike, VirtualDOM, CSSAttribute, AnyVirtualDOM } from 'rx-vdom'
+import { fromMarkdown, parseMd, Router } from 'mkdocs-ts'
 import { BehaviorSubject, mergeMap, Observable, of, Subject, timer } from 'rxjs'
 import { setup } from '../../auto-generated'
 import { AppState } from '../app-state'

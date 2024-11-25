@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs'
 import { Local, Label, raiseHTTPErrors } from '@w3nest/http-clients'
 import { ExpandableGroupView } from './expandable-group.view'

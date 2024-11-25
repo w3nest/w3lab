@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Local } from '@w3nest/http-clients'
 import { State } from './state'
 

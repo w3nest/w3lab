@@ -1,7 +1,7 @@
 import { combineLatest, from, Observable, of } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
-import { ChildrenLike, RxHTMLElement, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { spinnerView } from './utils-view'
 
 export type CodeLanguage =

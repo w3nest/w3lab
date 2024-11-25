@@ -99,7 +99,7 @@ export class State {
         document.head.appendChild(styleElement)
         return new Function(content.js)()({
             webpm,
-            mkdocs: window['@youwol/mkdocs-ts'],
+            mkdocs: window['mkdocs-ts'],
             mdSrc: content.md,
             router: this.appState.router,
         })

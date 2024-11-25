@@ -1,6 +1,6 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppMode, AppState } from './app-state'
-import { Router, Views } from '@youwol/mkdocs-ts'
+import { Router, Views } from 'mkdocs-ts'
 import { TopBannerView } from './top-banner.view'
 import { Subject } from 'rxjs'
 import { DisconnectedView } from './disconnected.view'

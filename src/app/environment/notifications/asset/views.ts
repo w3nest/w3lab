@@ -1,12 +1,12 @@
 import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { AssetDownloadEvent, State } from '../state'
 import { filter } from 'rxjs/operators'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { downloadIcon } from '../views'
 import { Observable } from 'rxjs'
 import { LogsExplorerView } from '../../../common/logs-explorer.view'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 
 export class AssetDownloadNotificationView extends ExpandableGroupView {
     constructor({

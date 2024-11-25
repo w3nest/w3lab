@@ -1,7 +1,7 @@
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { DonutChart, DonutChartSection } from './donut-chart.utils'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 
 /**
  * A widget that displays a donut chart representing components.

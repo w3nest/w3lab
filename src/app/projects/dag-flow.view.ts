@@ -10,7 +10,7 @@ import { combineLatest, merge } from 'rxjs'
 import { Local } from '@w3nest/http-clients'
 import { instanceOfStepStatus, State } from './state'
 import { map } from 'rxjs/operators'
-import { RxHTMLElement, VirtualDOM } from '@youwol/rx-vdom'
+import { RxHTMLElement, VirtualDOM } from 'rx-vdom'
 
 /**
  * @category View

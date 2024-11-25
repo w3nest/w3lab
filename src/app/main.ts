@@ -4,7 +4,7 @@ import * as webpmClient from '@w3nest/webpm-client'
 
 import { setup } from '../auto-generated'
 
-const mkdocsVersion = setup.runTimeDependencies.externals['@youwol/mkdocs-ts']
+const mkdocsVersion = setup.runTimeDependencies.externals['mkdocs-ts']
 
 await setup.installMainModule({
     cdnClient: webpmClient,
@@ -15,7 +15,7 @@ await setup.installMainModule({
             'highlight.js#11.2.0~styles/default.css',
             'fontawesome#5.12.1~css/all.min.css',
             '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
-            `@youwol/mkdocs-ts#${mkdocsVersion}~assets/mkdocs-light.css`,
+            `mkdocs-ts#${mkdocsVersion}~assets/mkdocs-light.css`,
         ],
         displayLoadingScreen: true,
     },

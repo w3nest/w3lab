@@ -1,9 +1,4 @@
-import {
-    AnyVirtualDOM,
-    ChildLike,
-    ChildrenLike,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildLike, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 
 /**

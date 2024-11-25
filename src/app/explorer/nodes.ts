@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs'
 import { Explorer } from '@w3nest/http-clients'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 export interface Origin {
     local: boolean

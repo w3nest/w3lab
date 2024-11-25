@@ -11,14 +11,14 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / 'package.json')
 
 externals_deps = {
-    "@youwol/mkdocs-ts": "^0.6.3",
-    "@youwol/rx-vdom": "^1.0.1",
+    "mkdocs-ts": "^0.1.1",
+    "rx-vdom": "^0.1.0",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.0",
-    '@w3nest/http-clients': '^0.1.0',
+    '@w3nest/http-clients': '^0.1.1',
     '@youwol/os-core': '^0.2.0',
-    "@youwol/rx-tree-views": "^0.3.1",
-    "@youwol/rx-code-mirror-editors": "^0.5.0",
+    "@w3nest/rx-tree-views": "^0.1.0",
+    "@w3nest/rx-code-mirror-editors": "^0.1.0",
     "@floating-ui/dom": "^1.6.3",
     "rxjs": "^7.5.6",
     'd3': '^7.7.0',

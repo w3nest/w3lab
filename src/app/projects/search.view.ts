@@ -1,9 +1,9 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { State } from './state'
 import { map } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { Local } from '@w3nest/http-clients'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 import { icon } from './icons'
 
 export class SearchView implements VirtualDOM<'div'> {

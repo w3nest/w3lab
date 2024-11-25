@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { Local, raiseHTTPErrors } from '@w3nest/http-clients'

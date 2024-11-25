@@ -18,14 +18,14 @@ import {
 import { WebpmSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
-import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
+import { TsCodeEditorModule } from '@w3nest/rx-code-mirror-editors'
 
 import * as webpmClient from '@w3nest/webpm-client'
 import * as httpClients from '@w3nest/http-clients'
 
 const cmInstall = {
     modules: [
-        `@youwol/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/rx-code-mirror-editors']} as codeMirrorEditors`,
+        `@w3nest/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@w3nest/rx-code-mirror-editors']} as codeMirrorEditors`,
     ],
     scripts: [
         'codemirror#5.52.0~mode/javascript.min.js',

@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway } from '@w3nest/http-clients'
 import { AssetPreview, Installer } from '@youwol/os-core'
 import { map } from 'rxjs/operators'

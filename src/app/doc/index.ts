@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     Router,
     parseMd,
@@ -7,7 +7,7 @@ import {
     fromMarkdown,
     installCodeApiModule,
     installNotebookModule,
-} from '@youwol/mkdocs-ts'
+} from 'mkdocs-ts'
 import { pyYwDocLink } from '../common/py-yw-references.view'
 import { AppMode, AppState } from '../app-state'
 import { getCompanionDocHref } from '../app-view'

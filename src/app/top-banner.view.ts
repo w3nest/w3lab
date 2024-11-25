@@ -1,11 +1,11 @@
-import { Router, Views } from '@youwol/mkdocs-ts'
+import { Router, Views } from 'mkdocs-ts'
 import {
     AnyVirtualDOM,
     ChildrenLike,
     VirtualDOM,
     CustomAttribute,
     RxAttribute,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { Local, Accounts } from '@w3nest/http-clients'
 import { AppState } from './app-state'
 import { internalAnchor } from './common/links.view'

@@ -1,8 +1,8 @@
-import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
+import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { EsmServerView } from './esm-server.view'
 export { State } from './state'
 

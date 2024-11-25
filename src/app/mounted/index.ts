@@ -1,12 +1,6 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState, MountedPath } from '../app-state'
-import {
-    CatchAllNav,
-    Navigation,
-    parseMd,
-    Router,
-    Views,
-} from '@youwol/mkdocs-ts'
+import { CatchAllNav, Navigation, parseMd, Router, Views } from 'mkdocs-ts'
 import { FileContentView } from './file-content-view'
 import { map, take } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'

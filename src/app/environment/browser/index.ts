@@ -1,7 +1,7 @@
 import { AppState } from '../../app-state'
 
-import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { map } from 'rxjs/operators'
 import { Local } from '@w3nest/http-clients'
 import { HdPathBookView } from '../../common'

@@ -4,8 +4,8 @@ import {
     PreferencesView,
     ProfilesListView,
 } from './profiles.view'
-import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { ProfilesState } from './profiles.state'
 
 export const navigation = (appState: AppState): Navigation => ({

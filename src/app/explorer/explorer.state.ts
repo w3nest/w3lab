@@ -15,7 +15,7 @@ import {
     ItemNode,
     TrashNode,
 } from './nodes'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 
 export type ItemCut = {
     cutType: 'borrow' | 'move'

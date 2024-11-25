@@ -1,11 +1,11 @@
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { parseMd, Router } from 'mkdocs-ts'
 import { PackageView } from '../js-wasm/package.views'
 import {
     AnyVirtualDOM,
     ChildrenLike,
     RxHTMLElement,
     VirtualDOM,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import {
     BehaviorSubject,
     combineLatest,

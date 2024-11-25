@@ -1,6 +1,6 @@
 import { AppState } from '../../app-state'
-import { Navigation, parseMd, Router, Views } from '@youwol/mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     AssetDownloadEvent,
     BackendInstallFlow,

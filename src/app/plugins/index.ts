@@ -28,8 +28,8 @@
  * @module
  */
 import { AppState } from '../app-state'
-import { Views, MdWidgets, parseMd, Navigation } from '@youwol/mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Views, MdWidgets, parseMd, Navigation } from 'mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { State, Status } from './state'
 export * from './state'

@@ -1,6 +1,6 @@
 import { Local } from '@w3nest/http-clients'
 import { NavIconSvg } from '../common'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 export function icon(project: Local.Projects.Project): AnyVirtualDOM {
     const filenames = {

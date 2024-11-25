@@ -1,5 +1,5 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { ImmutableTree } from '@youwol/rx-tree-views'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { of } from 'rxjs'
 
 /**

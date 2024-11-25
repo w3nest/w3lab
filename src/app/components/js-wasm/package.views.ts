@@ -3,7 +3,7 @@ import {
     AnyVirtualDOM,
     VirtualDOM,
     ChildLike,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { State } from '../state'
 
 import { Local, Assets, Webpm,
@@ -17,7 +17,7 @@ import {
     switchMap,
 } from 'rxjs'
 import { AssetLightDescription } from '@youwol/os-core'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { parseMd, Router } from 'mkdocs-ts'
 import { ExplorerView } from '../package-explorer.view'
 import { map, mergeMap } from 'rxjs/operators'
 import { ComponentCrossLinksView } from '../../common'

@@ -2,15 +2,15 @@
 const runTimeDependencies = {
     "externals": {
         "@floating-ui/dom": "^1.6.3",
-        "@w3nest/http-clients": "^0.1.0",
+        "@w3nest/http-clients": "^0.1.1",
+        "@w3nest/rx-code-mirror-editors": "^0.1.0",
+        "@w3nest/rx-tree-views": "^0.1.0",
         "@w3nest/webpm-client": "^0.1.0",
-        "@youwol/mkdocs-ts": "^0.6.3",
         "@youwol/os-core": "^0.2.0",
-        "@youwol/rx-code-mirror-editors": "^0.5.0",
-        "@youwol/rx-tree-views": "^0.3.1",
-        "@youwol/rx-vdom": "^1.0.1",
         "bootstrap": "^5.3.0",
         "d3": "^7.7.0",
+        "mkdocs-ts": "^0.1.1",
+        "rx-vdom": "^0.1.0",
         "rxjs": "^7.5.6"
     },
     "includedInBundle": {
@@ -20,14 +20,14 @@ const runTimeDependencies = {
 const externals = {
     "@floating-ui/dom": "window['@floating-ui/dom_APIv1']",
     "@w3nest/http-clients": "window['@w3nest/http-clients_APIv01']",
+    "@w3nest/rx-code-mirror-editors": "window['@w3nest/rx-code-mirror-editors_APIv01']",
+    "@w3nest/rx-tree-views": "window['@w3nest/rx-tree-views_APIv01']",
     "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
-    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv06']",
     "@youwol/os-core": "window['@youwol/os-core_APIv02']",
-    "@youwol/rx-code-mirror-editors": "window['@youwol/rx-code-mirror-editors_APIv05']",
-    "@youwol/rx-tree-views": "window['@youwol/rx-tree-views_APIv03']",
-    "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "bootstrap": "window['bootstrap_APIv5']",
     "d3": "window['d3_APIv7']",
+    "mkdocs-ts": "window['mkdocs-ts_APIv01']",
+    "rx-vdom": "window['rx-vdom_APIv01']",
     "rxjs": "window['rxjs_APIv7']",
     "rxjs/fetch": "window['rxjs_APIv7']['fetch']",
     "rxjs/operators": "window['rxjs_APIv7']['operators']"
@@ -41,29 +41,21 @@ const exportedSymbols = {
         "apiKey": "01",
         "exportedSymbol": "@w3nest/http-clients"
     },
+    "@w3nest/rx-code-mirror-editors": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/rx-code-mirror-editors"
+    },
+    "@w3nest/rx-tree-views": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/rx-tree-views"
+    },
     "@w3nest/webpm-client": {
         "apiKey": "01",
         "exportedSymbol": "@w3nest/webpm-client"
     },
-    "@youwol/mkdocs-ts": {
-        "apiKey": "06",
-        "exportedSymbol": "@youwol/mkdocs-ts"
-    },
     "@youwol/os-core": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/os-core"
-    },
-    "@youwol/rx-code-mirror-editors": {
-        "apiKey": "05",
-        "exportedSymbol": "@youwol/rx-code-mirror-editors"
-    },
-    "@youwol/rx-tree-views": {
-        "apiKey": "03",
-        "exportedSymbol": "@youwol/rx-tree-views"
-    },
-    "@youwol/rx-vdom": {
-        "apiKey": "1",
-        "exportedSymbol": "@youwol/rx-vdom"
     },
     "bootstrap": {
         "apiKey": "5",
@@ -72,6 +64,14 @@ const exportedSymbols = {
     "d3": {
         "apiKey": "7",
         "exportedSymbol": "d3"
+    },
+    "mkdocs-ts": {
+        "apiKey": "01",
+        "exportedSymbol": "mkdocs-ts"
+    },
+    "rx-vdom": {
+        "apiKey": "01",
+        "exportedSymbol": "rx-vdom"
     },
     "rxjs": {
         "apiKey": "7",
@@ -82,14 +82,14 @@ const exportedSymbols = {
 const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "entryFile": "./main.ts",
     "loadDependencies": [
-        "@youwol/mkdocs-ts",
-        "@youwol/rx-vdom",
+        "mkdocs-ts",
+        "rx-vdom",
         "bootstrap",
         "@w3nest/webpm-client",
         "@w3nest/http-clients",
         "@youwol/os-core",
-        "@youwol/rx-tree-views",
-        "@youwol/rx-code-mirror-editors",
+        "@w3nest/rx-tree-views",
+        "@w3nest/rx-code-mirror-editors",
         "@floating-ui/dom",
         "rxjs",
         "d3"

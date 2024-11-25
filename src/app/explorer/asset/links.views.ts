@@ -1,8 +1,8 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway, Explorer } from '@w3nest/http-clients'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { PathView } from '../path.views'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 import { ExplorerState } from '../explorer.state'
 
 export class LinkView implements VirtualDOM<'div'> {

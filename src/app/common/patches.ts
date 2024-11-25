@@ -1,4 +1,5 @@
 import { delay } from 'rxjs/operators'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 /**
  * This patch is used when mounting a local HD folder (during the redirect to the mounted folder).
@@ -12,4 +13,17 @@ import { delay } from 'rxjs/operators'
  */
 export function patchRequestObjectAlreadyUsed() {
     return delay(100)
+}
+
+/**
+ * This datastructure should be moved somewhere else.
+ */
+export interface ApplicationInfo {
+    cdnPackage: string
+    displayName: string
+    graphics?: {
+        background?: AnyVirtualDOM
+        fileIcon?: AnyVirtualDOM
+        appIcon?: AnyVirtualDOM
+    }
 }

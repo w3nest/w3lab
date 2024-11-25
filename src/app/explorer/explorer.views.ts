@@ -1,9 +1,4 @@
-import {
-    AnyVirtualDOM,
-    ChildrenLike,
-    RxChild,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, RxChild, VirtualDOM } from 'rx-vdom'
 import {
     Assets,
     AssetsGateway,
@@ -11,7 +6,7 @@ import {
     Local,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { parseMd, Router } from 'mkdocs-ts'
 import {
     PathView,
     groupAnchorView,

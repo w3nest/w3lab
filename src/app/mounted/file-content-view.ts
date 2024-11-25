@@ -1,9 +1,9 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
-import { ObjectJs } from '@youwol/rx-tree-views'
+import { ObjectJs } from '@w3nest/rx-tree-views'
 import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
 import { HeaderView } from './explorer.view'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 import { headerViewWrapper } from '../explorer/explorer.views'
 
 export class FileContentView implements VirtualDOM<'div'> {

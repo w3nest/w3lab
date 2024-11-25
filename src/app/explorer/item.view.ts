@@ -1,19 +1,11 @@
-import {
-    AttributeLike,
-    ChildrenLike,
-    CSSAttribute,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { AttributeLike, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
 import { Explorer } from '@w3nest/http-clients'
-import {
-    ApplicationInfo,
-    OpenWithParametrization,
-    defaultOpeningApp$,
-} from '@youwol/os-core'
+import { OpenWithParametrization, defaultOpeningApp$ } from '@youwol/os-core'
 import { Observable, of } from 'rxjs'
 import { ExplorerState, ItemCut } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'
 import { FolderNode, TrashNode } from './nodes'
+import { ApplicationInfo } from '../common/patches'
 
 export const classFolderFileBase =
     'colab-ExplorerItem mkdocs-text-0 text-decoration-none d-flex align-items-center my-1 px-1 rounded mkdocs-hover-bg-4 mkdocs-hover-text-5 fv-pointer'
@@ -208,7 +200,7 @@ export class ItemIconView implements VirtualDOM<'div'> {
 
     constructor({ item }: { item: Explorer.GetItemResponse }) {
         this.defaultOpeningApp$ = Explorer.isInstanceOfItemResponse(item)
-            ? defaultOpeningApp$(item)
+            ? (defaultOpeningApp$(item) as any)
             : of(undefined)
         const defaultView = {
             tag: 'img' as const,

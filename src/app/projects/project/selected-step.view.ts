@@ -1,9 +1,4 @@
-import {
-    AnyVirtualDOM,
-    ChildrenLike,
-    RxHTMLElement,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { State } from '../state'
 import {
     ContextMessage,

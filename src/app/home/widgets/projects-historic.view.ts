@@ -1,6 +1,6 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { colabClassPrefix, ComponentCrossLinksView } from '../../common'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
 import { getProjectNav$ } from '../../common/utils-nav'

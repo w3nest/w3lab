@@ -1,5 +1,5 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { parseMd, Router } from 'mkdocs-ts'
 import { HdPathBookView } from '../common'
 import { AppState } from '../app-state'
 import { FailuresView } from './project.view'

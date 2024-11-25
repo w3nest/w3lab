@@ -1,9 +1,9 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { ProfilesState, Profile } from './profiles.state'
 
 import { CodeEditorView } from './code-editor.view'
 import { combineLatest } from 'rxjs'
-import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
+import { TsCodeEditorModule } from '@w3nest/rx-code-mirror-editors'
 import { spinnerView } from '../../common'
 
 export class ProfilesListView implements VirtualDOM<'div'> {

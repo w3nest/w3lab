@@ -1,6 +1,6 @@
 import { AppState } from '../../app-state'
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { Navigation, parseMd, Router } from '@youwol/mkdocs-ts'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { Navigation, parseMd, Router } from 'mkdocs-ts'
 import { lazyResolver } from '../index'
 import { debounceTime } from 'rxjs'
 import { map } from 'rxjs/operators'

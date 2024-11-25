@@ -4,12 +4,7 @@ import {
     flip,
     ReferenceElement,
 } from '@floating-ui/dom'
-import {
-    ChildrenLike,
-    render,
-    RxHTMLElement,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { ChildrenLike, render, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { ExplorerNode } from './nodes'
 import { Action, getActions$ } from './actions.factory'
 import { ExplorerState } from './explorer.state'

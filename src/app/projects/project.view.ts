@@ -1,5 +1,5 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd, Router } from '@youwol/mkdocs-ts'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { parseMd, Router } from 'mkdocs-ts'
 import { DagFlowView } from './dag-flow.view'
 import { State } from './state'
 import { filterCtxMessage, raiseHTTPErrors, Local } from '@w3nest/http-clients'

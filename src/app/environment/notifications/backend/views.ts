@@ -3,11 +3,11 @@ import { BackendInstallEvent, State } from '../state'
 import { filter, map, takeUntil } from 'rxjs/operators'
 import { styleShellStdOut } from '../../../common'
 import { ContextMessage, Local } from '@w3nest/http-clients'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Observable } from 'rxjs'
 import { installIcon } from '../views'
 import { CdnLinkView } from '../../../common/links.view'
-import { Router } from '@youwol/mkdocs-ts'
+import { Router } from 'mkdocs-ts'
 
 export class BackendInstallNotificationView extends ExpandableGroupView {
     constructor({
