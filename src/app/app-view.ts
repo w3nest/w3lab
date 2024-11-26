@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppMode, AppState } from './app-state'
 import { Router, Views } from 'mkdocs-ts'
 import { TopBannerView } from './top-banner.view'
@@ -33,19 +33,19 @@ export class AppView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: this.appState.appMode$,
-                    vdomMap: (mode: AppMode) => {
+                    vdomMap: (mode) => {
                         return mode === 'docRemoteBelow'
                             ? 'h-50 w-100 border'
                             : 'h-100 w-100'
                     },
-                },
+                }),
                 children: [mainView],
             },
-            {
+            child$({
                 source$: this.appState.appMode$,
-                vdomMap: (mode: AppMode) => {
+                vdomMap: (mode) => {
                     if (mode !== 'docRemoteBelow') {
                         return { tag: 'div' }
                     }
@@ -62,7 +62,7 @@ export class AppView implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
             new DisconnectedView({ appState: this.appState }),
         ]
     }
@@ -88,9 +88,9 @@ class TopBannerDocCompanion implements VirtualDOM<'div'> {
         layoutOptions: Views.LayoutOptions
     }) {
         this.children = [
-            {
+            child$({
                 source$: params.displayModeNav$,
-                vdomMap: (displayMode: Views.DisplayMode) => {
+                vdomMap: (displayMode) => {
                     if (displayMode === 'Full') {
                         return { tag: 'div' as const }
                     }
@@ -106,7 +106,7 @@ class TopBannerDocCompanion implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
         ]
     }
 }

@@ -1,5 +1,10 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { Assets, AssetsGateway, Explorer } from '@w3nest/http-clients'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    Assets,
+    AssetsGateway,
+    Explorer,
+    raiseHTTPErrors,
+} from '@w3nest/http-clients'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { PathView } from '../path.views'
 import { Router } from 'mkdocs-ts'
@@ -19,10 +24,13 @@ export class LinkView implements VirtualDOM<'div'> {
         router: Router
     }) {
         const client = new AssetsGateway.Client().explorer
+        const source$ = client
+            .getPath$({ itemId: item.itemId })
+            .pipe(raiseHTTPErrors())
         this.children = [
-            {
-                source$: client.getPath$({ itemId: item.itemId }),
-                vdomMap: (path: Explorer.GetPathFolderResponse) => {
+            child$({
+                source$,
+                vdomMap: (path) => {
                     return new PathView({
                         path,
                         router,
@@ -30,7 +38,7 @@ export class LinkView implements VirtualDOM<'div'> {
                         displayCtxMenu: false,
                     })
                 },
-            },
+            }),
         ]
     }
 }
@@ -48,7 +56,9 @@ export class LinksView implements VirtualDOM<'div'> {
         router: Router
     }) {
         const client = new AssetsGateway.Client().explorer
-        const items$ = client.queryItemsByAssetId$({ assetId: asset.assetId })
+        const items$ = client
+            .queryItemsByAssetId$({ assetId: asset.assetId })
+            .pipe(raiseHTTPErrors())
         this.children = [
             new ExpandableGroupView({
                 title: 'Symbolic links',
@@ -57,15 +67,13 @@ export class LinksView implements VirtualDOM<'div'> {
                     tag: 'div',
                     class: 'py-1',
                     children: [
-                        {
+                        child$({
                             source$: items$,
                             untilFirst: {
                                 tag: 'div',
                                 class: 'fas fa-spinner fa-spin',
                             },
-                            vdomMap: (
-                                resp: Explorer.QueryItemsByAssetIdResponse,
-                            ) => {
+                            vdomMap: (resp) => {
                                 const original = resp.items.find(
                                     (item) => item.itemId === item.assetId,
                                 )
@@ -110,7 +118,7 @@ export class LinksView implements VirtualDOM<'div'> {
                                     ],
                                 }
                             },
-                        },
+                        }),
                     ],
                 }),
                 expanded: false,

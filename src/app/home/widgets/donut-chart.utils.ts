@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
 import * as d3 from 'd3'
 import { AppState } from '../../app-state'
@@ -175,12 +175,13 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
 
+        const d3$ = this.appState.install('d3') as unknown as Observable<{
+            d3: D3
+        }>
         this.children = [
-            {
-                source$: this.appState
-                    .install('d3')
-                    .pipe(withLatestFrom(this.entities$)),
-                vdomMap: ([{ d3 }, entities]: [{ d3: D3 }, entities: T[]]) => {
+            child$({
+                source$: d3$.pipe(withLatestFrom(this.entities$)),
+                vdomMap: ([{ d3 }, entities]) => {
                     return createDonutChartD3<T>({
                         d3,
                         width: this.width,
@@ -189,7 +190,7 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
                         sections: this.sections,
                     })
                 },
-            },
+            }),
         ]
     }
 

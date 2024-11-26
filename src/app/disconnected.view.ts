@@ -1,4 +1,4 @@
-import { ChildrenLike, RxAttribute, VirtualDOM } from 'rx-vdom'
+import { attr$, ChildrenLike, RxAttribute, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
 
 export class DisconnectedView implements VirtualDOM<'div'> {
@@ -16,14 +16,14 @@ export class DisconnectedView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ appState }: { appState: AppState }) {
-        this.class = {
+        this.class = attr$({
             source$: appState.connectedLocal$,
-            vdomMap: (isConnected: boolean): string =>
+            vdomMap: (isConnected): string =>
                 isConnected ? 'd-none' : 'd-flex',
             wrapper: (d) =>
                 `${d} vh-100 vw-100 flex-column justify-content-center`,
             untilFirst: 'd-none',
-        }
+        })
         this.children = [
             {
                 tag: 'div',

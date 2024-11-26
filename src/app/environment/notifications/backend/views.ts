@@ -3,7 +3,14 @@ import { BackendInstallEvent, State } from '../state'
 import { filter, map, takeUntil } from 'rxjs/operators'
 import { styleShellStdOut } from '../../../common'
 import { ContextMessage, Local } from '@w3nest/http-clients'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    append$,
+    attr$,
+    child$,
+    ChildrenLike,
+    VirtualDOM,
+} from 'rx-vdom'
 import { Observable } from 'rxjs'
 import { installIcon } from '../views'
 import { CdnLinkView } from '../../../common/links.view'
@@ -30,15 +37,15 @@ export class BackendInstallNotificationView extends ExpandableGroupView {
         )
         const statusIcon: AnyVirtualDOM = {
             tag: 'div',
-            class: {
+            class: attr$({
                 source$: done$,
-                vdomMap: (m: Local.System.InstallBackendEvent) => {
+                vdomMap: (m) => {
                     return m.event == 'succeeded'
                         ? 'fas fa-check text-success'
                         : 'fas fa-times text-danger'
                 },
                 untilFirst: 'fas fa-spinner fa-spin',
-            },
+            }),
         }
         super({
             expanded: false,
@@ -90,23 +97,23 @@ export class ContentBackendInstallView implements VirtualDOM<'div'> {
         )
         const untilFirst: AnyVirtualDOM = {
             ...styleShellStdOut,
-            children: {
+            children: append$({
                 policy: 'append',
                 source$: dynamicSource$,
-                vdomMap: (m: ContextMessage<unknown>) => ({
+                vdomMap: (m) => ({
                     tag: 'span',
                     innerText: m.text,
                 }),
-            },
+            }),
         }
         this.children = [
-            {
+            child$({
                 source$: done$,
                 vdomMap: () => {
                     return new CdnLinkView({ name: backend, router })
                 },
                 untilFirst,
-            },
+            }),
         ]
     }
 }

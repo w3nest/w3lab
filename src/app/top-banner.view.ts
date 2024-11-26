@@ -5,8 +5,10 @@ import {
     VirtualDOM,
     CustomAttribute,
     RxAttribute,
+    attr$,
+    child$,
 } from 'rx-vdom'
-import { Local, Accounts } from '@w3nest/http-clients'
+import { Local, Accounts, raiseHTTPErrors } from '@w3nest/http-clients'
 import { AppState } from './app-state'
 import { internalAnchor } from './common/links.view'
 import { map, mergeMap } from 'rxjs/operators'
@@ -75,17 +77,17 @@ export class NotificationsView implements VirtualDOM<'div'> {
 
     constructor({ state, router }: { state: AppState; router: Router }) {
         const notifState = state.notificationsState
-        this.class = {
+        this.class = attr$({
             source$: combineLatest([
                 notifState.backendEvents.installing$,
                 notifState.assetEvents.downloading$,
             ]),
-            vdomMap: ([install, download]: [unknown[], unknown[]]) => {
+            vdomMap: ([install, download]) => {
                 return install.length + download.length === 0
                     ? 'd-none'
                     : 'd-flex align-items-center'
             },
-        }
+        })
         this.children = [
             {
                 ...internalAnchor({
@@ -95,26 +97,26 @@ export class NotificationsView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'i',
-                        class: {
+                        class: attr$({
                             source$: notifState.backendEvents.installing$,
-                            vdomMap: (installing: unknown[]) => {
+                            vdomMap: (installing) => {
                                 return installing.length > 0
                                     ? 'fas fa-plug text-success fv-blink me-1'
                                     : 'd-none'
                             },
-                        },
+                        }),
                     },
                     { tag: 'i', class: 'mx-1' },
                     {
                         tag: 'i',
-                        class: {
+                        class: attr$({
                             source$: notifState.assetEvents.downloading$,
-                            vdomMap: (installing: unknown[]) => {
+                            vdomMap: (installing) => {
                                 return installing.length > 0
                                     ? 'fas fa-download text-success fv-blink'
                                     : 'd-none'
                             },
-                        },
+                        }),
                     },
                 ],
             },
@@ -141,18 +143,18 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
 
     constructor({ state }: { state: AppState }) {
         this.children = [
-            {
+            child$({
                 source$: state.environment$.pipe(
                     mergeMap((env) => {
                         return new Accounts.AccountsClient()
                             .getSessionDetails$()
-                            .pipe(map((session) => [session, env]))
+                            .pipe(
+                                raiseHTTPErrors(),
+                                map((session) => [session, env] as const),
+                            )
                     }),
                 ),
-                vdomMap: ([sessionInfo, env]: [
-                    Accounts.SessionDetails,
-                    Local.Environment.EnvironmentStatusResponse,
-                ]) => {
+                vdomMap: ([sessionInfo, env]) => {
                     return {
                         tag: 'div',
                         class: 'dropdown',
@@ -169,7 +171,7 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
         ]
     }
 
@@ -404,16 +406,16 @@ export class BackendServingView implements VirtualDOM<'a'> {
             internalAnchor({ path: '/environment/backends', router }),
         )
         this.children = [
-            {
+            child$({
                 source$: state.environment$.pipe(
                     map((env) => env.proxiedBackends),
                 ),
-                vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
-                    return proxieds.length == 0
+                vdomMap: (proxieds) => {
+                    return proxieds.store.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-network-wired me-1' }
                 },
-            },
+            }),
         ]
     }
 }
@@ -448,16 +450,16 @@ export class EsmServingView implements VirtualDOM<'a'> {
             internalAnchor({ path: '/environment/esm-servers', router }),
         )
         this.children = [
-            {
+            child$({
                 source$: state.environment$.pipe(
                     map((env) => env.proxiedEsmServers),
                 ),
-                vdomMap: (proxieds: Local.Environment.ProxiedBackend[]) => {
-                    return proxieds.length == 0
+                vdomMap: (proxieds) => {
+                    return proxieds.store.length == 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-laptop-code me-1' }
                 },
-            },
+            }),
         ]
     }
 }

@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { State as ProjectsState } from './state'
 import { HTTPError, dispatchHTTPErrors, Local } from '@w3nest/http-clients'
 import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
@@ -87,9 +87,9 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
                 class: 'w-100 h-100 py-2 overflow-auto',
                 style: { minHeight: '0px' },
                 children: [
-                    {
+                    child$({
                         source$: NewProjectFromTemplateView.loadFvCodeEditors$,
-                        vdomMap: (CodeEditorModule: CodeEditorModule) => {
+                        vdomMap: (CodeEditorModule) => {
                             return new ProjectTemplateEditor({
                                 projectsState: this.projectsState,
                                 CodeEditorModule: CodeEditorModule,
@@ -99,7 +99,7 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
                                 },
                             })
                         },
-                    },
+                    }),
                 ],
             },
             //bottomNav,
@@ -237,11 +237,11 @@ export class GenerateButton implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: creating$,
                     vdomMap: (creating) =>
                         creating ? 'fas fa-spinner fa-spin ms-1' : '',
-                },
+                }),
             },
         ]
         this.onclick = () => {

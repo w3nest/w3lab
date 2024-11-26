@@ -1,6 +1,6 @@
 import { AppState } from '../../app-state'
 import { NavIconSvg } from '../../common'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { Navigation, parseMd, Router } from 'mkdocs-ts'
 import { debounceTime, distinctUntilChanged } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators'
@@ -86,26 +86,24 @@ export class RuntimesView implements VirtualDOM<'div'> {
     constructor({ appState }: { appState: AppState }) {
         const client = new Local.Client().python
         client.getStatus$().subscribe((d) => console.log('Status', d))
+        const pythonStatus$ = appState.cdnState.status$.pipe(
+            map(
+                (d) =>
+                    d.packages.find((p) => p.name === 'pyodide')?.versions
+                        .length,
+            ),
+            distinctUntilChanged(),
+            mergeMap(() => client.getStatus$()),
+            raiseHTTPErrors(),
+        )
+
         this.children = [
             {
                 tag: 'div',
-                children: {
+                children: replace$({
                     policy: 'replace',
-                    source$: appState.cdnState.status$.pipe(
-                        map(
-                            (d) =>
-                                d.packages.find((p) => p.name === 'pyodide')
-                                    ?.versions.length,
-                        ),
-                        distinctUntilChanged(),
-                        mergeMap(() => client.getStatus$()),
-                        raiseHTTPErrors(),
-                    ),
-                    vdomMap: ({
-                        runtimes,
-                    }: {
-                        runtimes: Local.Python.Runtime[]
-                    }) => {
+                    source$: pythonStatus$,
+                    vdomMap: ({ runtimes }) => {
                         return runtimes.map((r) => {
                             return new ExpandableGroupView({
                                 title: `Pyodide ${r.info.version}, python ${r.info.python}`,
@@ -134,7 +132,7 @@ in addition to pure Python packages from <a href="https://pypi.org/" target="_bl
                             })
                         })
                     },
-                },
+                }),
             },
         ]
     }

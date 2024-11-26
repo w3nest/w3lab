@@ -1,4 +1,11 @@
-import { AnyVirtualDOM, ChildLike, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    attr$,
+    child$,
+    ChildLike,
+    ChildrenLike,
+    VirtualDOM,
+} from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 
 /**
@@ -34,11 +41,12 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: expanded$,
-                    vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),
+                    vdomMap: (expanded): string =>
+                        expanded ? 'border-bottom' : '',
                     wrapper: (d) => `${d} d-flex align-items-center`,
-                },
+                }),
                 children: [
                     typeof icon === 'string'
                         ? {
@@ -62,25 +70,25 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                     },
                     {
                         tag: 'i',
-                        class: {
+                        class: attr$({
                             source$: expanded$,
-                            vdomMap: (expanded) =>
+                            vdomMap: (expanded): string =>
                                 expanded
                                     ? 'fa-chevron-down'
                                     : 'fa-chevron-right',
                             wrapper: (d) =>
                                 `${d} fas fv-pointer fv-hover-text-focus`,
-                        },
+                        }),
                         onclick: () => expanded$.next(!expanded$.value),
                     },
                 ],
             },
-            {
+            child$({
                 source$: expanded$,
                 vdomMap: (expanded) => {
                     return expanded ? content() : { tag: 'div' }
                 },
-            },
+            }),
         ]
     }
 }

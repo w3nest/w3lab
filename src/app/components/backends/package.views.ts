@@ -2,6 +2,9 @@ import { parseMd, Router } from 'mkdocs-ts'
 import { PackageView } from '../js-wasm/package.views'
 import {
     AnyVirtualDOM,
+    append$,
+    attr$,
+    child$,
     ChildrenLike,
     RxHTMLElement,
     VirtualDOM,
@@ -17,8 +20,12 @@ import {
 import { filter, map, shareReplay, take, tap } from 'rxjs/operators'
 import { AppState } from '../../app-state'
 import { styleShellStdOut } from '../../common'
-import { ContextMessage, Local, onHTTPErrors,
-    AssetsGateway } from '@w3nest/http-clients'
+import {
+    ContextMessage,
+    Local,
+    onHTTPErrors,
+    AssetsGateway,
+} from '@w3nest/http-clients'
 
 /**
  * @category View
@@ -146,14 +153,14 @@ class InstallManifestView implements VirtualDOM<'div'> {
         }
         const stdOutVDom: AnyVirtualDOM = {
             ...styleShellStdOut,
-            children: {
+            children: append$({
                 policy: 'append',
                 source$: stdOutput$,
-                vdomMap: (m: ContextMessage<unknown>) => ({
+                vdomMap: (m) => ({
                     tag: 'span',
                     innerText: m.text,
                 }),
-            },
+            }),
         }
         const manifestVDOM = (manifest: string): AnyVirtualDOM => ({
             tag: 'div',
@@ -171,26 +178,26 @@ class InstallManifestView implements VirtualDOM<'div'> {
             ],
         })
         this.children = [
-            {
+            child$({
                 source$: savedManifest$,
-                vdomMap: (manifest: string) => {
+                vdomMap: (manifest) => {
                     return manifest
                         ? manifestVDOM(manifest)
                         : {
                               tag: 'div',
-                              class: {
+                              class: attr$({
                                   source$: displayCurrentInstall$,
                                   vdomMap: (d) => (d ? '' : 'd-none'),
-                              },
+                              }),
                               children: [
-                                  {
+                                  child$({
                                       source$: startInstall$,
                                       vdomMap: () => stdOutVDom,
-                                  },
+                                  }),
                               ],
                           }
                 },
-            },
+            }),
         ]
     }
 }

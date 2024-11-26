@@ -1,4 +1,4 @@
-import { VirtualDOM, ChildLike } from 'rx-vdom'
+import { VirtualDOM, ChildLike, child$ } from 'rx-vdom'
 import { State } from '../state'
 
 import { Local } from '@w3nest/http-clients'
@@ -57,13 +57,11 @@ export class PyodideView implements VirtualDOM<'div'> {
                     versions: () => ({
                         tag: 'div',
                         children: [
-                            {
+                            child$({
                                 source$:
                                     this.cdnState.packagesEvent[this.packageId]
                                         .info$,
-                                vdomMap: (
-                                    packageInfo: Local.Components.CdnPackage,
-                                ) => {
+                                vdomMap: (packageInfo) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]
                                             .version,
@@ -74,7 +72,7 @@ export class PyodideView implements VirtualDOM<'div'> {
                                         selectedVersion$: this.selectedVersion$,
                                     })
                                 },
-                            },
+                            }),
                         ],
                     }),
                 },

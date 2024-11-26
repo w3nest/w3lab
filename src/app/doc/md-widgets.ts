@@ -1,4 +1,4 @@
-import { AnyVirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$ } from 'rx-vdom'
 import { Router } from 'mkdocs-ts'
 import { AppState } from '../app-state'
 import { filter, map, switchMap } from 'rxjs/operators'
@@ -167,7 +167,7 @@ export function projectNav(
         tag: 'button',
         class: 'btn btn-sm bg-light py-0 px-1 rounded',
         children: [
-            {
+            child$({
                 source$: nav$,
                 vdomMap: ({ project, path }) => {
                     return {
@@ -196,7 +196,7 @@ export function projectNav(
                     class: 'border rounded p-1 text-disabled',
                     innerText: `⚠️ Project '${project}' not available ⚠️`,
                 },
-            },
+            }),
         ],
     }
 }
@@ -222,9 +222,9 @@ export function defaultUserDrive(
         tag: 'button',
         class: 'btn btn-sm bg-light py-0 px-1 rounded',
         children: [
-            {
+            child$({
                 source$: target$,
-                vdomMap: (path: string) => {
+                vdomMap: (path) => {
                     return {
                         tag: 'a',
                         href: `@nav/${path}`,
@@ -249,7 +249,7 @@ export function defaultUserDrive(
                         ],
                     }
                 },
-            },
+            }),
         ],
     }
 }

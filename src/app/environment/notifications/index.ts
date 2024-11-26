@@ -1,6 +1,6 @@
 import { AppState } from '../../app-state'
 import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { append$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     AssetDownloadEvent,
     BackendInstallFlow,
@@ -66,10 +66,10 @@ export class NotificationsView implements VirtualDOM<'div'> {
     constructor({ state, router }: { state: State; router: Router }) {
         const backend$ = state.backendEvents.startInstall$
         const asset$ = state.assetEvents.enqueuedDownload$
-        this.children = {
+        this.children = append$({
             policy: 'append',
             source$: merge(backend$, asset$).pipe(map((b) => [b])),
-            vdomMap: (event: BackendInstallEvent | AssetDownloadEvent) => {
+            vdomMap: (event) => {
                 if (isBackendInstallEvent(event)) {
                     return new BackendInstallNotificationView({
                         router,
@@ -85,6 +85,6 @@ export class NotificationsView implements VirtualDOM<'div'> {
                     })
                 }
             },
-        }
+        })
     }
 }

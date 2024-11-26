@@ -1,4 +1,11 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    attr$,
+    child$,
+    ChildrenLike,
+    replace$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs'
 import { Local, Label, raiseHTTPErrors } from '@w3nest/http-clients'
 import { ExpandableGroupView } from './expandable-group.view'
@@ -156,14 +163,14 @@ const stepIntoIcon = (
 const refreshButton = (state: LogsExplorerState): AnyVirtualDOM => {
     return {
         tag: 'i',
-        class: {
+        class: attr$({
             source$: state.fetchingLogs$,
-            vdomMap: (isFetching) =>
+            vdomMap: (isFetching): string =>
                 isFetching
                     ? 'fas fa-spinner fa-spin'
                     : 'fas fa-sync  fv-pointer',
             wrapper: (d) => `${d} ms-1`,
-        },
+        }),
         onclick: () => state.refresh(),
     }
 }
@@ -198,11 +205,11 @@ const rootElemStackView = (state: LogsExplorerState) =>
             children: [
                 {
                     tag: 'div',
-                    innerText: {
+                    innerText: attr$({
                         source$: state.t0$,
-                        vdomMap: (t: number) =>
+                        vdomMap: (t) =>
                             new Date(t).toLocaleTimeString([], dateFormat),
-                    },
+                    }),
                 },
                 {
                     tag: 'i',
@@ -221,13 +228,13 @@ const rootElemStackView = (state: LogsExplorerState) =>
                     innerText: state.title,
                 },
                 { tag: 'i', class: 'mx-1' },
-                {
+                child$({
                     source$: state.stack$,
-                    vdomMap: (stack: unknown[]) =>
+                    vdomMap: (stack) =>
                         stack.length === 0
                             ? refreshButton(state)
                             : { tag: 'div' },
-                },
+                }),
             ],
         },
         content: () => {
@@ -255,10 +262,10 @@ class StackView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                children: {
+                children: replace$({
                     source$: this.state.stack$,
                     policy: 'replace',
-                    vdomMap: (stack: Local.System.LogResponse[]) => {
+                    vdomMap: (stack) => {
                         return items(stack).map((item, i) => {
                             return {
                                 tag: 'div',
@@ -271,7 +278,7 @@ class StackView implements VirtualDOM<'div'> {
                             }
                         })
                     },
-                },
+                }),
             },
         ]
     }
@@ -488,13 +495,13 @@ class LogsListView implements VirtualDOM<'div'> {
 
     constructor(params: { state: LogsExplorerState }) {
         Object.assign(this, params)
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: this.state.logs$,
-            vdomMap: (response: Local.System.LogsResponse) =>
+            vdomMap: (response) =>
                 response.logs.map((log) => {
                     return new LogView({ state: this.state, log })
                 }),
-        }
+        })
     }
 }

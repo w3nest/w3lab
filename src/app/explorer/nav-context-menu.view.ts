@@ -4,7 +4,13 @@ import {
     flip,
     ReferenceElement,
 } from '@floating-ui/dom'
-import { ChildrenLike, render, RxHTMLElement, VirtualDOM } from 'rx-vdom'
+import {
+    ChildrenLike,
+    render,
+    replace$,
+    RxHTMLElement,
+    VirtualDOM,
+} from 'rx-vdom'
 import { ExplorerNode } from './nodes'
 import { Action, getActions$ } from './actions.factory'
 import { ExplorerState } from './explorer.state'
@@ -101,10 +107,10 @@ export class ContextMenuView implements VirtualDOM<'div'> {
                     fontSize: ' 90%',
                     zIndex: 10,
                 },
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: getActions$(explorerState, node),
-                    vdomMap: (actions: Action[]) => {
+                    vdomMap: (actions) => {
                         return actions.map(
                             (action: Action) =>
                                 new ContexMenuItemView({ action }),
@@ -116,7 +122,7 @@ export class ContextMenuView implements VirtualDOM<'div'> {
                             class: 'fas fa-spinner fa-spin text-light',
                         },
                     ],
-                },
+                }),
             },
         ]
     }

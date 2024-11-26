@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { parseMd } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
@@ -48,10 +48,10 @@ export class InstancesListView implements VirtualDOM<'div'> {
         appState: AppState
         partitionId: string
     }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (env) => {
                 return env.proxiedBackends.store
                     .filter((backend) => backend.partitionId === partitionId)
                     .map((backend) => {
@@ -92,6 +92,6 @@ export class InstancesListView implements VirtualDOM<'div'> {
                         }
                     })
             },
-        }
+        })
     }
 }

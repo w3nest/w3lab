@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway } from '@w3nest/http-clients'
 import { ExplorerState } from '../explorer.state'
 import { BehaviorSubject, skip } from 'rxjs'
@@ -46,13 +46,13 @@ export class DescriptionView implements VirtualDOM<'div'> {
             })
         const button: AnyVirtualDOM = {
             tag: 'div',
-            class: {
+            class: attr$({
                 source$: edit$,
-                vdomMap: (edit: boolean) =>
+                vdomMap: (edit) =>
                     edit
                         ? 'fas fa-save fv-pointer p-1'
                         : 'fas fa-pen fv-pointer p-1',
-            },
+            }),
             style: {
                 position: 'absolute',
                 top: '0px',
@@ -68,7 +68,7 @@ export class DescriptionView implements VirtualDOM<'div'> {
                 ? 'No description provided'
                 : asset.description
         this.children = [
-            {
+            child$({
                 source$: edit$,
                 vdomMap: (edit: boolean) =>
                     edit
@@ -84,7 +84,7 @@ export class DescriptionView implements VirtualDOM<'div'> {
                               ],
                           }
                         : parseMd({ src }),
-            },
+            }),
             button,
         ]
     }

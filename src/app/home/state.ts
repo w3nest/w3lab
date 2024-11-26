@@ -10,6 +10,7 @@ import { filter, switchMap, take } from 'rxjs/operators'
 import { setup } from '../../auto-generated'
 import { WebpmSessionsStorage } from '@w3nest/http-clients'
 import * as webpm from '@w3nest/webpm-client'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 export type HomePageMode = 'view' | 'edit'
 
@@ -92,7 +93,7 @@ export class State {
             : this.mode$.next('view')
     }
 
-    async generateView(content: Content) {
+    async generateView(content: Content): Promise<AnyVirtualDOM> {
         const styleElement = document.createElement('style')
         styleElement.id = 'home-css'
         styleElement.textContent = content.css

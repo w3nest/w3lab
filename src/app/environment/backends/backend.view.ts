@@ -1,4 +1,10 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    replace$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { AppState } from '../../app-state'
 import { parseMd, Router, MdWidgets } from 'mkdocs-ts'
 import { debounceTime, merge, Observable, of } from 'rxjs'
@@ -118,10 +124,10 @@ class OutputsView implements VirtualDOM<'pre'> {
         logs$: Observable<Local.System.BackendLogsResponse>
         reverse?: boolean
     }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: logs$,
-            vdomMap: (resp: Local.System.BackendLogsResponse) => {
+            vdomMap: (resp) => {
                 const outputs = reverse
                     ? resp.server_outputs.reverse()
                     : resp.server_outputs
@@ -130,7 +136,7 @@ class OutputsView implements VirtualDOM<'pre'> {
                     innerText: text,
                 }))
             },
-        }
+        })
     }
 }
 
@@ -186,13 +192,9 @@ export class StatusView implements VirtualDOM<'div'> {
             map((resp) => resp.proxiedBackends),
         )
         this.children = [
-            {
+            child$({
                 source$: backends$,
-                vdomMap: ({
-                    store,
-                }: {
-                    store: Local.Environment.ProxiedBackend[]
-                }) => {
+                vdomMap: ({ store }) => {
                     if (store.find((b) => b.uid === uid)) {
                         return new TerminateButton({ uid, router })
                     }
@@ -202,7 +204,7 @@ export class StatusView implements VirtualDOM<'div'> {
                         parsingArgs: {},
                     })
                 },
-            },
+            }),
         ]
     }
 }

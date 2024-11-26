@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { State } from './state'
 import { map } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
@@ -70,10 +70,10 @@ export class SearchView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: 'd-flex flex-wrap',
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: allTags$,
-                    vdomMap: (tags: Set<string>) => {
+                    vdomMap: (tags) => {
                         return Array.from(tags).map((tag): AnyVirtualDOM => {
                             return {
                                 tag: 'div',
@@ -102,7 +102,7 @@ export class SearchView implements VirtualDOM<'div'> {
                             }
                         })
                     },
-                },
+                }),
             },
             {
                 tag: 'div',

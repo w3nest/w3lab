@@ -1,8 +1,15 @@
-import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    CSSAttribute,
+    VirtualDOM,
+} from 'rx-vdom'
 import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { shareReplay } from 'rxjs/operators'
 import { colabClassPrefix } from '../../common'
 import { ApplicationInfo } from '../../common/patches'
+import { Observable } from 'rxjs'
 
 /**
  * Represents a view that displays a collection of application links, arranged in a flexible grid layout.
@@ -89,7 +96,9 @@ export class AppIcon implements VirtualDOM<'button'> {
 
     public readonly children: ChildrenLike
 
-    static readonly appMetadata$ = (appName: string) => {
+    static readonly appMetadata$ = (
+        appName: string,
+    ): Observable<ApplicationInfo> => {
         if (AppIcon._appMetadata$[appName]) {
             return AppIcon._appMetadata$[appName]
         }
@@ -119,9 +128,9 @@ export class AppIcon implements VirtualDOM<'button'> {
             this.style = params.style
         }
         this.children = [
-            {
+            child$({
                 source$: AppIcon.appMetadata$(params.package),
-                vdomMap: (appInfo: ApplicationInfo) => {
+                vdomMap: (appInfo) => {
                     return {
                         tag: 'a',
                         class: 'd-flex flex-column align-items-center',
@@ -157,7 +166,7 @@ export class AppIcon implements VirtualDOM<'button'> {
                     tag: 'i',
                     class: 'fas fa-spinner fa-spin m-5',
                 },
-            },
+            }),
         ]
     }
 

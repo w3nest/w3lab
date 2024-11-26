@@ -29,7 +29,7 @@
  */
 import { AppState } from '../app-state'
 import { Views, MdWidgets, parseMd, Navigation } from 'mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { State, Status } from './state'
 export * from './state'
@@ -113,9 +113,9 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         const pluginsState = this.appState.pluginsState
         this.children = [
-            {
+            child$({
                 source$: pluginsState.jsContent$(),
-                vdomMap: (jsContent: string) => {
+                vdomMap: (jsContent) => {
                     const editor = new MdWidgets.CodeSnippetView({
                         language: 'javascript',
                         content: jsContent,
@@ -126,7 +126,7 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
                     this.content$ = editor.content$
                     return editor
                 },
-            },
+            }),
             {
                 tag: 'button',
                 class: 'btn btn-light btn-sm',
@@ -141,9 +141,9 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'my-2',
             },
-            {
+            child$({
                 source$: pluginsState.status$,
-                vdomMap: (status: Status | undefined) => {
+                vdomMap: (status) => {
                     if (!status) {
                         return { tag: 'div' }
                     }
@@ -153,7 +153,7 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
                         parsingArgs: {},
                     })
                 },
-            },
+            }),
         ]
     }
 }

@@ -1,10 +1,14 @@
 import { BehaviorSubject, Observable } from 'rxjs'
-import { AssetsGateway, Webpm, Assets,
-    raiseHTTPErrors } from '@w3nest/http-clients'
+import {
+    AssetsGateway,
+    Webpm,
+    Assets,
+    raiseHTTPErrors,
+} from '@w3nest/http-clients'
 
 import { mergeMap, share } from 'rxjs/operators'
 
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { getUrlBase } from '@w3nest/webpm-client'
 
 export class ExplorerState {
@@ -81,10 +85,7 @@ export class FileView implements VirtualDOM<'div'> {
     public readonly file: Webpm.FileResponse
     public readonly state: ExplorerState
 
-    constructor(params: {
-        file: Webpm.FileResponse
-        state: ExplorerState
-    }) {
+    constructor(params: { file: Webpm.FileResponse; state: ExplorerState }) {
         Object.assign(this, params)
         const url = `${getUrlBase(
             this.state.asset.name,
@@ -131,11 +132,11 @@ export class ExplorerView implements VirtualDOM<'div'> {
         this.state = new ExplorerState(params)
 
         this.children = [
-            {
+            child$({
                 source$: this.state.selectedFolder$,
-                vdomMap: (path: string) =>
+                vdomMap: (path) =>
                     new PathView({ state: this.state, folderPath: path }),
-            },
+            }),
             {
                 tag: 'div',
                 class: 'd-flex align-items-center',
@@ -160,9 +161,9 @@ export class ExplorerView implements VirtualDOM<'div'> {
                     },
                 ],
             },
-            {
+            child$({
                 source$: this.state.items$,
-                vdomMap: ({ files, folders }: Webpm.QueryExplorerResponse) => {
+                vdomMap: ({ files, folders }) => {
                     return {
                         tag: 'div',
                         class: 'd-flex flex-column',
@@ -181,7 +182,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
         ]
     }
 }

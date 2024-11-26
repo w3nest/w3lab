@@ -1,7 +1,7 @@
 import { AppState } from '../../app-state'
 
 import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { map } from 'rxjs/operators'
 import { Local } from '@w3nest/http-clients'
 import { HdPathBookView } from '../../common'
@@ -53,19 +53,17 @@ This section compiles the elements stored in the cache, which you can clear as n
                         return {
                             tag: 'div',
                             children: [
-                                {
+                                child$({
                                     source$:
                                         appState.environmentState.browserState
                                             .status$,
-                                    vdomMap: (
-                                        status: Local.Environment.BrowserCacheStatusResponse,
-                                    ) => {
+                                    vdomMap: (status) => {
                                         return new ItemsView({
                                             status,
                                             appState,
                                         })
                                     },
-                                },
+                                }),
                             ],
                         }
                     },
@@ -80,11 +78,9 @@ class FileView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
     constructor({ appState }: { appState: AppState }) {
         this.children = [
-            {
+            child$({
                 source$: appState.environmentState.browserState.status$,
-                vdomMap: (
-                    status: Local.Environment.BrowserCacheStatusResponse,
-                ) => {
+                vdomMap: (status) => {
                     if (status.file && status.file !== 'None') {
                         return {
                             tag: 'div',
@@ -111,7 +107,7 @@ class FileView implements VirtualDOM<'div'> {
                         innerText: 'The cache is persisted in memory',
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -135,13 +131,13 @@ class ItemsView implements VirtualDOM<'div'> {
         }
         const btn = (target: 'flat' | 'hierarchical'): AnyVirtualDOM => ({
             tag: 'button',
-            class: {
+            class: attr$({
                 source$: mode$,
-                vdomMap: (mode: 'flat' | 'hierarchical') => {
+                vdomMap: (mode: 'flat' | 'hierarchical'): string => {
                     return mode === target ? 'active' : ''
                 },
                 wrapper: (d) => `btn btn-sm btn-primary ${d}`,
-            },
+            }),
             children: [
                 {
                     tag: 'i',
@@ -172,9 +168,9 @@ class ItemsView implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'my-2',
             },
-            {
+            child$({
                 source$: mode$,
-                vdomMap: (mode: 'flat' | 'hierarchical') => {
+                vdomMap: (mode) => {
                     return mode === 'flat'
                         ? new FlatBrowserCacheItemsView({ status, appState })
                         : new HierarchicalBrowserCacheItemsView({
@@ -182,7 +178,7 @@ class ItemsView implements VirtualDOM<'div'> {
                               appState,
                           })
                 },
-            },
+            }),
         ]
     }
 }
@@ -232,16 +228,16 @@ class FlatItemView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'i',
-                        class: {
+                        class: attr$({
                             source$: expanded$,
-                            vdomMap: (expanded: boolean) => {
+                            vdomMap: (expanded: boolean): string => {
                                 return expanded
                                     ? 'fa-chevron-down'
                                     : 'fa-chevron-right'
                             },
                             wrapper: (d) =>
                                 `fas ${d} fv-pointer fv-hover-text-focus`,
-                        },
+                        }),
                         onclick: () => expanded$.next(!expanded$.value),
                     },
                     { tag: 'div', class: 'mx-2' },
@@ -252,7 +248,7 @@ class FlatItemView implements VirtualDOM<'div'> {
                     },
                 ],
             },
-            {
+            child$({
                 source$: expanded$,
                 vdomMap: (expanded) => {
                     return expanded
@@ -262,7 +258,7 @@ class FlatItemView implements VirtualDOM<'div'> {
                           })
                         : { tag: 'div' }
                 },
-            },
+            }),
         ]
     }
 }
@@ -291,7 +287,7 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
                 fullPath: '',
                 selected$,
             }),
-            {
+            child$({
                 source$: selected$.pipe(
                     map((s?: string) => {
                         if (!s) {
@@ -301,13 +297,13 @@ class HierarchicalBrowserCacheItemsView implements VirtualDOM<'div'> {
                         return status.items[index]
                     }),
                 ),
-                vdomMap: (item?: Local.Environment.BrowserCacheItem) => {
+                vdomMap: (item) => {
                     if (!item) {
                         return { tag: 'div' }
                     }
                     return new ItemView({ item, appState })
                 },
-            },
+            }),
         ]
     }
 }
@@ -337,7 +333,12 @@ class DropDownPathsView implements VirtualDOM<'div'> {
         data: object
         selected$: Subject<string>
     }) {
-        const next$ = new Subject()
+        type T = {
+            title: string
+            fullPath: string
+            data: object
+        }
+        const next$ = new Subject<T>()
         this.children = [
             {
                 tag: 'div',
@@ -373,14 +374,10 @@ class DropDownPathsView implements VirtualDOM<'div'> {
                     },
                 ],
             },
-            {
+            child$({
                 source$: next$,
-                vdomMap: (p: {
-                    title: string
-                    data: object
-                    fullPath: string
-                }) => new DropDownPathsView({ ...p, selected$ }),
-            },
+                vdomMap: (p) => new DropDownPathsView({ ...p, selected$ }),
+            }),
         ]
     }
 

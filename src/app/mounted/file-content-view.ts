@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
@@ -43,7 +43,7 @@ export class FileContentView implements VirtualDOM<'div'> {
             headerViewWrapper(
                 new HeaderView({ path, origin, router, type: 'file' }),
             ),
-            {
+            child$({
                 source$: file$,
                 vdomMap: (resp: string | { [k: string]: unknown }) => {
                     if (typeof resp == 'string') {
@@ -68,7 +68,7 @@ export class FileContentView implements VirtualDOM<'div'> {
                     })
                     return new ObjectJs.View({ state })
                 },
-            },
+            }),
         ]
     }
 }

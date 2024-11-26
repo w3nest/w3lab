@@ -1,11 +1,12 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
-import { mergeMap, of } from 'rxjs'
+import { mergeMap, Observable, of } from 'rxjs'
 import {
     AssetsGateway,
     Explorer,
     onHTTPErrors,
     Local,
+    raiseHTTPErrors,
 } from '@w3nest/http-clients'
 
 export const internalAnchor = ({
@@ -29,25 +30,23 @@ export class CdnLinkView implements VirtualDOM<'div'> {
 
     constructor({ name, router }: { name: string; router: Router }) {
         const client = new Local.Client().api.components
-
+        type Resp = Local.Components.GetPackageResponse | undefined
         this.children = [
-            {
+            child$({
                 source$: client
                     .getPackage$({
                         packageId: window.btoa(name),
                     })
                     .pipe(
                         onHTTPErrors(() => undefined),
-                        mergeMap(
-                            (resp?: Local.Components.GetPackageResponse) => {
-                                if (resp === undefined) {
-                                    return of(undefined)
-                                }
-                                return of(resp)
-                            },
-                        ),
+                        mergeMap((resp: Resp) => {
+                            if (resp === undefined) {
+                                return of(undefined)
+                            }
+                            return of(resp)
+                        }),
                     ),
-                vdomMap: (resp?: Local.Components.GetPackageResponse) => {
+                vdomMap: (resp) => {
                     if (resp == undefined || resp.versions.length == 0) {
                         return parseMd({
                             src: 'The project has not been published in your components database yet.',
@@ -66,7 +65,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                         router,
                     })
                 },
-            },
+            }),
         ]
     }
 }
@@ -79,7 +78,7 @@ export class ExplorerLinkView implements VirtualDOM<'div'> {
         const client = new AssetsGateway.Client().explorer
         const itemId = window.btoa(window.btoa(name))
         this.children = [
-            {
+            child$({
                 source$: client
                     .getItem$({
                         itemId,
@@ -90,10 +89,12 @@ export class ExplorerLinkView implements VirtualDOM<'div'> {
                             if (resp === undefined) {
                                 return of(undefined)
                             }
-                            return client.getPath$({ itemId })
+                            return client
+                                .getPath$({ itemId })
+                                .pipe(raiseHTTPErrors())
                         }),
                     ),
-                vdomMap: (resp?: Explorer.PathBase) => {
+                vdomMap: (resp) => {
                     if (resp == undefined) {
                         return parseMd({
                             src: 'The project has not been published in your explorer yet.',
@@ -111,7 +112,7 @@ export class ExplorerLinkView implements VirtualDOM<'div'> {
                         router,
                     })
                 },
-            },
+            }),
         ]
     }
 }

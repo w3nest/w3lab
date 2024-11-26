@@ -1,4 +1,11 @@
-import { AnyVirtualDOM, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    append$,
+    attr$,
+    child$,
+    ChildrenLike,
+    VirtualDOM,
+} from 'rx-vdom'
 import { State } from '../state'
 import {
     ContextMessage,
@@ -68,9 +75,9 @@ export class SelectedStepView implements VirtualDOM<'div'> {
                 }),
         }
         this.children = [
-            {
+            child$({
                 source$: selected$,
-                vdomMap: ({ step }: { step: Local.Projects.PipelineStep }) => {
+                vdomMap: ({ step }) => {
                     return new ExpandableGroupView({
                         expanded: true,
                         icon: '',
@@ -84,16 +91,15 @@ export class SelectedStepView implements VirtualDOM<'div'> {
                         content: () => ({
                             tag: 'div',
                             children: [
-                                {
+                                child$({
                                     source$: mode$,
-                                    vdomMap: (mode: Mode) =>
-                                        factory[mode](step),
-                                },
+                                    vdomMap: (mode) => factory[mode](step),
+                                }),
                             ],
                         }),
                     })
                 },
-            },
+            }),
         ]
     }
 }
@@ -121,27 +127,27 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
     }) {
         const button = (target: Mode, icon: string): AnyVirtualDOM => ({
             tag: 'i',
-            class: {
+            class: attr$({
                 source$: mode$,
-                vdomMap: (mode: Mode) =>
+                vdomMap: (mode): string =>
                     mode == target ? 'fv-text-success' : '',
                 wrapper: (d: string) => `${d} fas ${icon} fv-pointer`,
-            },
+            }),
             onclick: () => mode$.next(target),
         })
 
         const playButton: AnyVirtualDOM = {
             tag: 'i',
-            class: {
+            class: attr$({
                 source$: combineLatest([status$, mode$]),
-                vdomMap: ([s, m]: [string, Mode]) => {
+                vdomMap: ([s, m]) => {
                     const base =
                         s === 'runStarted'
                             ? 'fas fa-spinner fa-spin'
                             : 'fas fa-play fv-pointer'
                     return m == 'run' ? base + ' fv-text-success' : base
                 },
-            },
+            }),
             onclick: () => {
                 mode$.next('run')
                 projectsState.runStep(project.id, stepId)
@@ -161,14 +167,14 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             },
             sep,
             playButton,
-            {
+            child$({
                 source$: config$,
                 vdomMap: (d) =>
                     d && {
                         tag: 'div',
                         children: [sep, button('config', 'fa-wrench')],
                     },
-            },
+            }),
             sep,
             button('manifest', 'fa-newspaper'),
         ]
@@ -190,31 +196,32 @@ export class ConfigView implements VirtualDOM<'div'> {
         onExecute: () => void
     }) {
         const projectsRouter = new Local.Client().api.projects
-        this.children = [
-            {
-                source$: projectsRouter
-                    .getStepView$({
-                        projectId: project.id,
-                        stepId,
-                    })
-                    .pipe(
-                        raiseHTTPErrors(),
-                        mergeMap((js) =>
-                            from(
-                                new Function(js)()({
-                                    triggerRun: triggerRunHandler,
-                                    project,
-                                    stepId,
-                                    projectsRouter,
-                                    webpmClient,
-                                }),
-                            ),
-                        ),
+        const source$ = projectsRouter
+            .getStepView$({
+                projectId: project.id,
+                stepId,
+            })
+            .pipe(
+                raiseHTTPErrors(),
+                mergeMap((js) =>
+                    from(
+                        new Function(js)()({
+                            triggerRun: triggerRunHandler,
+                            project,
+                            stepId,
+                            projectsRouter,
+                            webpmClient,
+                        }) as unknown as Observable<AnyVirtualDOM>,
                     ),
-                vdomMap: (view: RxHTMLElement<'div'>) => {
+                ),
+            )
+        this.children = [
+            child$({
+                source$,
+                vdomMap: (view) => {
                     return { tag: 'div', children: [view] }
                 },
-            },
+            }),
         ]
         const triggerRunHandler = ({
             configuration,
@@ -319,14 +326,16 @@ export class ManifestView implements VirtualDOM<'div'> {
                 },
             ],
         })
+        type Event = Local.Projects.PipelineStepEventKind
+        type Status = Local.Projects.PipelineStepStatusResponse
+        function isStatusResponse(d: Event | Status): d is Status {
+            return (d as Status).manifest !== undefined
+        }
+        const source$ = status$.pipe(filter(isStatusResponse))
         this.children = [
-            {
-                source$: status$,
-                vdomMap: ({
-                    manifest,
-                }: {
-                    manifest?: Local.Projects.Manifest
-                }) => {
+            child$({
+                source$,
+                vdomMap: ({ manifest }) => {
                     return {
                         tag: 'div',
                         class: 'w-100',
@@ -343,7 +352,7 @@ export class ManifestView implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -378,7 +387,7 @@ export class RunOutputsView implements VirtualDOM<'div'> {
         >
     }) {
         this.children = [
-            {
+            child$({
                 source$: status$,
                 vdomMap: (s) =>
                     s === 'runStarted'
@@ -389,23 +398,21 @@ export class RunOutputsView implements VirtualDOM<'div'> {
                                   fontSize: 'x-small',
                                   whiteSpace: 'pre',
                               },
-                              children: {
+                              children: append$({
                                   policy: 'append',
                                   source$: messages$.pipe(map((m) => [m])),
-                                  vdomMap: (
-                                      message: ContextMessage<unknown>,
-                                  ) => {
+                                  vdomMap: (message) => {
                                       return {
                                           tag: 'div',
                                           innerText: `${message.text}`,
                                       }
                                   },
-                              },
+                              }),
                           }
                         : {
                               tag: 'div',
                           },
-            },
+            }),
         ]
     }
 }

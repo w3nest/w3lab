@@ -1,5 +1,6 @@
 import {
     AnyVirtualDOM,
+    child$,
     ChildrenLike,
     CSSAttribute,
     RxHTMLElement,
@@ -215,12 +216,9 @@ export class AssetPermissionsView implements VirtualDOM<'div'> {
             .getPermissions$({ assetId: this.asset.assetId })
             .pipe(raiseHTTPErrors(), share())
         this.children = [
-            {
+            child$({
                 source$: combineLatest([accessInfo$, permission$]),
-                vdomMap: ([accessInfo, permissions]: [
-                    Assets.QueryAccessInfoResponse,
-                    Assets.GetPermissionsResponse,
-                ]) => {
+                vdomMap: ([accessInfo, permissions]) => {
                     return {
                         tag: 'div',
                         class: 'w-100 mx-auto my-auto',
@@ -243,7 +241,7 @@ export class AssetPermissionsView implements VirtualDOM<'div'> {
                         ],
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -464,15 +462,17 @@ export class WritePermission implements VirtualDOM<'div'> {
                 },
             ],
         }
+        const source$ = client
+            .getPermissions$({ assetId: asset.assetId })
+            .pipe(raiseHTTPErrors())
+
         this.children = [
-            {
-                source$: client.getPermissions$({ assetId: asset.assetId }),
-                vdomMap: (
-                    permission: Assets.GetPermissionsResponse,
-                ): AnyVirtualDOM => {
+            child$({
+                source$,
+                vdomMap: (permission): AnyVirtualDOM => {
                     return permission.write ? unlocked : locked
                 },
-            },
+            }),
         ]
     }
 }

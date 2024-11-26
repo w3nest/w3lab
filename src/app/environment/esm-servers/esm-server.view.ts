@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { Local } from '@w3nest/http-clients'
 import { parseMd, Router } from 'mkdocs-ts'
 import {
@@ -98,17 +98,20 @@ class ConsoleOutputsView implements VirtualDOM<'pre'> {
         maxCount: number
     }) {
         const displayed$ = logs$.pipe(
-            scan((acc, e) => [...acc, e].slice(0, maxCount), []),
+            scan(
+                (acc: { text: string }[], e) => [...acc, e].slice(0, maxCount),
+                [],
+            ),
         )
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: displayed$,
-            vdomMap: (elems: { text: string }[]) => {
+            vdomMap: (elems) => {
                 return [...elems.reverse()].map(({ text }) => ({
                     tag: 'div' as const,
                     innerText: text,
                 }))
             },
-        }
+        })
     }
 }

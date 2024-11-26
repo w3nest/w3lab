@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { MdWidgets, Navigation, parseMd, Router, Views } from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
@@ -130,10 +130,10 @@ export class PartitionsListView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ appState }: { appState: AppState }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: appState.environment$,
-            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (env) => {
                 const backends = env.proxiedBackends
                 if (backends.store.length === 0) {
                     return [
@@ -206,6 +206,6 @@ export class PartitionsListView implements VirtualDOM<'div'> {
                     })
                 })
             },
-        }
+        })
     }
 }

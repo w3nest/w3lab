@@ -1,7 +1,7 @@
 import { WebpmSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
 import { setup } from '../../auto-generated'
 import { map } from 'rxjs/operators'
-import { firstValueFrom, Subject } from 'rxjs'
+import { firstValueFrom, Observable, Subject } from 'rxjs'
 import * as webpm from '@w3nest/webpm-client'
 import type * as WebPM from '@w3nest/webpm-client'
 import { AppState } from '../app-state'
@@ -83,7 +83,7 @@ export type Status = {
 export class State {
     public readonly status$ = new Subject<Status | undefined>()
 
-    jsContent$() {
+    jsContent$(): Observable<string> {
         const client = new WebpmSessionsStorage.Client()
         return client
             .getData$({

@@ -1,7 +1,14 @@
-import { ChildrenLike, VirtualDOM, AnyVirtualDOM } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM, AnyVirtualDOM, child$, attr$ } from 'rx-vdom'
 
 import { MdWidgets } from 'mkdocs-ts'
-import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
+import {
+    BehaviorSubject,
+    combineLatest,
+    debounceTime,
+    from,
+    Observable,
+    of,
+} from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'
 import { buttonsFactory, internalDocLink } from '../common/buttons'
@@ -15,7 +22,7 @@ export const editHomeAction = (state: State): VirtualDOM<'i'> => ({
         padding: '0px',
     },
     children: [
-        {
+        child$({
             source$: state.mode$,
             vdomMap: (mode) =>
                 mode === 'view'
@@ -27,7 +34,7 @@ export const editHomeAction = (state: State): VirtualDOM<'i'> => ({
                           ...buttonsFactory.HomeView,
                           onclick: () => state.toggleMode(),
                       },
-        },
+        }),
     ],
 })
 
@@ -40,21 +47,22 @@ export class HomeView implements VirtualDOM<'div'> {
     constructor(params: { state: State }) {
         Object.assign(this, params)
 
+        const source$ = combineLatest([
+            this.state.content$,
+            this.state.mode$,
+        ]).pipe(
+            debounceTime(100),
+            switchMap(([content, mode]) => {
+                return mode == 'view'
+                    ? from(this.state.generateView(content))
+                    : of(new EditorView({ state: this.state, content }))
+            }),
+        )
         this.children = [
-            {
-                source$: combineLatest([
-                    this.state.content$,
-                    this.state.mode$,
-                ]).pipe(
-                    debounceTime(100),
-                    switchMap(([content, mode]: [Content, HomePageMode]) => {
-                        return mode == 'view'
-                            ? from(this.state.generateView(content))
-                            : of(new EditorView({ state: this.state, content }))
-                    }),
-                ),
-                vdomMap: (vdom: AnyVirtualDOM) => vdom,
-            },
+            child$({
+                source$,
+                vdomMap: (vdom) => vdom,
+            }),
         ]
     }
 }
@@ -81,9 +89,9 @@ class EditorView implements VirtualDOM<'div'> {
                 router: state.appState.router,
             }),
             sepV,
-            {
+            child$({
                 source$: this.selectedMode$,
-                vdomMap: (mode: Language) => {
+                vdomMap: (mode) => {
                     const languages: Record<Language, MdWidgets.CodeLanguage> =
                         {
                             md: 'markdown',
@@ -111,7 +119,7 @@ class EditorView implements VirtualDOM<'div'> {
                         },
                     }
                 },
-            },
+            }),
         ]
     }
 
@@ -138,11 +146,12 @@ class EditorView implements VirtualDOM<'div'> {
         }
         return {
             tag: 'label',
-            class: {
+            class: attr$({
                 source$: this.selectedMode$,
-                vdomMap: (selected) => (selected === target ? 'active' : ''),
+                vdomMap: (selected): string =>
+                    selected === target ? 'active' : '',
                 wrapper: (d) => `${d} btn btn-light p-1`,
-            },
+            }),
             children: [
                 { tag: 'img', style: { width: '25px' }, src: urls[target] },
             ],

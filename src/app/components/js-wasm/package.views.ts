@@ -3,11 +3,18 @@ import {
     AnyVirtualDOM,
     VirtualDOM,
     ChildLike,
+    child$,
+    attr$,
 } from 'rx-vdom'
 import { State } from '../state'
 
-import { Local, Assets, Webpm,
-    raiseHTTPErrors } from '@w3nest/http-clients'
+import {
+    Local,
+    Assets,
+    Webpm,
+    raiseHTTPErrors,
+    AssetsGateway,
+} from '@w3nest/http-clients'
 import {
     combineLatest,
     from,
@@ -87,14 +94,12 @@ export class PackageView implements VirtualDOM<'div'> {
                     versions: () => ({
                         tag: 'div',
                         children: [
-                            {
+                            child$({
                                 source$:
                                     this.appState.cdnState.packagesEvent[
                                         this.packageId
                                     ].info$,
-                                vdomMap: (
-                                    packageInfo: Local.Components.CdnPackage,
-                                ) => {
+                                vdomMap: (packageInfo) => {
                                     this.selectedVersion$.next(
                                         packageInfo.versions.slice(-1)[0]
                                             .version,
@@ -105,7 +110,7 @@ export class PackageView implements VirtualDOM<'div'> {
                                         selectedVersion$: this.selectedVersion$,
                                     })
                                 },
-                            },
+                            }),
                         ],
                     }),
                     details: () => {
@@ -242,10 +247,10 @@ export class VersionsView implements VirtualDOM<'div'> {
                         tag: 'option',
                         innerText: p.version,
                         value: p.version,
-                        selected: {
+                        selected: attr$({
                             source$: params.selectedVersion$,
                             vdomMap: (v) => v === p.version,
-                        },
+                        }),
                     }
                 }),
                 onchange: (ev) => {
@@ -268,7 +273,7 @@ export class FilesView implements VirtualDOM<'div'> {
         selectedVersion$: Observable<string>
     }) {
         this.children = [
-            {
+            child$({
                 source$: combineLatest([
                     new Assets.AssetsClient()
                         .getAsset$({
@@ -277,13 +282,10 @@ export class FilesView implements VirtualDOM<'div'> {
                         .pipe(raiseHTTPErrors()),
                     selectedVersion$,
                 ]),
-                vdomMap: ([assetResponse, version]: [
-                    Assets.GetAssetResponse,
-                    string,
-                ]): AnyVirtualDOM => {
+                vdomMap: ([assetResponse, version]): AnyVirtualDOM => {
                     return new ExplorerView({ asset: assetResponse, version })
                 },
-            },
+            }),
         ]
     }
 }
@@ -302,12 +304,14 @@ export class LinksView implements VirtualDOM<'div'> {
         packageId: string
         selectedVersion$: Observable<string>
     }) {
+        type Metadata = { links: { kind: string; name: string; url: string }[] }
+
         this.children = [
-            {
+            child$({
                 source$: selectedVersion$.pipe(
                     mergeMap((version) =>
                         new Webpm.Client()
-                            .getResource$({
+                            .getResource$<Metadata>({
                                 libraryId: packageId,
                                 version,
                                 restOfPath: '.yw_metadata.json',
@@ -321,13 +325,7 @@ export class LinksView implements VirtualDOM<'div'> {
                             ),
                     ),
                 ),
-                vdomMap: ({
-                    resp,
-                    version,
-                }: {
-                    resp: YwMetadata
-                    version: string
-                }) => {
+                vdomMap: ({ resp, version }) => {
                     return {
                         tag: 'ul',
                         children: resp.links.map((link) => {
@@ -349,7 +347,7 @@ export class LinksView implements VirtualDOM<'div'> {
                         }),
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -366,28 +364,28 @@ export class LinkLaunchAppLib implements VirtualDOM<'div'> {
         selectedVersion$: Observable<string>
         router: Router
     }) {
+        type Metadata = {
+            family?: string
+            execution?: { standalone: boolean }
+        }
         const packageName = window.atob(packageId)
         this.children = [
-            {
+            child$({
                 source$: selectedVersion$.pipe(
                     switchMap((version) => {
-                        return from(
-                            fetch(
-                                `/api/assets-gateway/webpm/resources/${packageId}/${version}/.yw_metadata.json`,
+                        return new AssetsGateway.Client().webpm
+                            .getResource$<Metadata>({
+                                libraryId: packageId,
+                                version,
+                                restOfPath: '.yw_metadata.json',
+                            })
+                            .pipe(
+                                raiseHTTPErrors(),
+                                map((resp) => ({ ...resp, version })),
                             )
-                                .then((resp) => resp.json())
-                                .then((resp) => ({
-                                    ...resp,
-                                    version,
-                                })),
-                        )
                     }),
                 ),
-                vdomMap: (resp: {
-                    family?: string
-                    version: string
-                    execution?: { standalone: boolean }
-                }) => {
+                vdomMap: (resp) => {
                     if (resp.family === 'application') {
                         return new LinkLaunchAppView({
                             version: resp.version,
@@ -405,7 +403,7 @@ export class LinkLaunchAppLib implements VirtualDOM<'div'> {
                     }
                     return { tag: 'div' }
                 },
-            },
+            }),
         ]
     }
 }

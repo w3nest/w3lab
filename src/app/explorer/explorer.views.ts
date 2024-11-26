@@ -1,4 +1,10 @@
-import { AnyVirtualDOM, ChildrenLike, RxChild, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    RxChild,
+    VirtualDOM,
+} from 'rx-vdom'
 import {
     Assets,
     AssetsGateway,
@@ -61,9 +67,9 @@ export class HeaderView implements VirtualDOM<'div'> {
                       .getPathFolder$({ folderId: entityId })
                       .pipe(raiseHTTPErrors())
 
-            return {
+            return child$({
                 source$: path$,
-                vdomMap: (path: Explorer.GetPathFolderResponse) =>
+                vdomMap: (path) =>
                     new PathView({
                         path,
                         router,
@@ -74,7 +80,7 @@ export class HeaderView implements VirtualDOM<'div'> {
                     tag: 'div',
                     class: 'fas fa-spinner fa-spin',
                 },
-            }
+            })
         }
 
         if (target.startsWith('folder_')) {

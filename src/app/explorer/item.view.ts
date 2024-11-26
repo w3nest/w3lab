@@ -1,4 +1,10 @@
-import { AttributeLike, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
+import {
+    attr$,
+    AttributeLike,
+    ChildrenLike,
+    CSSAttribute,
+    VirtualDOM,
+} from 'rx-vdom'
 import { Explorer } from '@w3nest/http-clients'
 import { Observable, of } from 'rxjs'
 import { ExplorerState, ItemCut } from './explorer.state'
@@ -25,14 +31,14 @@ export class ItemView implements VirtualDOM<'a'> {
         item: Explorer.GetItemResponse
         explorerState: ExplorerState
     }) {
-        this.style = {
+        this.style = attr$({
             source$: explorerState.itemCut$,
-            vdomMap: (itemCut: ItemCut) => {
+            vdomMap: (itemCut) => {
                 return itemCut?.node.id === item.itemId
                     ? { opacity: 0.5 }
                     : { opacity: 1 }
             },
-        }
+        })
         this.href = `@nav/explorer/${groupId}/item_${item.itemId}`
         this.children = [
             new ItemIconView({ item }),
@@ -90,14 +96,14 @@ export class FolderView implements VirtualDOM<'a'> {
         folder: Explorer.GetFolderResponse
         explorerState: ExplorerState
     }) {
-        this.style = {
+        this.style = attr$({
             source$: explorerState.itemCut$,
             vdomMap: (itemCut: ItemCut) => {
                 return itemCut?.node.id === folder.folderId
                     ? { opacity: 0.5, fontWeight: 'bolder' }
                     : { opacity: 1, fontWeight: 'bolder' }
             },
-        }
+        })
 
         this.href = `@nav/explorer/${groupId}/folder_${folder.folderId}`
         this.children = [

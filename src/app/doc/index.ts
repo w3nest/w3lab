@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     Router,
     parseMd,
@@ -152,13 +152,13 @@ export const navigation = (appState: AppState): Navigation => ({
 const decoration = (icon: string, appState: AppState) => {
     return {
         icon: { tag: 'i' as const, class: `fas ${icon} me-2` },
-        wrapperClass: {
+        wrapperClass: attr$({
             source$: appState.appMode$,
             vdomMap: (mode: AppMode) =>
                 ['normal', 'docCompanion'].includes(mode)
                     ? Views.NavigationHeader.DefaultWrapperClass
                     : 'd-none',
-        },
+        }),
     }
 }
 

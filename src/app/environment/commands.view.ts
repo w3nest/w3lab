@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { State, Method } from './state'
 import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs'
@@ -28,10 +28,10 @@ export class CommandsListView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ environmentState }: { environmentState: State }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: environmentState.environment$,
-            vdomMap: (env: Local.Environment.EnvironmentStatusResponse) => {
+            vdomMap: (env) => {
                 return Object.entries(env.commands).map(
                     ([_type, command]) =>
                         new ExpandableGroupView({
@@ -45,7 +45,7 @@ export class CommandsListView implements VirtualDOM<'div'> {
                         }),
                 )
             },
-        }
+        })
     }
 }
 
@@ -212,10 +212,10 @@ export class ExecuteNoBodyView extends ExecuteView {
                         )
                         .subscribe((out) => this.output$.next(out)),
             }),
-            {
+            child$({
                 source$: this.output$,
                 vdomMap: (output) => new OutputView({ output }),
-            },
+            }),
         ]
     }
 }
@@ -273,10 +273,10 @@ export class ExecuteBodyView extends ExecuteView {
             //new DashboardTitle({ title: 'Execute command' }),
             bodyView,
             playView,
-            {
+            child$({
                 source$: this.output$,
                 vdomMap: (output) => new OutputView({ output }),
-            },
+            }),
         ]
     }
 }
@@ -371,7 +371,7 @@ export class BodyView implements VirtualDOM<'div'> {
                 tag: 'div',
                 innerText: "Command's body (json format):",
             },
-            {
+            child$({
                 source$: fetchCodeMirror$(),
                 vdomMap: () => {
                     return {
@@ -398,7 +398,7 @@ export class BodyView implements VirtualDOM<'div'> {
                         },
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -480,7 +480,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
         this.environmentState.openCommand(this.command)
         const events = this.environmentState.commandsEvent[this.command.name]
         this.children = [
-            {
+            child$({
                 source$: events.log$.pipe(
                     take(1),
                     map((d) => d.parentContextId),
@@ -491,7 +491,7 @@ export class LogsTabView implements VirtualDOM<'div'> {
                         title: this.command.name,
                     })
                 },
-            },
+            }),
         ]
     }
 }

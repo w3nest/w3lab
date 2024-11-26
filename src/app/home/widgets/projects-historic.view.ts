@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { colabClassPrefix, ComponentCrossLinksView } from '../../common'
 import { Router } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
@@ -29,9 +29,9 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
         Object.assign(this, params)
 
         this.children = [
-            {
+            child$({
                 source$: this.appState.projectsState.historic$,
-                vdomMap: (projects: Local.Projects.Project[]) => {
+                vdomMap: (projects) => {
                     return {
                         tag: 'div',
                         class: 'w-100',
@@ -44,7 +44,7 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
                         ),
                     }
                 },
-            },
+            }),
         ]
     }
 
@@ -100,13 +100,14 @@ export class ProjectHistoricItemView implements VirtualDOM<'div'> {
         appState: AppState
         project: Local.Projects.Project
     }) {
+        const source$ = getProjectNav$({
+            projectName: project.name,
+            appState,
+        }).pipe(take(1))
         this.children = [
-            {
-                source$: getProjectNav$({
-                    projectName: project.name,
-                    appState,
-                }).pipe(take(1)),
-                vdomMap: (nav: string | undefined) => {
+            child$({
+                source$,
+                vdomMap: (nav) => {
                     return {
                         tag: 'a',
                         href: nav,
@@ -117,7 +118,7 @@ export class ProjectHistoricItemView implements VirtualDOM<'div'> {
                         },
                     }
                 },
-            },
+            }),
             { tag: 'div', class: 'flex-grow-1' },
             new ComponentCrossLinksView({
                 appState,

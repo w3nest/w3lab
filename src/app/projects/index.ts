@@ -1,7 +1,7 @@
 import { FailuresView, NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
 import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { SearchView } from './search.view'
 import { pyYwDocLink } from '../common/py-yw-references.view'
 import { Local } from '@w3nest/http-clients'
@@ -60,11 +60,11 @@ const refreshAction = (appState: AppState): VirtualDOM<'i'> => ({
     children: [
         {
             tag: 'i',
-            class: {
+            class: attr$({
                 source$: refresh$,
-                vdomMap: (r: boolean) => (r ? 'fa-spin' : ''),
-                wrapper: (d: string) => `${d} fas fa-sync`,
-            },
+                vdomMap: (r): string => (r ? 'fa-spin' : ''),
+                wrapper: (d) => `${d} fas fa-sync`,
+            }),
         },
     ],
 })
@@ -138,17 +138,17 @@ The following projects have failed to load:
                     searchView: () => new SearchView({ projectsState, router }),
                     projectsListView: () => ({
                         tag: 'ul',
-                        children: {
+                        children: replace$({
                             policy: 'replace',
                             source$: projectsState.projects$,
-                            vdomMap: (projects: Local.Projects.Project[]) =>
+                            vdomMap: (projects) =>
                                 projects.map((p) =>
                                     parseMd({
                                         src: `*  [${p.name}](@nav/projects/${p.id})`,
                                         router,
                                     }),
                                 ),
-                        },
+                        }),
                     }),
                     failedListView: () =>
                         new FailuresView({ appState, router }),

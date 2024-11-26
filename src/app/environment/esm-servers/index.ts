@@ -2,7 +2,7 @@ import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { EsmServerView } from './esm-server.view'
 export { State } from './state'
 
@@ -90,39 +90,37 @@ class EsmServersListView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor(appState: AppState) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: appState.environment$.pipe(
                 map((env) => env.proxiedEsmServers),
             ),
-            vdomMap: (esmServers: Local.Environment.ProxiedEsmServer[]) => {
-                if (esmServers.length === 0) {
+            vdomMap: ({ store }) => {
+                if (store.length === 0) {
                     return [{ tag: 'div', innerText: 'No servers running.' }]
                 }
-                return esmServers.map(
-                    ({ package: packageName, version, uid }) => {
-                        return {
-                            tag: 'a',
-                            class: 'd-flex align-items-center mb-2',
-                            href: `@nav/environment/esm-servers/${uid}`,
-                            children: [
-                                { tag: 'i', class: 'fas fa-laptop-code' },
-                                { tag: 'i', class: 'mx-1' },
-                                {
-                                    tag: 'div',
-                                    innerText: `${packageName}#${version}`,
-                                },
-                            ],
-                            onclick: (ev: MouseEvent) => {
-                                ev.preventDefault()
-                                appState.router.navigateTo({
-                                    path: `/environment/esm-servers/${uid}`,
-                                })
+                return store.map(({ package: packageName, version, uid }) => {
+                    return {
+                        tag: 'a',
+                        class: 'd-flex align-items-center mb-2',
+                        href: `@nav/environment/esm-servers/${uid}`,
+                        children: [
+                            { tag: 'i', class: 'fas fa-laptop-code' },
+                            { tag: 'i', class: 'mx-1' },
+                            {
+                                tag: 'div',
+                                innerText: `${packageName}#${version}`,
                             },
-                        }
-                    },
-                )
+                        ],
+                        onclick: (ev: MouseEvent) => {
+                            ev.preventDefault()
+                            appState.router.navigateTo({
+                                path: `/environment/esm-servers/${uid}`,
+                            })
+                        },
+                    }
+                })
             },
-        }
+        })
     }
 }

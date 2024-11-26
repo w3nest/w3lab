@@ -1,4 +1,11 @@
-import { ChildrenLike, VirtualDOM, CSSAttribute, AnyVirtualDOM } from 'rx-vdom'
+import {
+    ChildrenLike,
+    VirtualDOM,
+    CSSAttribute,
+    AnyVirtualDOM,
+    attr$,
+    child$,
+} from 'rx-vdom'
 import { fromMarkdown, parseMd, Router } from 'mkdocs-ts'
 import { BehaviorSubject, mergeMap, Observable, of, Subject, timer } from 'rxjs'
 import { setup } from '../../auto-generated'
@@ -9,6 +16,7 @@ import {
     Explorer,
     Local,
     onHTTPErrors,
+    raiseHTTPErrors,
 } from '@w3nest/http-clients'
 import { getProjectNav$ } from './utils-nav'
 
@@ -119,7 +127,7 @@ export class InfoSectionView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'i',
-                        class: {
+                        class: attr$({
                             source$: expanded$,
                             vdomMap: (expanded): string =>
                                 expanded
@@ -127,12 +135,12 @@ export class InfoSectionView implements VirtualDOM<'div'> {
                                     : 'fv-text-focus',
                             wrapper: (d) =>
                                 `${d} fas fa-info-circle fv-pointer`,
-                        },
+                        }),
                     },
                 ],
                 onclick: () => expanded$.next(!expanded$.value),
             },
-            {
+            child$({
                 source$: expanded$,
                 vdomMap: (expanded) =>
                     expanded
@@ -147,7 +155,7 @@ export class InfoSectionView implements VirtualDOM<'div'> {
                               ],
                           }
                         : { tag: 'div' },
-            },
+            }),
         ]
     }
 }
@@ -355,31 +363,31 @@ export class HdPathBookView implements VirtualDOM<'div'> {
                     direction: 'rtl',
                     textAlign: 'left',
                 },
-                innerText: {
+                innerText: attr$({
                     source$: path$,
-                    vdomMap: (path: string) => {
+                    vdomMap: (path) => {
                         return path
                     },
-                },
+                }),
             },
-            {
+            child$({
                 source$: path$,
-                vdomMap: (path: string) => {
+                vdomMap: (path) => {
                     return new CopyClipboardView({
                         text: path,
                     })
                 },
-            },
-            {
+            }),
+            child$({
                 source$: path$,
-                vdomMap: (path: string) => {
+                vdomMap: (path) => {
                     return {
                         tag: 'i',
                         class: 'fas fa-folder-open p-1 rounded border fv-pointer fv-hover-text-focus mx-2',
                         onclick: () => appState.mountHdPath(path, type),
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -411,30 +419,30 @@ export class CoLabBanner implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'img',
-                class: {
+                class: attr$({
                     source$: timer$,
                     vdomMap: (i) => (i == 0 ? '' : 'd-none'),
-                },
+                }),
                 style,
                 src: `${basePath}/co-lab-light.png`,
                 onload: () => loaded$.next(true),
             },
             {
                 tag: 'img',
-                class: {
+                class: attr$({
                     source$: timer(0, 1000).pipe(take(2)),
                     vdomMap: (i) => (i == 0 ? 'd-none' : ''),
-                },
+                }),
                 style,
                 src: `${basePath}/co-lab-high.png`,
             },
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: loaded$,
                     vdomMap: () => 'w-100',
                     untilFirst: 'd-none',
-                },
+                }),
                 style: {
                     position: 'absolute' as const,
                     top: '50%',
@@ -507,9 +515,9 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                 ],
             },
             sep,
-            {
+            child$({
                 source$: appState.cdnState.status$,
-                vdomMap: (status: Local.Components.CdnStatusResponse) => {
+                vdomMap: (status) => {
                     const target = status.packages.find(
                         (p) => p.name === component,
                     )
@@ -532,9 +540,9 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         enabled: true,
                     })
                 },
-            },
+            }),
             sep,
-            {
+            child$({
                 source$: appState.cdnState.status$.pipe(
                     mergeMap(() =>
                         client.getItem$({
@@ -546,10 +554,12 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         if (resp === undefined) {
                             return of(undefined)
                         }
-                        return client.getPath$({ itemId })
+                        return client
+                            .getPath$({ itemId })
+                            .pipe(raiseHTTPErrors())
                     }),
                 ),
-                vdomMap: (resp?: Explorer.PathBase) => {
+                vdomMap: (resp) => {
                     let nav = ''
                     if (resp) {
                         const folders = resp.folders.reduce(
@@ -565,9 +575,9 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                     })
                 },
                 untilFirst,
-            },
+            }),
             sep,
-            {
+            child$({
                 source$: getProjectNav$({
                     projectName: component,
                     appState,
@@ -579,11 +589,11 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         enabled: nav !== undefined,
                     })
                 },
-            },
+            }),
             sep,
-            {
+            child$({
                 source$: appState.projectsState.projects$,
-                vdomMap: (projects: Local.Projects.Project[]) => {
+                vdomMap: (projects) => {
                     const project = projects.find(
                         (p) => p.name.split('~')[0] === component,
                     )
@@ -598,17 +608,17 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         },
                     })
                 },
-            },
+            }),
             ...this.withLinks
                 .map((linkInput$) => {
                     return [
                         sep,
-                        {
+                        child$({
                             source$: linkInput$,
-                            vdomMap: (linkInput: LinkInput): AnyVirtualDOM =>
+                            vdomMap: (linkInput): AnyVirtualDOM =>
                                 this.linkView(linkInput),
                             untilFirst,
-                        },
+                        }),
                     ]
                 })
                 .flat(),

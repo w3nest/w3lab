@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { Local } from '@w3nest/http-clients'
 import { State } from './state'
 
@@ -21,12 +21,10 @@ export class DispatchListView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ environmentState }: { environmentState: State }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: environmentState.customDispatches$,
-            vdomMap: (dispatches: {
-                [k: string]: Local.Environment.CustomDispatch[]
-            }) => {
+            vdomMap: (dispatches) => {
                 return Object.entries(dispatches).map(([type, items]) => {
                     return {
                         tag: 'div',
@@ -43,7 +41,7 @@ export class DispatchListView implements VirtualDOM<'div'> {
                     }
                 })
             },
-        }
+        })
     }
 }
 

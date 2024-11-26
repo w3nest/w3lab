@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { Local, raiseHTTPErrors } from '@w3nest/http-clients'
@@ -66,20 +66,17 @@ export class FilesBrowserView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: 'my-4',
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: this.items$,
-                    vdomMap: ({
-                        files,
-                        folders,
-                    }: Local.System.QueryFolderContentResponse) => {
+                    vdomMap: ({ files, folders }) => {
                         const filesVDom = files.map((name) => fileView(name))
                         const foldersVDom = folders.map((name) =>
                             folderView(this.folderSelected$, name),
                         )
                         return [...foldersVDom, ...filesVDom]
                     },
-                },
+                }),
             },
         ]
     }
@@ -114,17 +111,17 @@ function folderNavigationView(
     return {
         tag: 'div',
         class: 'd-flex',
-        children: {
+        children: replace$({
             policy: 'replace',
             source$: folderSelected$,
-            vdomMap: (paths: string) =>
+            vdomMap: (paths) =>
                 paths
                     .split('/')
                     .slice(originFolderIndex)
                     .map((element) =>
                         pathElementView(folderSelected$, element),
                     ),
-        },
+        }),
     }
 }
 

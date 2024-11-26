@@ -1,4 +1,10 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    replace$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
 import { DagFlowView } from './dag-flow.view'
 import { State } from './state'
@@ -134,14 +140,14 @@ Publishing a components means to publish all or a part of those artifacts.
                         return {
                             tag: 'div',
                             children: [
-                                {
+                                child$({
                                     source$: appState.cdnState.status$,
                                     vdomMap: () =>
                                         new CdnLinkView({
                                             name: project.name.split('~')[0],
                                             router,
                                         }),
-                                },
+                                }),
                             ],
                         }
                     },
@@ -212,26 +218,23 @@ export class ArtifactsView implements VirtualDOM<'div'> {
             }),
             debounceTime(1000),
         )
-        this.children = {
-            policy: 'replace',
-            source$: merge(of(undefined), event$).pipe(
-                mergeMap(() =>
-                    projectsState.projectsClient.getArtifacts$({
-                        projectId: project.id,
-                    }),
-                ),
-                raiseHTTPErrors(),
+        const source$ = merge(of(undefined), event$).pipe(
+            mergeMap(() =>
+                projectsState.projectsClient.getArtifacts$({
+                    projectId: project.id,
+                }),
             ),
-            vdomMap: ({
-                artifacts,
-            }: {
-                artifacts: Local.Projects.GetArtifactResponse[]
-            }) => {
+            raiseHTTPErrors(),
+        )
+        this.children = replace$({
+            policy: 'replace',
+            source$,
+            vdomMap: ({ artifacts }) => {
                 return artifacts.map((artifact) => {
                     return new ArtifactView({ artifact, router })
                 })
             },
-        }
+        })
     }
 }
 export class ArtifactView implements VirtualDOM<'div'> {
@@ -283,12 +286,10 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: 'ps-4 flex-grow-1 overflow-auto',
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: projectsState.appState.environment$,
-                    vdomMap: (
-                        environment: Local.Environment.EnvironmentStatusResponse,
-                    ) => {
+                    vdomMap: (environment) => {
                         return environment.projects.templates.map(
                             (projectTemplate) =>
                                 new ExpandableGroupView({
@@ -302,7 +303,7 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
                                 }),
                         )
                     },
-                },
+                }),
             },
         ]
     }
@@ -325,12 +326,10 @@ export class FailuresView implements VirtualDOM<'div'> {
         router: Router
         prefix?: string
     }) {
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: appState.projectsState.projectsFailures$,
-            vdomMap: (
-                failures: Local.Projects.ProjectsLoadingResults['failures'],
-            ) => [
+            vdomMap: (failures) => [
                 new FailuresCategoryView({
                     appState: appState,
                     failures: failures.importExceptions.filter((error) =>
@@ -353,7 +352,7 @@ export class FailuresView implements VirtualDOM<'div'> {
                     title: 'Pipeline Not Found Failures',
                 }),
             ],
-        }
+        })
     }
 }
 

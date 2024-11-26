@@ -1,7 +1,7 @@
 import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { AssetDownloadEvent, State } from '../state'
 import { filter } from 'rxjs/operators'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { downloadIcon } from '../views'
 import { Observable } from 'rxjs'
 import { LogsExplorerView } from '../../../common/logs-explorer.view'
@@ -22,9 +22,9 @@ export class AssetDownloadNotificationView extends ExpandableGroupView {
         )
         const statusIcon: AnyVirtualDOM = {
             tag: 'div',
-            class: {
+            class: attr$({
                 source$: message$,
-                vdomMap: (m: Local.System.DownloadEvent) => {
+                vdomMap: (m) => {
                     const factory = {
                         succeeded: 'fa-check text-success',
                         failed: 'fa-times text-danger',
@@ -34,7 +34,7 @@ export class AssetDownloadNotificationView extends ExpandableGroupView {
                     return `fas ${factory[m.type]}`
                 },
                 untilFirst: 'fas fa-spinner fa-spin',
-            },
+            }),
         }
         super({
             expanded: false,
@@ -62,9 +62,9 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
                 style: {
                     fontWeight: 'bolder',
                 },
-                innerText: {
+                innerText: attr$({
                     source$: notification$,
-                    vdomMap: (m: AssetDownloadEvent) => {
+                    vdomMap: (m) => {
                         const factory = {
                             succeeded:
                                 'The asset has been installed successfully.',
@@ -75,11 +75,11 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
                         }
                         return factory[m.type]
                     },
-                },
+                }),
             },
-            {
+            child$({
                 source$: notification$,
-                vdomMap: (notif: AssetDownloadEvent) => {
+                vdomMap: (notif) => {
                     return new LogsExplorerView({
                         rootLogs$: new Local.Client().api.system
                             .queryLogs$({
@@ -90,7 +90,7 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
                         showHeaderMenu: false,
                     })
                 },
-            },
+            }),
         ]
     }
 }

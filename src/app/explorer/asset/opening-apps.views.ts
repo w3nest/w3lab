@@ -1,5 +1,5 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { Assets } from '@w3nest/http-clients'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { Assets, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 
 import { fromFetch } from 'rxjs/fetch'
 import { switchMap } from 'rxjs/operators'
@@ -13,17 +13,21 @@ export class PackageLogoView implements VirtualDOM<'div'> {
     public readonly style = {}
     constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         if (asset.kind === 'package') {
-            const source$ = fromFetch(
-                `/api/assets-gateway/webpm/resources/${asset.rawId}/latest/.yw_metadata.json`,
-            ).pipe(switchMap((resp) => resp.json()))
-
+            type Metadata = {
+                graphics: { appIcon: AnyVirtualDOM }
+            }
+            const source$ = new AssetsGateway.Client().webpm
+                .getResource$<Metadata>({
+                    libraryId: asset.rawId,
+                    version: 'lates',
+                    restOfPath: '.yw_metadata.json',
+                })
+                .pipe(raiseHTTPErrors())
             this.children = [
-                {
+                child$({
                     source$,
                     untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
-                    vdomMap: (resp: {
-                        graphics: { appIcon: AnyVirtualDOM }
-                    }) => {
+                    vdomMap: (resp) => {
                         if (resp.graphics?.appIcon === undefined) {
                             return {
                                 tag: 'div',
@@ -32,7 +36,7 @@ export class PackageLogoView implements VirtualDOM<'div'> {
                         }
                         return new CustomIconView(resp.graphics.appIcon)
                     },
-                },
+                }),
             ]
         }
     }
@@ -100,10 +104,10 @@ export class LaunchView implements VirtualDOM<'div'> {
             const source$ = launchPackage$(asset.rawId)
 
             this.children = [
-                {
+                child$({
                     source$,
                     untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
-                    vdomMap: (resp: LaunchPackageData | undefined) => {
+                    vdomMap: (resp) => {
                         if (!resp) {
                             return { tag: 'div' }
                         }
@@ -122,7 +126,7 @@ export class LaunchView implements VirtualDOM<'div'> {
                             )
                         }
                     },
-                },
+                }),
             ]
         }
     }
