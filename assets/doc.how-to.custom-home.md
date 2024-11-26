@@ -24,7 +24,7 @@ It supports all standard `Markdown` syntax, allowing you to create rich content 
 Additionally, you can enhance the page using special widgets and custom processing features.
 
 <note level="hint">
-The `Markdown` engine is powered by the **@youwol/mkdocs-ts** library.
+The `Markdown` engine is powered by the **mkdocs-ts** library.
 For more information, you can refer to the official documentation 
 <mkdocsDoc nav="/tutorials/markdown">documentation</mkdocsDoc>..
 </note>
@@ -48,9 +48,9 @@ This widget creates a launch-pad from target applications:
 This is an example of `LaunchPad`:
 
 <launchPad size='50px'>
-   <app name="@youwol/mkdocs-ts-doc"></app>
-   <app name="@youwol/rx-vdom-doc"></app>
-   <app name="@youwol/webpm-client-doc"></app>
+   <app name="mkdocs-ts-doc"></app>
+   <app name="rx-vdom-doc"></app>
+   <app name="@w3nest/webpm-client-doc"></app>
 </launchPad>
 </md-cell>
 
@@ -127,9 +127,9 @@ More information in  <apiLink target="ProjectsHistoricView"></apiLink>.
 
 ### Other Widgets
 
-####  `@youwol/mkdocs-ts` Widgets
+####  `mkdocs-ts` Widgets
 
-The **@youwol/mkdocs-ts** library also offers several widgets for use. 
+The **mkdocs-ts** library also offers several widgets for use. 
 Below is an example combining `note`, `expandable` and `code-snippet`:
 
 <md-cell>
@@ -146,7 +146,7 @@ I'm a note featuring an expandable content:
 </note>
 </md-cell>
 
-For more details on the **`@youwol/mkdocs-ts`** widgets, visit the
+For more details on the **`mkdocs-ts`** widgets, visit the
 <mkdocsDoc nav="/tutorials/markdown">documentation</mkdocsDoc>.
 
 #### Custom Widgets
@@ -171,9 +171,9 @@ return async({mdSrc, webpm, mkdocs, router}) => {
 
 **Parameters**:
 *  **mdSrc**: The raw content of the `Markdown` source.
-*  **<webpmDoc>webpm</webpmDoc>**: The installer module from youwol. 
+*  **<webpmDoc>webpm</webpmDoc>**: The installer module from w3nest. 
    This module can be used to install required packages, for instance when defining custom views. 
-*  **<mkdocsDoc>mkdocs</mkdocsDoc>**: It is the **@youwol/mkdocs-ts** module, which provides the `Markdown` parser, 
+*  **<mkdocsDoc>mkdocs</mkdocsDoc>**: It is the **mkdocs-ts** module, which provides the `Markdown` parser, 
    including the <mkdocsDoc nav='/api/MainModule.parseMd'>parseMd</mkdocsDoc> function.
 *  **<mkdocsDoc nav="/api/MainModule.Router">router</mkdocsDoc>**: The router for this application, 
    often only forwarded to `parseMd`.

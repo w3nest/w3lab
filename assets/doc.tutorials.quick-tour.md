@@ -16,7 +16,7 @@ located under the <i class="fas fa-book px-1"></i> **Doc** section.
 
 ## Project Creation
 
-YouWol provides several standard project templates, each implemented as a Python module. These templates also define a 
+W3Nest provides several standard project templates, each implemented as a Python module. These templates also define a 
 pipeline that outlines the necessary steps (e.g., `setup`, `build`, `test`) to create an executable component.
 
 Let's create a simple JavaScript project starter:
@@ -31,11 +31,11 @@ The project should open with its pipeline displayed.
 
 
 <expandable title="Additional info" icon="fas fa-question-circle text-success">
-Here, we used a template for a basic web application, managed by the YouWol’s Python module 
+Here, we used a template for a basic web application, managed by the W3Nest’s Python module 
 <apiLink target="pipeline_raw_app"></apiLink>.
 The default configuration includes it among a couple of others.
 
-For additional information regarding how YouWol is looking for projects, or how to define your own template & pipeline,
+For additional information regarding how W3Nest is looking for projects, or how to define your own template & pipeline,
 a starting point can be found [here](@nav/doc/how-to/config/projects)
 </expandable>
 
@@ -51,7 +51,7 @@ entirely with the user.
 It features 3 steps:
 *  **package**: Package selected files into an artifact named `package`.
 *  **cdn-local**: Publish the `package` artifact into the local components' database.
-*  **cdn_prod**: Publish the component from the local database to the remote one (on `platform.youwol.com`).
+*  **cdn_prod**: Publish the component from the local database to the remote one.
 
 ### Package
 
@@ -68,7 +68,7 @@ project's page header will activate. Click it to open your application in a new 
 <note level="hint" label="✨ Congratulations! You've successfully deployed a ToDo application ✨">
 In the upcoming sections, we will explore smaller code examples to dive into specific topics. 
 If you're interested in the ToDo application code and a step-by-step guide on how it was built,
-you can find it <a href="/applications/@youwol/rx-vdom-doc/latest?nav=/tutorials" target="_blank">here</a>.
+you can find it <a href="/apps/rx-vdom-doc/latest?nav=/tutorials" target="_blank">here</a>.
 </note>
 
 The header also features an icon: <i class='fas fa-microchip text-primary'></i>, which links to the details page of 
@@ -91,7 +91,7 @@ release.
 
 ## Dynamic Resources Linking
 
-One of the key features provided by the YouWol environment is its ability to dynamically install and link the necessary
+One of the key features provided by the W3Nest environment is its ability to dynamically install and link the necessary
 dependencies for your application. These dependencies come in three forms: 
 *  JavaScript or WebAssembly (ESM) packages.
 *  Python packages ported by Pyodide to run in the browser. 
@@ -104,14 +104,14 @@ To illustrate this:
     *  In the top ribbon bar, click the <i class='fas fa-folder-open text-primary'></i> icon. 
        It opens your platform's files explorer.
     *  Copy/paste the content of the `script.js` and `style.css` files found 
-     <a target="_blank" href="https://github.com/youwol/co-lab/tree/main/components/tdse-1d/src">here</a>.
+     <a target="_blank" href="https://github.com/w3nest/co-lab/tree/main/components/tdse-1d/src">here</a>.
 *  Back on <projectNav project="tdse-1d"></projectNav>, re-run the `package` and `cdn-local` steps.
 *  Refresh the tab running your application and return here while the required backend is installing.
 
 <note level="hint" label="TDSE-1D">
 The updated application's code solves the 1D Time-Dependent Schrödinger Equation (TDSE) for a custom potential energy. 
 As mentioned below, the app requires 
-[this backend](https://github.com/youwol/co-lab/tree/main/components/colab-backend-project), which will need to be 
+[this backend](https://github.com/w3nest/co-lab/tree/main/components/colab-backend-project), which will need to be 
 installed on first use (likely right now).
 
 *  You can follow the installation progress from <a href="@nav/components/backends/Y29sYWJfYmFja2VuZA==">here</a>.
@@ -132,7 +132,7 @@ const { backend, rxjs, d3 } = await webpm.install({
 })
 </code-snippet>
 
-The `webpm` (Web Packages Manager) variable serves as the client for YouWol's components service. 
+The `webpm` (Web Packages Manager) variable serves as the client for W3Nest's components service. 
 It provides real-time resolution of dependency trees. When the `install` function is invoked:
 *  It resolves the dependency tree for the requested components according to the **semantic versioning query**.
 *  It installs and links the resolved dependencies (**both direct and indirect**) in your browser,
@@ -143,11 +143,11 @@ It provides real-time resolution of dependency trees. When the `install` functio
 
 <expandable title="Additional info" icon="fas fa-question-circle text-success">
 *  For more details about the WebPM client and its installation options, refer to the
-<a target="_blank" href="/applications/@youwol/webpm-client-doc/latest?nav=/">WebPM's documentation</a>.
+<a target="_blank" href="/apps/@w3nest/webpm-client-doc/latest?nav=/">WebPM's documentation</a>.
 
 *  To learn more about the resolution of the TDSE 1D equation and the plotting implementation, visit the interactive
    notebook available 
-   <a target="_blank" href="/applications/@youwol/gallery/latest?nav=/sciences/tdse-1d">here</a>.
+   <a target="_blank" href="/apps/@w3nest/gallery/latest?nav=/sciences/tdse-1d">here</a>.
    It uses the ability of WebPM to install and run python modules. 
 
 *  If you are interested in some details on how backend installation is working, refer to
@@ -167,7 +167,7 @@ the **Permissions** section below).
 
 Once an application is published online,  it can be accessed via the following URL:
 
-https://platform.youwol.com/applications/{APP_NAME}/{APP_VERSION}`
+https://w3nest.org/apps/{APP_NAME}/{APP_VERSION}`
 
 Where:
 *  `{APP_NAME}` is the name of your application.
@@ -176,7 +176,7 @@ Where:
 
 <note level="warning">
 Applications that require backend installation, like the one built here, can currently only be executed through the
-local YouWol server. In practice, you can share the URL for these applications only with users who have the local YouWol
+local W3Nest server. In practice, you can share the URL for these applications only with users who have the local W3Nest
 server installed and running.
 </note>
 
@@ -188,7 +188,7 @@ To change this, click the <i class="fas fa-folder text-primary"></i> icon in the
 the permissions under the **Access** section. Set the read policy for **Default access** to `Authorized`,
 and then re-run the `cdn_prod` step.
 
-Additionally, your component will be stored within YouWol’s file system in a `Download` folder, 
+Additionally, your component will be stored within W3Nest’s file system in a `Download` folder, 
 which you can browse from <defaultUserDrive target="download"></defaultUserDrive>. 
 You have the option to move the asset by cutting/pasting it to a different location.
 
@@ -204,5 +204,5 @@ You have the option to move the asset by cutting/pasting it to a different locat
 *  Projects can utilize the WebPM client to install dependencies dynamically. It enables backends to 
    be seamlessly integrated into your applications—opening up vast possibilities. Also, it offers a significant 
    advantage in scenarios where dependencies are unknown in advance, such as in applications like
-   <a href="/applications/@youwol/mkdocs-ts-doc/latest?nav=/tutorials/notebook" target="_blank">notebooks</a> or 
-   <a href="/applications/@youwol/gallery/latest?nav=/vs-flow" target="_blank">low-code environments</a>.
+   <a href="/apps/mkdocs-ts-doc/latest?nav=/tutorials/notebook" target="_blank">notebooks</a> or 
+   <a href="/apps/@w3nest/gallery/latest?nav=/vs-flow" target="_blank">low-code environments</a>.
