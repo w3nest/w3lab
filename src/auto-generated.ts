@@ -98,7 +98,7 @@ const entries = {
 export const setup = {
     name:'@w3nest/co-lab',
         assetId:'QHczbmVzdC9jby1sYWI=',
-    version:'0.7.0-wip',
+    version:'0.7.0',
     shortDescription:"The W3Nest's collaborative laboratory application.",
     developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@w3nest/co-lab',
@@ -144,7 +144,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@w3nest/co-lab#0.7.0-wip~dist/@w3nest/co-lab/${entry.name}.js`
+            `@w3nest/co-lab#0.7.0~dist/@w3nest/co-lab/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
