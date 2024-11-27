@@ -1,11 +1,23 @@
+:root {
+    --font-size-base: clamp(12px, 2.5vw, 18px);
+    --font-family-base: 'Georgia', serif;
+    --line-height-base: 1.6;
+}
+
+html {
+    font-size: var(--font-size-base);
+}
+
+body {
+    font-family: var(--font-family-base) !important;
+    line-height: var(--line-height-base);
+}
+
 .CodeMirror {
     height: 100% !important;
     z-index: 0;
 }
 
-html {
-    font-size: 18px;
-}
 
 .yw-hover-shadow:hover {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
