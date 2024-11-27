@@ -12,7 +12,7 @@ export const navigation = (appState: AppState): Navigation => ({
     name: 'Browser',
     html: ({ router }) => new PageView({ router, appState }),
     tableOfContent: Views.tocView,
-    decoration: { icon: { tag: 'i', class: 'fas fa-window-maximize me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-window-maximize' } },
 })
 
 export class PageView implements VirtualDOM<'div'> {

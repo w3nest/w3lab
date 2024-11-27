@@ -18,7 +18,7 @@ export const navigation = (appState: AppState): Navigation => ({
     name: 'Notifications',
     html: ({ router }) => new PageView({ router, appState }),
     tableOfContent: Views.tocView,
-    decoration: { icon: { tag: 'i', class: 'fas fa-envelope-open-text me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-envelope-open-text' } },
 })
 
 export class PageView implements VirtualDOM<'div'> {

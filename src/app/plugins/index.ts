@@ -60,7 +60,7 @@ export async function navigation(appState: AppState): Promise<Navigation> {
     return {
         name: 'Plugins',
         decoration: {
-            icon: { tag: 'i' as const, class: `fas fa-puzzle-piece me-2` },
+            icon: { tag: 'i' as const, class: `fas fa-puzzle-piece` },
         },
         tableOfContent: Views.tocView,
         html: () => new PluginsView({ appState }),

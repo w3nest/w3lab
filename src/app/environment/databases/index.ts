@@ -6,7 +6,7 @@ import { HdPathBookView } from '../../common'
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Databases',
-    decoration: { icon: { tag: 'i', class: 'fas fa-database me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-database' } },
     tableOfContent: Views.tocView,
     html: ({ router }) => new PageView({ router, appState }),
 })

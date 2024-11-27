@@ -16,7 +16,7 @@ export function decodeHdPath(encodedStr) {
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Mounted',
-    decoration: { icon: { tag: 'i', class: 'fas fa-laptop me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-laptop' } },
     tableOfContent: Views.tocView,
     html: ({ router }) => new PageView({ router, appState }),
     '...': appState.mountedHdPaths$.pipe(

@@ -19,7 +19,7 @@ const refresh$ = new BehaviorSubject(false)
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Projects',
     decoration: {
-        icon: { tag: 'i', class: 'fas  fa-boxes me-2' },
+        icon: { tag: 'i', class: 'fas  fa-boxes' },
         actions: [refreshAction(appState)],
     },
     tableOfContent: Views.tocView,
@@ -177,7 +177,7 @@ function lazyResolver(
                         decoration: {
                             icon: {
                                 tag: 'i' as const,
-                                class: 'mx-2 fas fa-object-group',
+                                class: 'fas fa-object-group',
                             },
                         },
                     }

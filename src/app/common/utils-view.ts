@@ -42,7 +42,6 @@ export const classesButton =
 
 export class NavIconSvg implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'me-2'
     public readonly style: CSSAttribute
     constructor({ filename }: { filename: string }) {
         const basePath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}`

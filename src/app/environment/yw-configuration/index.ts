@@ -8,7 +8,7 @@ import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 
 export const navigation = (appState: AppState): Navigation => ({
     html: ({ router }) => new PageView({ appState, router }),
-    decoration: { icon: { tag: 'i', class: 'fas fa-wrench me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-wrench' } },
     name: 'Server config.',
     tableOfContent: Views.tocView,
 })

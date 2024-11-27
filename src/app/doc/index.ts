@@ -151,7 +151,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
 const decoration = (icon: string, appState: AppState) => {
     return {
-        icon: { tag: 'i' as const, class: `fas ${icon} me-2` },
+        icon: { tag: 'i' as const, class: `fas ${icon}` },
         wrapperClass: attr$({
             source$: appState.appMode$,
             vdomMap: (mode: AppMode) =>

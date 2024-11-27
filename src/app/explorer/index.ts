@@ -19,7 +19,7 @@ export const navigation = ({
     const explorerState = new ExplorerState()
     return {
         name: 'Explorer',
-        decoration: { icon: { tag: 'i', class: 'fas fa-folder me-2' } },
+        decoration: { icon: { tag: 'i', class: 'fas fa-folder' } },
         tableOfContent,
         html: ({ router }) => {
             explorerState.setRouter(router)

@@ -264,7 +264,7 @@ export class AppState {
             normal: {
                 name: 'Home',
                 decoration: {
-                    icon: { tag: 'div', class: 'fas fa-home pe-1' },
+                    icon: { tag: 'div', class: 'fas fa-home' },
                     actions: [editHomeAction(this.homeState)],
                 },
                 tableOfContent: Views.tocView,

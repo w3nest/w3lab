@@ -15,7 +15,7 @@ function backendName(backend: Local.Environment.ProxiedBackend) {
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Backends',
-    decoration: { icon: { tag: 'i', class: 'fas fa-server me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-server' } },
     tableOfContent: Views.tocView,
     html: ({ router }) => new PageView({ router, appState }),
     '...': appState.environment$.pipe(
@@ -43,7 +43,7 @@ function lazyResolver(
                 decoration: {
                     icon: {
                         tag: 'i' as const,
-                        class: 'fas fa-network-wired me-2',
+                        class: 'fas fa-network-wired',
                     },
                 },
             }
@@ -71,7 +71,7 @@ function lazyResolver(
                     decoration: {
                         icon: {
                             tag: 'i' as const,
-                            class: 'fas fa-terminal me-2',
+                            class: 'fas fa-terminal',
                         },
                     },
                 }

@@ -16,7 +16,7 @@ export * from './state'
 type Target = 'js/wasm' | 'backend' | 'pyodide'
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Components',
-    decoration: { icon: { tag: 'i', class: 'fas  fa-microchip me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas  fa-microchip' } },
     html: ({ router }) => new PageView({ router, appState }),
     '/js-wasm': JsWasm.navigation(appState),
     '/pyodide': Pyodide.navigation(appState),
@@ -38,7 +38,7 @@ export function formatChildren(
                 id: component.id,
                 leaf: true,
                 decoration: {
-                    icon: { tag: 'div' as const, class: 'mx-2' },
+                    icon: { tag: 'div' as const },
                 },
             }
         })

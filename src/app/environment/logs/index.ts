@@ -6,7 +6,7 @@ import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Logs',
-    decoration: { icon: { tag: 'i', class: 'fas fa-bug me-2' } },
+    decoration: { icon: { tag: 'i', class: 'fas fa-bug' } },
     tableOfContent: Views.tocView,
     html: ({ router }) => new PageView({ router, appState }),
 })
