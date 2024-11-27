@@ -4,11 +4,11 @@ const runTimeDependencies = {
         "@floating-ui/dom": "^1.6.3",
         "@w3nest/http-clients": "^0.1.1",
         "@w3nest/rx-code-mirror-editors": "^0.1.0",
-        "@w3nest/rx-tree-views": "^0.1.0",
+        "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/webpm-client": "^0.1.0",
         "bootstrap": "^5.3.0",
         "d3": "^7.7.0",
-        "mkdocs-ts": "^0.1.1",
+        "mkdocs-ts": "^0.2.0",
         "rx-vdom": "^0.1.0",
         "rxjs": "^7.5.6"
     },
@@ -20,11 +20,11 @@ const externals = {
     "@floating-ui/dom": "window['@floating-ui/dom_APIv1']",
     "@w3nest/http-clients": "window['@w3nest/http-clients_APIv01']",
     "@w3nest/rx-code-mirror-editors": "window['@w3nest/rx-code-mirror-editors_APIv01']",
-    "@w3nest/rx-tree-views": "window['@w3nest/rx-tree-views_APIv01']",
+    "@w3nest/rx-tree-views": "window['@w3nest/rx-tree-views_APIv02']",
     "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
     "bootstrap": "window['bootstrap_APIv5']",
     "d3": "window['d3_APIv7']",
-    "mkdocs-ts": "window['mkdocs-ts_APIv01']",
+    "mkdocs-ts": "window['mkdocs-ts_APIv02']",
     "rx-vdom": "window['rx-vdom_APIv01']",
     "rxjs": "window['rxjs_APIv7']",
     "rxjs/fetch": "window['rxjs_APIv7']['fetch']",
@@ -44,7 +44,7 @@ const exportedSymbols = {
         "exportedSymbol": "@w3nest/rx-code-mirror-editors"
     },
     "@w3nest/rx-tree-views": {
-        "apiKey": "01",
+        "apiKey": "02",
         "exportedSymbol": "@w3nest/rx-tree-views"
     },
     "@w3nest/webpm-client": {
@@ -60,7 +60,7 @@ const exportedSymbols = {
         "exportedSymbol": "d3"
     },
     "mkdocs-ts": {
-        "apiKey": "01",
+        "apiKey": "02",
         "exportedSymbol": "mkdocs-ts"
     },
     "rx-vdom": {
