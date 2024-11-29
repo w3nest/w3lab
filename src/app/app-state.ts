@@ -62,6 +62,8 @@ export class AppState {
      * @group Immutable Constants
      */
     public readonly router: Router
+
+    public readonly bookmarks$: BehaviorSubject<string[]>
     /**
      * @group Observables
      */
@@ -205,7 +207,16 @@ export class AppState {
             shareReplay(1),
         )
         this.navigation = this.getNav()
-
+        this.bookmarks$ = new BehaviorSubject([
+            '/',
+            '/environment',
+            '/components',
+            '/projects',
+            '/explorer',
+            '/mounted',
+            '/plugins',
+            '/doc',
+        ])
         this.router = new Router({
             navigation: this.navigation,
             basePath: `/apps/${setup.name}/${setup.version}`,

@@ -17,16 +17,12 @@ export class AppView implements VirtualDOM<'div'> {
 
         const mainView = new Views.DefaultLayoutView({
             router: this.appState.router,
-            name: '',
-            topBanner:
-                parent.document === document
-                    ? (params) => new TopBannerView(params, this.appState)
-                    : (params) => new TopBannerDocCompanion(params),
             footer: () => {
                 return parent.document === document
                     ? new Views.FooterView()
                     : { tag: 'div' }
             },
+            bookmarks$: this.appState.bookmarks$,
         })
         this.children = [
             {
