@@ -12,6 +12,7 @@ import { pyYwDocLink } from '../common/py-yw-references.view'
 import { DispatchListView } from './dispatches.view'
 import { CommandsListView } from './commands.view'
 import * as Logs from './logs'
+import { UserBadgeDropdownView } from './user-connection.view'
 export * from './state'
 
 export const navigation = (appState: AppState): Navigation => ({
@@ -43,6 +44,18 @@ youwol's [configuration file](@nav/environment/yw-configuration).
 
 </info>
 
+## Remote connection
+<info>
+To authenticate, resolve dependency trees, and download missing resources, a connection to a remote ecosystem is 
+required.
+
+At any given time, the server operates with a single active connection. However, multiple connections can be configured 
+in the settings file and switched as needed from the following dropdown.
+</info>
+
+Connected with remote environment using: 
+<userBadge></userBadge>
+
 ## Dispatches
 
 <info>
@@ -73,6 +86,7 @@ backends.
                         new DispatchListView({
                             environmentState: appState.environmentState,
                         }),
+                    userBadge: () => new UserBadgeDropdownView({ appState }),
                     commands: () =>
                         new CommandsListView({
                             environmentState: appState.environmentState,
