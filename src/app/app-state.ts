@@ -262,9 +262,15 @@ export class AppState {
             Navigation
         > = {
             normal: {
-                name: 'Home',
+                name: 'W3Lab',
                 decoration: {
-                    icon: { tag: 'div', class: 'fas fa-home' },
+                    icon: {
+                        tag: 'img',
+                        src: '../assets/logo.svg',
+                        style: {
+                            height: '30px',
+                        },
+                    },
                     actions: [editHomeAction(this.homeState)],
                 },
                 tableOfContent: Views.tocView,

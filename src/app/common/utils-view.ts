@@ -73,6 +73,13 @@ export class CoLabLogo implements VirtualDOM<'a'> {
         }
         this.children = [
             {
+                tag: 'img',
+                src: '../assets/logo.svg',
+                style: {
+                    height: '30px',
+                },
+            },
+            {
                 tag: 'div',
                 class: 'd-flex align-items-center',
                 style: {
