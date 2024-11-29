@@ -104,7 +104,7 @@ export class BackendServingView implements VirtualDOM<'a'> {
                     map((env) => env.proxiedBackends),
                 ),
                 vdomMap: (proxieds) => {
-                    return proxieds.store.length == 0
+                    return proxieds.store.length === 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-network-wired me-1' }
                 },
@@ -148,7 +148,7 @@ export class EsmServingView implements VirtualDOM<'a'> {
                     map((env) => env.proxiedEsmServers),
                 ),
                 vdomMap: (proxieds) => {
-                    return proxieds.store.length == 0
+                    return proxieds.store.length === 0
                         ? { tag: 'i' }
                         : { tag: 'i', class: 'fas fa-laptop-code me-1' }
                 },

@@ -26,14 +26,6 @@ import { encodeHdPath } from './mounted'
 import { Patches } from './common'
 import { editHomeAction, HomeView } from './home/views'
 
-export type Topic =
-    | 'Projects'
-    | 'Updates'
-    | 'CDN'
-    | 'Admin'
-    | 'Environment'
-    | 'System'
-
 Local.Client.ws = new Local.WsRouter({
     autoReconnect: true,
     autoReconnectDelay: 1000,
@@ -133,10 +125,10 @@ export class AppState {
     public readonly appMode$ = new BehaviorSubject<AppMode>('normal')
 
     public readonly navBroadcastChannel = new BroadcastChannel(
-        `colab-${Math.floor(Math.random() * 1e6)}`,
+        `colab-${Math.floor(Math.random() * Math.pow(10, 6))}`,
     )
 
-    install(id: string) {
+    install(id: 'd3') {
         if (this._installed[id]) {
             return this._installed[id]
         }
@@ -224,9 +216,14 @@ export class AppState {
         })
         // A workaround for now, it simplifies e.g. defining MD widgets where only the router is known
         this.router['appState'] = this
-        this.navBroadcastChannel.onmessage = (e) => {
-            e.data.path && this.router.navigateTo({ path: e.data.path })
-            e.data === 'done' && this.appMode$.next('normal')
+        this.navBroadcastChannel.onmessage = (
+            e: MessageEvent<{ path: string } | 'done'>,
+        ) => {
+            if (e.data === 'done') {
+                this.appMode$.next('normal')
+            } else {
+                this.router.navigateTo({ path: e.data.path })
+            }
         }
         if (
             this.appMode$.value === 'docCompanion' &&
@@ -266,7 +263,7 @@ export class AppState {
         })
     }
 
-    private getNav() {
+    private getNav(): Navigation {
         const homeView = new HomeView({ state: this.homeState })
         const navs: Record<
             Exclude<AppMode, 'docRemoteBelow' | 'docRemoteInTab'>,
@@ -339,7 +336,7 @@ export class AppState {
             })
             return
         }
-        if (this.appMode$.value == 'docRemoteBelow' && to.startsWith('/doc')) {
+        if (this.appMode$.value === 'docRemoteBelow' && to.startsWith('/doc')) {
             this.navBroadcastChannel.postMessage({
                 path: to,
             })
