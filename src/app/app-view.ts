@@ -1,8 +1,6 @@
-import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { AppMode, AppState } from './app-state'
-import { Router, Views } from 'mkdocs-ts'
-import { TopBannerView } from './top-banner.view'
-import { Subject } from 'rxjs'
+import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AppState } from './app-state'
+import { Views } from 'mkdocs-ts'
 import { DisconnectedView } from './disconnected.view'
 
 export class AppView implements VirtualDOM<'div'> {
@@ -75,38 +73,4 @@ export function getCompanionDocHref(appState: AppState) {
         return `${document.location.href}&${parameters}`
     }
     return `${location.pathname}?nav=/doc&${parameters}`
-}
-class TopBannerDocCompanion implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly children: ChildrenLike
-
-    constructor(params: {
-        title: string | AnyVirtualDOM
-        router: Router
-        displayModeNav$: Subject<Views.DisplayMode>
-        displayModeToc$: Subject<Views.DisplayMode>
-        layoutOptions: Views.LayoutOptions
-    }) {
-        this.children = [
-            child$({
-                source$: params.displayModeNav$,
-                vdomMap: (displayMode) => {
-                    if (displayMode === 'Full') {
-                        return { tag: 'div' as const }
-                    }
-                    return {
-                        tag: 'div',
-                        class: 'mkdocs-bg-5 mkdocs-text-5 py-2',
-                        children: [
-                            new Views.ModalNavigationView({
-                                router: params.router,
-                                displayModeToc$: params.displayModeToc$,
-                                footer: undefined,
-                            }),
-                        ],
-                    }
-                },
-            }),
-        ]
-    }
 }
