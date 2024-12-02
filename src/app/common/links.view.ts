@@ -1,6 +1,6 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
-import { mergeMap, Observable, of } from 'rxjs'
+import { mergeMap, of } from 'rxjs'
 import {
     AssetsGateway,
     Explorer,
@@ -20,6 +20,7 @@ export const internalAnchor = ({
     href: `@nav${path}`,
     onclick: (e: MouseEvent) => {
         e.preventDefault()
+        e.stopPropagation()
         router.navigateTo({ path })
     },
 })
@@ -95,7 +96,7 @@ export class ExplorerLinkView implements VirtualDOM<'div'> {
                         }),
                     ),
                 vdomMap: (resp) => {
-                    if (resp == undefined) {
+                    if (resp === undefined) {
                         return parseMd({
                             src: 'The project has not been published in your explorer yet.',
                             router,

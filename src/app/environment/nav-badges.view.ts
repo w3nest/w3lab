@@ -1,9 +1,13 @@
 import { Router } from 'mkdocs-ts'
 import { ChildrenLike, VirtualDOM, RxAttribute, attr$, child$ } from 'rx-vdom'
-import { AppState } from './app-state'
-import { internalAnchor } from './common/links.view'
+import { AppState } from '../app-state'
+import { internalAnchor } from '../common/links.view'
 import { map } from 'rxjs/operators'
 import { combineLatest } from 'rxjs'
+
+const style = {
+    transform: 'scale(0.75)',
+}
 
 export class NotificationsView implements VirtualDOM<'div'> {
     /**
@@ -20,8 +24,8 @@ export class NotificationsView implements VirtualDOM<'div'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ state, router }: { state: AppState; router: Router }) {
-        const notifState = state.notificationsState
+    constructor({ appState, router }: { appState: AppState; router: Router }) {
+        const notifState = appState.notificationsState
         this.class = attr$({
             source$: combineLatest([
                 notifState.backendEvents.installing$,
@@ -42,6 +46,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'i',
+                        style,
                         class: attr$({
                             source$: notifState.backendEvents.installing$,
                             vdomMap: (installing) => {
@@ -54,6 +59,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
                     { tag: 'i', class: 'mx-1' },
                     {
                         tag: 'i',
+                        style,
                         class: attr$({
                             source$: notifState.assetEvents.downloading$,
                             vdomMap: (installing) => {
@@ -93,20 +99,27 @@ export class BackendServingView implements VirtualDOM<'a'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ state, router }: { state: AppState; router: Router }) {
+    constructor({ appState, router }: { appState: AppState; router: Router }) {
         Object.assign(
             this,
-            internalAnchor({ path: '/environment/backends', router }),
+            internalAnchor({
+                path: '/environment/backends',
+                router: router,
+            }),
         )
         this.children = [
             child$({
-                source$: state.environment$.pipe(
+                source$: appState.environment$.pipe(
                     map((env) => env.proxiedBackends),
                 ),
                 vdomMap: (proxieds) => {
                     return proxieds.store.length === 0
                         ? { tag: 'i' }
-                        : { tag: 'i', class: 'fas fa-network-wired me-1' }
+                        : {
+                              tag: 'i',
+                              style,
+                              class: 'fas fa-network-wired me-1',
+                          }
                 },
             }),
         ]
@@ -137,20 +150,20 @@ export class EsmServingView implements VirtualDOM<'a'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ state, router }: { state: AppState; router: Router }) {
+    constructor({ appState, router }: { appState: AppState; router: Router }) {
         Object.assign(
             this,
             internalAnchor({ path: '/environment/esm-servers', router }),
         )
         this.children = [
             child$({
-                source$: state.environment$.pipe(
+                source$: appState.environment$.pipe(
                     map((env) => env.proxiedEsmServers),
                 ),
                 vdomMap: (proxieds) => {
                     return proxieds.store.length === 0
                         ? { tag: 'i' }
-                        : { tag: 'i', class: 'fas fa-laptop-code me-1' }
+                        : { tag: 'i', style, class: 'fas fa-laptop-code me-1' }
                 },
             }),
         ]

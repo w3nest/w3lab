@@ -13,12 +13,24 @@ import { DispatchListView } from './dispatches.view'
 import { CommandsListView } from './commands.view'
 import * as Logs from './logs'
 import { UserBadgeDropdownView } from './user-connection.view'
+import {
+    BackendServingView,
+    EsmServingView,
+    NotificationsView,
+} from './nav-badges.view'
 export * from './state'
 
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Environment',
     tableOfContent: Views.tocView,
-    decoration: { icon: { tag: 'i', class: 'fas fa-tasks' } },
+    decoration: ({ router }) => ({
+        icon: { tag: 'i', class: 'fas fa-tasks' },
+        actions: [
+            new NotificationsView({ appState, router }),
+            new BackendServingView({ appState, router }),
+            new EsmServingView({ appState, router }),
+        ],
+    }),
     html: ({ router }: { router: Router }) =>
         new PageView({ appState, router }),
     '/yw-configuration': YwConfiguration.navigation(appState),
