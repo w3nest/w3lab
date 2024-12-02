@@ -36,12 +36,6 @@ export type MountedPath = {
     type: 'file' | 'folder'
 }
 
-export type AppMode =
-    | 'normal'
-    | 'docRemoteBelow'
-    | 'docRemoteInTab'
-    | 'docCompanion'
-
 /**
  * @category State
  */
@@ -122,10 +116,8 @@ export class AppState {
 
     public readonly mountedHdPaths$ = new BehaviorSubject<MountedPath[]>([])
 
-    public readonly appMode$ = new BehaviorSubject<AppMode>('normal')
-
-    public readonly navBroadcastChannel = new BroadcastChannel(
-        `colab-${Math.floor(Math.random() * Math.pow(10, 6))}`,
+    public readonly companionPage$ = new BehaviorSubject<string | undefined>(
+        undefined,
     )
 
     install(id: 'd3') {
@@ -146,18 +138,6 @@ export class AppState {
         {}
 
     constructor() {
-        const queryString = window.location.search
-        const urlParams = new URLSearchParams(queryString)
-
-        if (urlParams.get('appMode') === 'docCompanion') {
-            this.appMode$ = new BehaviorSubject('docCompanion')
-        }
-        if (urlParams.get('channelId')) {
-            this.navBroadcastChannel = new BroadcastChannel(
-                urlParams.get('channelId'),
-            )
-        }
-
         Local.Client.startWs$()
             .pipe(take(1))
             .subscribe(() => {
@@ -216,23 +196,6 @@ export class AppState {
         })
         // A workaround for now, it simplifies e.g. defining MD widgets where only the router is known
         this.router['appState'] = this
-        this.navBroadcastChannel.onmessage = (
-            e: MessageEvent<{ path: string } | 'done'>,
-        ) => {
-            if (e.data === 'done') {
-                this.appMode$.next('normal')
-            } else {
-                this.router.navigateTo({ path: e.data.path })
-            }
-        }
-        if (
-            this.appMode$.value === 'docCompanion' &&
-            parent.document === document
-        ) {
-            window.addEventListener('beforeunload', () => {
-                this.navBroadcastChannel.postMessage('done')
-            })
-        }
     }
 
     mountHdPath(path: string, type: 'file' | 'folder') {
@@ -264,47 +227,30 @@ export class AppState {
     }
 
     private getNav(): Navigation {
-        const homeView = new HomeView({ state: this.homeState })
-        const navs: Record<
-            Exclude<AppMode, 'docRemoteBelow' | 'docRemoteInTab'>,
-            Navigation
-        > = {
-            normal: {
-                name: 'W3Lab',
-                decoration: {
-                    icon: {
-                        tag: 'img',
-                        src: '../assets/logo.svg',
-                        style: {
-                            height: '30px',
-                        },
+        return {
+            name: 'W3Lab',
+            decoration: {
+                icon: {
+                    tag: 'img',
+                    src: '../assets/logo.svg',
+                    style: {
+                        height: '30px',
                     },
-                    actions: [editHomeAction(this.homeState)],
                 },
-                tableOfContent: Views.tocView,
-                html: () => homeView,
-                '/environment': Environment.navigation(this),
-                '/components': Components.navigation(this),
-                '/projects': Projects.navigation(this),
-                '/explorer': Explorer.navigation({
-                    session$: this.session$,
-                }),
-                '/mounted': Mounted.navigation(this),
-                '/plugins': Plugins.navigation(this),
-                '/doc': Doc.navigation(this),
+                actions: [editHomeAction(this.homeState)],
             },
-            docCompanion: {
-                name: 'Home',
-                decoration: {
-                    icon: { tag: 'div', class: 'fas fa-home pe-1' },
-                    wrapperClass: 'd-none',
-                },
-                tableOfContent: Views.tocView,
-                html: () => homeView,
-                '/doc': Doc.navigation(this),
-            },
+            tableOfContent: Views.tocView,
+            html: () => new HomeView({ state: this.homeState }),
+            '/environment': Environment.navigation(this),
+            '/components': Components.navigation(this),
+            '/projects': Projects.navigation(this),
+            '/explorer': Explorer.navigation({
+                session$: this.session$,
+            }),
+            '/mounted': Mounted.navigation(this),
+            '/plugins': Plugins.navigation(this),
+            '/doc': Doc.navigation(this),
         }
-        return navs[this.appMode$.value]
     }
 
     async getRedirects(target: string) {
@@ -329,18 +275,6 @@ export class AppState {
         }
         if (target.startsWith('/api/yw_utils')) {
             to = target.replace('/api/yw_utils', '/doc/api/yw_utils')
-        }
-        if (this.appMode$.value === 'docCompanion' && !to.startsWith('/doc')) {
-            this.navBroadcastChannel.postMessage({
-                path: to,
-            })
-            return
-        }
-        if (this.appMode$.value === 'docRemoteBelow' && to.startsWith('/doc')) {
-            this.navBroadcastChannel.postMessage({
-                path: to,
-            })
-            return
         }
         return to
     }

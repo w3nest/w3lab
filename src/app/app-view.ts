@@ -5,7 +5,7 @@ import { DisconnectedView } from './disconnected.view'
 
 export class AppView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'w-100 h-100'
+    public readonly class = 'w-100 h-100 d-flex'
     public readonly style = {
         position: 'relative' as const,
     }
@@ -17,6 +17,18 @@ export class AppView implements VirtualDOM<'div'> {
 
         const mainView = new Views.DefaultLayoutView({
             router: this.appState.router,
+            page: ({ router }) =>
+                new Views.PageView({
+                    router,
+                    filter: (d) => {
+                        const prefixCompanion =
+                            this.appState.companionPage$.value
+                        if (prefixCompanion === undefined) {
+                            return true
+                        }
+                        return !d.path.startsWith(prefixCompanion)
+                    },
+                }),
             footer: () => {
                 return parent.document === document
                     ? new Views.FooterView()
@@ -27,32 +39,37 @@ export class AppView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: attr$({
-                    source$: this.appState.appMode$,
-                    vdomMap: (mode) => {
-                        return mode === 'docRemoteBelow'
-                            ? 'h-50 w-100 border'
-                            : 'h-100 w-100'
-                    },
+                class: 'h-100',
+                style: attr$({
+                    source$: this.appState.companionPage$,
+                    vdomMap: (d) =>
+                        d === undefined ? { width: '100%' } : { width: '60%' },
                 }),
                 children: [mainView],
             },
             child$({
-                source$: this.appState.appMode$,
-                vdomMap: (mode) => {
-                    if (mode !== 'docRemoteBelow') {
+                source$: this.appState.companionPage$,
+                vdomMap: (target) => {
+                    if (target === undefined) {
                         return { tag: 'div' }
+                    }
+                    if (this.appState.router.getCurrentPath() === target) {
+                        const parentPath = this.appState.router.getParentPath()
+                        this.appState.router.navigateTo({ path: parentPath })
                     }
                     return {
                         tag: 'div',
-                        class: 'w-100 h-50',
+                        class: 'h-100 px-5 pt-5 overflow-auto',
+                        style: {
+                            width: '40%',
+                        },
                         children: [
-                            {
-                                tag: 'iframe',
-                                width: '100%',
-                                height: '100%',
-                                src: getCompanionDocHref(this.appState),
-                            },
+                            new Views.PageView({
+                                router: this.appState.router,
+                                filter: (d) => {
+                                    return d.path.startsWith(target)
+                                },
+                            }),
                         ],
                     }
                 },
@@ -60,13 +77,4 @@ export class AppView implements VirtualDOM<'div'> {
             new DisconnectedView({ appState: this.appState }),
         ]
     }
-}
-
-export function getCompanionDocHref(appState: AppState) {
-    const location = document.location
-    const parameters = `appMode=docCompanion&channelId=${appState.navBroadcastChannel.name}`
-    if (location.search.startsWith('?nav=/doc')) {
-        return `${document.location.href}&${parameters}`
-    }
-    return `${location.pathname}?nav=/doc&${parameters}`
 }

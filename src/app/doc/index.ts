@@ -1,4 +1,4 @@
-import { attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     Router,
     parseMd,
@@ -9,9 +9,9 @@ import {
     installNotebookModule,
 } from 'mkdocs-ts'
 import { pyYwDocLink } from '../common/py-yw-references.view'
-import { AppMode, AppState } from '../app-state'
-import { getCompanionDocHref } from '../app-view'
+import { AppState } from '../app-state'
 import { setup } from '../../auto-generated'
+import { splitCompanionAction } from '../common/utils-nav'
 
 function fromMd({
     file,
@@ -50,12 +50,8 @@ const configuration = {
 export const navigation = (appState: AppState): Navigation => ({
     name: 'Doc',
     decoration: {
-        ...decoration('fa-book', appState),
-        actions: [
-            splitDocBelow(appState),
-            splitDocInTab(appState),
-            closeDocBelow(appState),
-        ],
+        ...decoration('fa-book'),
+        actions: [splitCompanionAction('/doc', appState)],
     },
     tableOfContent: Views.tocView,
     html: fromMd({
@@ -63,14 +59,14 @@ export const navigation = (appState: AppState): Navigation => ({
     }),
     '/tutorials': {
         name: 'Tutorials',
-        decoration: decoration('fa-graduation-cap', appState),
+        decoration: decoration('fa-graduation-cap'),
         tableOfContent: Views.tocView,
         html: fromMd({
             file: 'doc.tutorials.md',
         }),
         '/quick-tour': {
             name: 'Quick Tour',
-            decoration: decoration('', appState),
+            decoration: decoration(''),
             tableOfContent: Views.tocView,
             html: fromMd({
                 file: 'doc.tutorials.quick-tour.md',
@@ -80,7 +76,7 @@ export const navigation = (appState: AppState): Navigation => ({
 
     '/how-to': {
         name: 'How-To',
-        decoration: decoration('fa-question-circle', appState),
+        decoration: decoration('fa-question-circle'),
         tableOfContent: Views.tocView,
         html: fromMd({
             file: 'doc.how-to.md',
@@ -100,7 +96,7 @@ export const navigation = (appState: AppState): Navigation => ({
             }),
             '/projects': {
                 name: 'Projects',
-                decoration: decoration('', appState),
+                decoration: decoration(''),
                 tableOfContent: Views.tocView,
                 html: fromMd({
                     file: 'doc.how-to.config.projects.md',
@@ -120,28 +116,28 @@ export const navigation = (appState: AppState): Navigation => ({
     },
     '/api': {
         name: 'API',
-        decoration: decoration('fa-code', appState),
+        decoration: decoration('fa-code'),
         tableOfContent: Views.tocView,
         html: fromMd({
             file: 'doc.api.md',
         }),
         '/youwol': CodeApiModule.codeApiEntryNode({
             name: 'youwol',
-            decoration: decoration('fa-box-open', appState),
+            decoration: decoration('fa-box-open'),
             entryModule: 'youwol',
             docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
             configuration: configuration,
         }),
         '/yw-clients': CodeApiModule.codeApiEntryNode({
             name: 'yw_clients',
-            decoration: decoration('fa-box-open', appState),
+            decoration: decoration('fa-box-open'),
             entryModule: 'yw_clients',
             docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
             configuration: configuration,
         }),
         '/co-lab': CodeApiModule.codeApiEntryNode({
             name: 'co-lab',
-            decoration: decoration('fa-box-open', appState),
+            decoration: decoration('fa-box-open'),
             entryModule: 'co-lab',
             docBasePath: '../assets/api',
             configuration: CodeApiModule.configurationTsTypedoc,
@@ -149,62 +145,12 @@ export const navigation = (appState: AppState): Navigation => ({
     },
 })
 
-const decoration = (icon: string, appState: AppState) => {
+const decoration = (icon: string) => {
     return {
         icon: { tag: 'i' as const, class: `fas ${icon}` },
-        wrapperClass: attr$({
-            source$: appState.appMode$,
-            vdomMap: (mode: AppMode) =>
-                ['normal', 'docCompanion'].includes(mode)
-                    ? Views.NavigationHeader.DefaultWrapperClass
-                    : 'd-none',
-        }),
+        wrapperClass: Views.NavigationHeader.DefaultWrapperClass,
     }
 }
-
-const splitDocBelow = (appState: AppState): VirtualDOM<'i'> => ({
-    tag: 'i' as const,
-    class:
-        appState.appMode$.value === 'normal'
-            ? 'mx-1 fas fa-object-ungroup fv-pointer'
-            : 'd-none',
-    style: {
-        padding: '0px',
-    },
-    onclick: () => {
-        appState.appMode$.next('docRemoteBelow')
-    },
-})
-
-const splitDocInTab = (appState: AppState): VirtualDOM<'i'> => ({
-    tag: 'i' as const,
-    class:
-        appState.appMode$.value === 'normal'
-            ? 'mx-1 fas fa-external-link-alt fv-pointer'
-            : 'd-none',
-    style: {
-        padding: '0px',
-    },
-    onclick: () => {
-        window.open(getCompanionDocHref(appState), '_blank')
-        appState.appMode$.next('docRemoteInTab')
-    },
-})
-
-const closeDocBelow = (appState: AppState): VirtualDOM<'i'> => ({
-    tag: 'i' as const,
-    class:
-        appState.appMode$.value === 'docCompanion' &&
-        parent.document !== document
-            ? 'mx-1 fas fa-object-group fv-pointer'
-            : 'd-none',
-    style: {
-        padding: '0px',
-    },
-    onclick: () => {
-        appState.navBroadcastChannel.postMessage('done')
-    },
-})
 
 export class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'

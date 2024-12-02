@@ -1,6 +1,8 @@
 import { AppState } from '../app-state'
 import { combineLatest, Observable, timer } from 'rxjs'
 import { filter, map, take, takeUntil } from 'rxjs/operators'
+import { Views } from 'mkdocs-ts'
+import { attr$ } from 'rx-vdom'
 
 export function getProjectNav$({
     projectName,
@@ -31,4 +33,30 @@ export function getProjectNav$({
         takeUntil(timer(timeout || 0, -1)),
         take(1),
     )
+}
+
+export function splitCompanionAction(
+    path: string,
+    appState: AppState,
+): Views.NavActionView {
+    return new Views.NavActionView({
+        content: {
+            tag: 'i',
+            class: attr$({
+                source$: appState.companionPage$.pipe(
+                    map((prefix) => path === prefix),
+                ),
+                vdomMap: (toggled) =>
+                    toggled ? 'fas fa-times' : 'fas fa-columns',
+            }),
+        },
+        action: () => {
+            const selected = appState.companionPage$.value === path
+            if (selected) {
+                appState.companionPage$.next(undefined)
+                return
+            }
+            appState.companionPage$.next(path)
+        },
+    })
 }
