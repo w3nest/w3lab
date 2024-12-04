@@ -40,25 +40,9 @@ export const navigation = (appState: AppState): Navigation => ({
     ),
 })
 
-const refreshAction = (appState: AppState): VirtualDOM<'i'> => ({
-    tag: 'i' as const,
-    class: 'mx-2 px-1 fv-hover-text-focus fv-pointer fv-tree-selected-only',
-    style: {
-        padding: '0px',
-    },
-    onclick: (ev: MouseEvent) => {
-        refresh$.next(true)
-        ev.preventDefault()
-        ev.stopPropagation()
-        appState.projectsState.projectsClient
-            .index$()
-            .pipe(delay(500))
-            .subscribe(() => {
-                refresh$.next(false)
-            })
-    },
-    children: [
-        {
+const refreshAction = (appState: AppState) =>
+    new Views.NavActionView({
+        content: {
             tag: 'i',
             class: attr$({
                 source$: refresh$,
@@ -66,8 +50,16 @@ const refreshAction = (appState: AppState): VirtualDOM<'i'> => ({
                 wrapper: (d) => `${d} fas fa-sync`,
             }),
         },
-    ],
-})
+        action: () => {
+            refresh$.next(true)
+            appState.projectsState.projectsClient
+                .index$()
+                .pipe(delay(500))
+                .subscribe(() => {
+                    refresh$.next(false)
+                })
+        },
+    })
 
 export class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
