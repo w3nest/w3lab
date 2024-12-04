@@ -208,8 +208,10 @@ export class AppState {
             this.mountedHdPaths$.next([...values, { path, type }])
             this.router.explorerState.root$
                 .pipe(
-                    filter(() =>
-                        this.router.explorerState.getNode(redirectNav),
+                    filter(
+                        () =>
+                            this.router.explorerState.getNode(redirectNav) !==
+                            undefined,
                     ),
                     take(1),
                     Patches.patchRequestObjectAlreadyUsed(),

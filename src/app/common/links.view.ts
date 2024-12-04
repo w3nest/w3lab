@@ -48,7 +48,7 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                         }),
                     ),
                 vdomMap: (resp) => {
-                    if (resp == undefined || resp.versions.length == 0) {
+                    if (resp === undefined || resp.versions.length === 0) {
                         return parseMd({
                             src: 'The project has not been published in your components database yet.',
                             router,
