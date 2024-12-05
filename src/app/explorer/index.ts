@@ -66,12 +66,12 @@ function lazyResolver({
     router: Router
     explorerState: ExplorerState
 }): CatchAllNav {
-    const parts = path.split('/').filter((d) => d != '')
+    const parts = path.split('/').filter((d) => d !== '')
     const client = new AssetsGateway.Client()
-    if (parts.length == 0) {
+    if (parts.length === 0) {
         return lazyResolverGroups({ client })
     }
-    if (parts.length == 1) {
+    if (parts.length === 1) {
         return lazyResolverDrive({
             groupId: parts[0],
             client,

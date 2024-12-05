@@ -11,7 +11,7 @@ import { Local } from '@w3nest/http-clients'
 import { instanceOfStepStatus, State } from './state'
 import { map } from 'rxjs/operators'
 import { RxHTMLElement, VirtualDOM } from 'rx-vdom'
-
+/* eslint-disable */
 /**
  * @category View
  */
@@ -345,7 +345,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
             settings: d3.selection
         },
     ) {
-        const isSelected = selected.step && selected.step.id == event.stepId
+        const isSelected = selected.step && selected.step.id === event.stepId
         const selectedClass = isSelected ? 'fv-xx-lighter' : ''
         const pendingClass = instanceOfStepStatus(event.status) ? '' : 'pending'
 
@@ -362,7 +362,9 @@ export class DagFlowView implements VirtualDOM<'div'> {
         )
         event.circle.attr(
             'r',
-            selected.step && selected.step.id == event.stepId ? '25px' : '20px',
+            selected.step && selected.step.id === event.stepId
+                ? '25px'
+                : '20px',
         )
         event.title.style(
             'fill',
@@ -434,6 +436,7 @@ function parseDag(project: Local.Projects.Project) {
             .reverse()
             .forEach((e: string) => {
                 previous && parentIds[previous].push(e)
+                // noinspection ReuseOfLocalVariableJS
                 previous = e
             })
     })
@@ -441,7 +444,9 @@ function parseDag(project: Local.Projects.Project) {
         return {
             id: stepId,
             parentIds: parentIds[stepId],
-            hasView: project.pipeline.steps.find((s) => s.id == stepId)['view'],
+            hasView: project.pipeline.steps.find((s) => s.id === stepId)[
+                'view'
+            ],
         }
     })
     return {
@@ -449,3 +454,4 @@ function parseDag(project: Local.Projects.Project) {
         data,
     }
 }
+/* eslint-enable */

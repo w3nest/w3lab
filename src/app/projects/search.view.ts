@@ -47,7 +47,7 @@ export class SearchView implements VirtualDOM<'div'> {
                         )
                     })
                     .filter((p) => {
-                        return term == '' ? true : p.name.includes(term)
+                        return term === '' ? true : p.name.includes(term)
                     })
             }),
         )
@@ -61,8 +61,9 @@ export class SearchView implements VirtualDOM<'div'> {
                     {
                         tag: 'input',
                         type: 'text',
-                        oninput: (ev) => {
-                            this.searchTerm$.next(ev.target['value'])
+                        oninput: (ev: MouseEvent) => {
+                            const target = ev.target as HTMLInputElement
+                            this.searchTerm$.next(target.value)
                         },
                     },
                 ],
@@ -84,7 +85,7 @@ export class SearchView implements VirtualDOM<'div'> {
                                         type: 'checkbox',
                                         onchange: (ev) => {
                                             const f = this.tags$.value.filter(
-                                                (t) => t != tag,
+                                                (t) => t !== tag,
                                             )
                                             this.tags$.next(
                                                 ev.target['checked']

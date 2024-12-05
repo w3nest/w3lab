@@ -20,7 +20,9 @@ export class State {
         const ws = new Local.Client().api.environment.webSocket
         ws.esmServerStdOut$().subscribe((message) => {
             const uid = message.attributes.proxyUid
-            uid && this.getStdOut$(uid).next(message)
+            if (uid) {
+                this.getStdOut$(uid).next(message)
+            }
         })
         const traceIds = new Set<string>()
         ws.esmServerDispatchLog$()
@@ -43,7 +45,9 @@ export class State {
                     l.labels.includes('Label.STARTED'),
                 )
                 const uid = started.attributes.proxyUid
-                uid && this.getDispatchLogs$(uid).next(started)
+                if (uid) {
+                    this.getDispatchLogs$(uid).next(started)
+                }
             })
 
         this.appState.environment$.subscribe((env) => {

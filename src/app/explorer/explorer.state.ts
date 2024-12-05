@@ -53,7 +53,7 @@ export class ExplorerState {
             })
     }
 
-    newAsset<_T>({
+    newAsset({
         response$,
     }: {
         parentNode: FolderNode
@@ -145,7 +145,7 @@ export class ExplorerState {
 
         if (
             nodeSelected instanceof ItemNode &&
-            this.itemCut$.value.cutType == 'borrow'
+            this.itemCut$.value.cutType === 'borrow'
         ) {
             this.explorerClient
                 .borrow$({
@@ -160,7 +160,7 @@ export class ExplorerState {
 
         if (
             nodeSelected instanceof ItemNode &&
-            this.itemCut$.value.cutType == 'move'
+            this.itemCut$.value.cutType === 'move'
         ) {
             this.explorerClient
                 .move$({
@@ -175,7 +175,7 @@ export class ExplorerState {
 
         if (
             nodeSelected instanceof FolderNode &&
-            this.itemCut$.value.cutType == 'move'
+            this.itemCut$.value.cutType === 'move'
         ) {
             this.explorerClient
                 .move$({

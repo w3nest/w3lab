@@ -247,6 +247,9 @@ export class ArtifactView implements VirtualDOM<'div'> {
         artifact: Local.Projects.Artifact
         router: Router
     }) {
+        const linksStr = artifact.links
+            .map((l) => `*  <a href="${l.url}" target="_blank">${l.name}</a>\n`)
+            .reduce((acc, e) => acc + e, '')
         this.children = [
             new ExpandableGroupView({
                 title: artifact.id,
@@ -255,7 +258,7 @@ export class ArtifactView implements VirtualDOM<'div'> {
                     return parseMd({
                         src: `
 Links:
-${artifact.links.map((l) => `*  <a href="${l.url}" target="_blank">${l.name}</a>\n`)}
+${linksStr}
 
 **Files included**:
 
@@ -384,48 +387,50 @@ class FailuresCategoryView implements VirtualDOM<'div'> {
                     failures: () => {
                         return {
                             tag: 'div',
-                            children: failures.map((failure) => ({
-                                tag: 'div' as const,
-                                class: 'my-4',
-                                children: [
-                                    new ExpandableGroupView({
-                                        title: {
-                                            tag: 'div',
-                                            style: {
-                                                maxWidth: '75%',
-                                            },
-                                            children: [
-                                                new HdPathBookView({
-                                                    path: failure.path,
-                                                    appState,
-                                                    type: 'folder',
-                                                }),
-                                            ],
-                                        },
-                                        icon: 'fas fa-times fv-text-error',
-                                        content: () => {
-                                            return {
-                                                tag: 'pre',
+                            children: failures.map(
+                                (failure: Local.Projects.Failure) => ({
+                                    tag: 'div' as const,
+                                    class: 'my-4',
+                                    children: [
+                                        new ExpandableGroupView({
+                                            title: {
+                                                tag: 'div',
+                                                style: {
+                                                    maxWidth: '75%',
+                                                },
                                                 children: [
-                                                    {
-                                                        tag: 'div',
-                                                        class: 'pt-2 px-2 text-start overflow-auto fv-text-error ',
-                                                        style: {
-                                                            whiteSpace:
-                                                                'pre-wrap',
-                                                        },
-                                                        innerText:
-                                                            failure[
-                                                                'traceback'
-                                                            ] ??
-                                                            failure.message,
-                                                    },
+                                                    new HdPathBookView({
+                                                        path: failure.path,
+                                                        appState,
+                                                        type: 'folder',
+                                                    }),
                                                 ],
-                                            }
-                                        },
-                                    }),
-                                ],
-                            })),
+                                            },
+                                            icon: 'fas fa-times fv-text-error',
+                                            content: () => {
+                                                return {
+                                                    tag: 'pre',
+                                                    children: [
+                                                        {
+                                                            tag: 'div',
+                                                            class: 'pt-2 px-2 text-start overflow-auto fv-text-error ',
+                                                            style: {
+                                                                whiteSpace:
+                                                                    'pre-wrap',
+                                                            },
+                                                            innerText:
+                                                                (failure[
+                                                                    'traceback'
+                                                                ] as string) ??
+                                                                failure.message,
+                                                        },
+                                                    ],
+                                                }
+                                            },
+                                        }),
+                                    ],
+                                }),
+                            ),
                         }
                     },
                 },

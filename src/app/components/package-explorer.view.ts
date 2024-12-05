@@ -241,7 +241,7 @@ export class PathView implements VirtualDOM<'div'> {
                         name,
                     }
                 })
-                .filter(({ name }) => name != ''),
+                .filter(({ name }) => name !== ''),
         ]
 
         this.children = elems.map((part) => {

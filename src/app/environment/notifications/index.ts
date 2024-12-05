@@ -1,12 +1,7 @@
 import { AppState } from '../../app-state'
 import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
-import { append$, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import {
-    AssetDownloadEvent,
-    BackendInstallFlow,
-    BackendInstallEvent,
-    State,
-} from './state'
+import { AnyVirtualDOM, append$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AssetDownloadEvent, BackendInstallFlow, State } from './state'
 import { map } from 'rxjs/operators'
 import { BackendInstallNotificationView } from './backend/views'
 import { merge } from 'rxjs'
@@ -69,7 +64,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
         this.children = append$({
             policy: 'append',
             source$: merge(backend$, asset$).pipe(map((b) => [b])),
-            vdomMap: (event) => {
+            vdomMap: (event): AnyVirtualDOM => {
                 if (isBackendInstallEvent(event)) {
                     return new BackendInstallNotificationView({
                         router,

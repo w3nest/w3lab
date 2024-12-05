@@ -1,12 +1,11 @@
 import { forkJoin, Observable, of } from 'rxjs'
-import { map, switchMap, take } from 'rxjs/operators'
+import { map, switchMap } from 'rxjs/operators'
 import {
     Assets,
     AssetsGateway as Gtw,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
-import * as webpmClient from '@w3nest/webpm-client'
-import * as rxVdom from 'rx-vdom'
+
 import {
     ExplorerNode,
     DriveNode,
@@ -36,8 +35,8 @@ export interface Action {
     icon: AnyVirtualDOM
     name: string
     enabled: () => boolean | Promise<boolean>
-    exe: () => void | Promise<void>
-    applicable: () => boolean | Promise<boolean>
+    exe: () => void
+    applicable: () => boolean
     section: Section
 }
 
@@ -59,7 +58,7 @@ export type ActionConstructor = (
 /**
  * fetch the permissions of the current user regarding a group management
  */
-function fetchGroupPermissions$(_groupId: string) {
+function fetchGroupPermissions$() {
     return of({
         write: true,
     })
@@ -166,7 +165,7 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         name: 'download file',
         section: 'IO',
         enabled: () => true,
-        applicable: () => node instanceof ItemNode && node.kind == 'data',
+        applicable: () => node instanceof ItemNode && node.kind === 'data',
         exe: () => {
             const nodeData = node as ItemNode
             const anchor = document.createElement('a')
@@ -255,7 +254,7 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         enabled: () => hasGroupModifyPermissions(permissions),
         applicable: () => {
             return (
-                node instanceof FolderNode && state.itemCut$.value != undefined
+                node instanceof FolderNode && state.itemCut$.value !== undefined
             )
         },
         exe: () => {
@@ -332,9 +331,16 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         name: "copy file's id",
         section: 'Info',
         enabled: () => true,
-        applicable: () => node instanceof ItemNode && node.kind == 'data',
+        applicable: () => node instanceof ItemNode && node.kind === 'data',
         exe: () => {
-            navigator.clipboard.writeText(node.rawId).then()
+            navigator.clipboard.writeText(node.rawId).then(
+                () => {
+                    /*No OP*/
+                },
+                () => {
+                    throw Error('Failed to copy to clipboard.')
+                },
+            )
         },
     }),
     copyExplorerId: (_state: ExplorerState, node: ItemNode) => ({
@@ -345,7 +351,14 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         enabled: () => true,
         applicable: () => node instanceof ItemNode,
         exe: () => {
-            navigator.clipboard.writeText(node.itemId).then()
+            navigator.clipboard.writeText(node.itemId).then(
+                () => {
+                    /*No OP*/
+                },
+                () => {
+                    throw Error('Failed to copy to clipboard.')
+                },
+            )
         },
     }),
     copyAssetId: (_state: ExplorerState, node: ItemNode) => ({
@@ -358,7 +371,14 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
             return node instanceof ItemNode
         },
         exe: () => {
-            navigator.clipboard.writeText(node.assetId).then()
+            navigator.clipboard.writeText(node.assetId).then(
+                () => {
+                    /*No OP*/
+                },
+                () => {
+                    throw Error('Failed to copy to clipboard.')
+                },
+            )
         },
     }),
     copyFileUrl: (state: ExplorerState, node: ItemNode) => ({
@@ -367,13 +387,20 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
         name: "copy file's url",
         section: 'Info',
         enabled: () => true,
-        applicable: () => node instanceof ItemNode && node.kind == 'data',
+        applicable: () => node instanceof ItemNode && node.kind === 'data',
         exe: () => {
             navigator.clipboard
                 .writeText(
                     `${window.location.host}/api/assets-gateway/files-backend/files/${node.rawId}`,
                 )
-                .then()
+                .then(
+                    () => {
+                        /*No OP*/
+                    },
+                    () => {
+                        throw Error('Failed to copy to clipboard.')
+                    },
+                )
         },
     }),
     // favoriteFolder: (_state: ExplorerState, node: ExplorerNode) => ({
@@ -478,26 +505,26 @@ export const launchPackage$ = (
 export function getActions$(
     state: ExplorerState,
     node: ExplorerNode,
-): Observable<Array<Action>> {
+): Observable<Action[]> {
     if (
         !(node instanceof ItemNode) &&
         !(node instanceof FolderNode) &&
         !(node instanceof TrashNode)
     ) {
-        return of([])
+        return of<Action[]>([])
     }
 
     const permissions$ =
         node instanceof ItemNode
             ? forkJoin([
                   fetchItemPermissions$(node),
-                  fetchGroupPermissions$(node.groupId),
+                  fetchGroupPermissions$(),
               ]).pipe(
                   map(([item, group]) => {
                       return { group, item }
                   }),
               )
-            : fetchGroupPermissions$(node.groupId).pipe(
+            : fetchGroupPermissions$().pipe(
                   raiseHTTPErrors(),
                   map((group) => {
                       return { group }

@@ -31,7 +31,7 @@ import { AppState } from '../app-state'
 import { Views, MdWidgets, parseMd, Navigation } from 'mkdocs-ts'
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
-import { State, Status } from './state'
+import { State } from './state'
 export * from './state'
 
 export async function navigation(appState: AppState): Promise<Navigation> {
@@ -134,7 +134,14 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
                 onclick: () => {
                     this.appState.pluginsState
                         .updateJs(this.content$.value)
-                        .then()
+                        .then(
+                            () => {
+                                /*NoOp*/
+                            },
+                            () => {
+                                throw Error('Failed to update JS content')
+                            },
+                        )
                 },
             },
             {

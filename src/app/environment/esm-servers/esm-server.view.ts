@@ -72,7 +72,10 @@ ${srcConsoleOutputs}
                             rootLogs$: appState.esmServersState
                                 .getDispatchLogs$(esmServer.uid)
                                 .pipe(
-                                    scan((acc, e) => [...acc, e], []),
+                                    scan(
+                                        (acc, e) => [...acc, e],
+                                        [] as Local.System.LogResponse[],
+                                    ),
                                     map((logs) => ({ logs })),
                                 ),
                             title: 'Dispatch Logs',

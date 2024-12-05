@@ -44,7 +44,7 @@ export class ExposedGroupState {
                 body,
             })
             // XXX:  Why groupAccess is not used ?
-            .subscribe((_groupAccess) => {
+            .subscribe(() => {
                 this.loading$.next(false)
             })
     }
@@ -56,10 +56,10 @@ export class ExposedGroupState {
             .pipe(raiseHTTPErrors())
             .subscribe((info) => {
                 const groupAccess =
-                    this.groupId == '*'
+                    this.groupId === '*'
                         ? info.ownerInfo.defaultAccess
                         : info.ownerInfo.exposingGroups.find(
-                              (g) => g.groupId == this.groupId,
+                              (g) => g.groupId === this.groupId,
                           )
 
                 this.groupAccess$.next({
@@ -77,11 +77,12 @@ export class SelectView<TID> implements VirtualDOM<'select'> {
     public readonly children: ChildrenLike
 
     public readonly value$: BehaviorSubject<TID>
-    onchange = (ev) => {
-        const option = Array.from(ev.target).find(
-            (optionElem) => optionElem['selected'],
+    onchange = (ev: MouseEvent) => {
+        const target = ev.target as unknown as HTMLOptionsCollection
+        const option = Array.from(target).find(
+            (optionElem) => optionElem.selected,
         )
-        this.value$.next(option['value'])
+        this.value$.next(option.value as TID)
     }
 
     constructor({
@@ -162,7 +163,7 @@ export class ExposedGroupView implements VirtualDOM<'div'> {
             }
         }
         this.children = [
-            state.groupName == '*'
+            state.groupName === '*'
                 ? undefined
                 : {
                       tag: 'div',
@@ -337,7 +338,7 @@ export class GroupsPermissionsView implements VirtualDOM<'div'> {
         }
 
         const exposedGroups = this.accessInfo.ownerInfo.exposingGroups
-            .filter((group) => group.name != 'private')
+            .filter((group) => group.name !== 'private')
             .map((group) => {
                 return new ExposedGroupView(
                     new ExposedGroupState({

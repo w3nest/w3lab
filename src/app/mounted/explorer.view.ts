@@ -29,7 +29,7 @@ export class HeaderView implements VirtualDOM<'div'> {
         type: 'file' | 'folder'
         router: Router
     }) {
-        let file = undefined
+        let file: { name: string; nav: string; path: string } = undefined
         let folderPath = path
         if (type === 'file' && path !== '') {
             folderPath = path.split('/').slice(0, -1).join('/')
@@ -73,7 +73,7 @@ export class HeaderView implements VirtualDOM<'div'> {
             folder: decodeURIComponent(`${window.atob(origin)}/${path}`),
         })
         const pathItems = [originEntity, ...parents.reverse(), file]
-            .filter((e) => e != undefined)
+            .filter((e) => e !== undefined)
             .map((entity) => {
                 return [
                     folderAnchorView({
@@ -155,7 +155,7 @@ export class ExplorerView implements VirtualDOM<'div'> {
         origin: string
         router: Router
     }) {
-        const sortFct = (a, b) => a.localeCompare(b)
+        const sortFct = (a: string, b: string) => a.localeCompare(b)
         this.children = [
             headerViewWrapper(
                 new HeaderView({

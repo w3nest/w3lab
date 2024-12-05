@@ -1,10 +1,7 @@
 import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 
-import { fromFetch } from 'rxjs/fetch'
-import { switchMap } from 'rxjs/operators'
-import { launchPackage$, LaunchPackageData } from '../actions.factory'
-import { ApplicationInfo } from '../../common/patches'
+import { launchPackage$ } from '../actions.factory'
 
 export class PackageLogoView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -125,6 +122,7 @@ export class LaunchView implements VirtualDOM<'div'> {
                                 'fas fa-code',
                             )
                         }
+                        return { tag: 'div' }
                     },
                 }),
             ]

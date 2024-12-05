@@ -3,6 +3,7 @@ import { install } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { spinnerView } from './utils-view'
+import { getCodeEditor } from './utlis-misc'
 
 export type CodeLanguage =
     | 'python'
@@ -94,10 +95,7 @@ export class CodeEditorView implements VirtualDOM<'div'> {
                                 ...this.codeMirrorConfiguration,
                                 value: content,
                             }
-                            const editor = window['CodeMirror'](
-                                htmlElement,
-                                config,
-                            )
+                            const editor = getCodeEditor(htmlElement, config)
                             editor.refresh()
                         },
                     }

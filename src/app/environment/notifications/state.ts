@@ -77,10 +77,10 @@ export class BackendEvents {
                     event === 'started' &&
                     this.installing$.value.find(
                         (d) =>
-                            d.name == name &&
-                            d.version == version &&
-                            d.installId == installId,
-                    ) == undefined
+                            d.name === name &&
+                            d.version === version &&
+                            d.installId === installId,
+                    ) === undefined
                 ) {
                     this.installing$.next([
                         ...currentInstalls,
@@ -160,7 +160,7 @@ export class AssetEvents {
             const currents = this.downloading$.value
             if (
                 type === 'started' &&
-                this.downloading$.value.find((d) => d.rawId == rawId) ==
+                this.downloading$.value.find((d) => d.rawId === rawId) ===
                     undefined
             ) {
                 this.downloading$.next([...currents, { rawId, type, kind }])

@@ -14,7 +14,6 @@ import { take } from 'rxjs/operators'
 import {
     AssetsGateway,
     Explorer,
-    Local,
     onHTTPErrors,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
@@ -307,7 +306,7 @@ export class AttributeView implements VirtualDOM<'div'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ text, value }) {
+    constructor({ text, value }: { text: string; value: string }) {
         this.children = [
             new AttributeTitleView({ text }),
             new AttributeValueView({ value }),
@@ -427,7 +426,7 @@ export class CoLabBanner implements VirtualDOM<'div'> {
                 tag: 'img',
                 class: attr$({
                     source$: timer$,
-                    vdomMap: (i) => (i == 0 ? '' : 'd-none'),
+                    vdomMap: (i) => (i === 0 ? '' : 'd-none'),
                 }),
                 style,
                 src: `${basePath}/co-lab-light.png`,
@@ -437,7 +436,7 @@ export class CoLabBanner implements VirtualDOM<'div'> {
                 tag: 'img',
                 class: attr$({
                     source$: timer(0, 1000).pipe(take(2)),
-                    vdomMap: (i) => (i == 0 ? 'd-none' : ''),
+                    vdomMap: (i) => (i === 0 ? 'd-none' : ''),
                 }),
                 style,
                 src: `${basePath}/co-lab-high.png`,
@@ -607,10 +606,11 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         icon: 'fa-laptop',
                         nav: '',
                         enabled: project !== undefined,
-                        onclick: (ev) => {
+                        onclick: (ev: MouseEvent) => {
                             ev.preventDefault()
-                            project &&
+                            if (project) {
                                 appState.mountHdPath(project.path, 'folder')
+                            }
                         },
                     })
                 },
@@ -653,7 +653,8 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                 onclick: (ev: MouseEvent) => {
                     ev.preventDefault()
                     if (onclick) {
-                        return onclick(ev)
+                        onclick(ev)
+                        return
                     }
                     if (hrefKind === 'external') {
                         window.open(href, '_blank')

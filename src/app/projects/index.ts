@@ -156,7 +156,7 @@ function lazyResolver(
     projects: Local.Projects.Project[],
     appState: AppState,
 ) {
-    const parts = path.split('/').filter((d) => d != '')
+    const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         return {
             tableOfContent: Views.tocView,
@@ -198,7 +198,7 @@ function lazyResolver(
                         leaf: true,
                     }
                 }),
-            html: ({ router }) => {
+            html: ({ router }: { router: Router }) => {
                 const finder = env.projects.finders.find(
                     (f) => f.fromPath === prefix,
                 )
@@ -214,7 +214,7 @@ function lazyResolver(
     return {
         tableOfContent: Views.tocView,
         children: [],
-        html: ({ router }) =>
+        html: ({ router }: { router: Router }) =>
             new ProjectView({
                 router,
                 project,

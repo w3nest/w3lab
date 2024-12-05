@@ -6,11 +6,11 @@ import { map, take } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ExplorerView } from './explorer.view'
 
-export function encodeHdPath(str) {
+export function encodeHdPath(str: string) {
     return window.btoa(encodeURIComponent(str))
 }
 
-export function decodeHdPath(encodedStr) {
+export function decodeHdPath(encodedStr: string) {
     return decodeURIComponent(window.atob(encodedStr))
 }
 
@@ -52,13 +52,13 @@ your hard drive.
     }
 }
 
-export function decodeHRef(path) {
+export function decodeHRef(path: string) {
     return path
         .split('/')
         .map((p) => decodeHdPath(p))
         .join('/')
 }
-export function encodeHRef(path) {
+export function encodeHRef(path: string) {
     return path
         .split('/')
         .map((p) => encodeHdPath(p))
@@ -71,7 +71,7 @@ function lazyResolver(
     path: string,
     router: Router,
 ): CatchAllNav {
-    const parts = path.split('/').filter((d) => d != '')
+    const parts = path.split('/').filter((d) => d !== '')
 
     if (parts.length === 0) {
         return {
@@ -118,7 +118,7 @@ function lazyResolver(
     const origin = parts[0]
     const from = parts.slice(1).join('/')
 
-    const fromDecoded = from != '' ? decodeHRef(from) : ''
+    const fromDecoded = from === '' ? '' : decodeHRef(from)
 
     return new Local.Client().api.system
         .queryFolderContent$({

@@ -24,7 +24,7 @@ function lazyResolver(
     router: Router,
     appState: AppState,
 ) {
-    const parts = path.split('/').filter((d) => d != '')
+    const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const children = env.proxiedEsmServers.store.map(
             ({ package: packageName, uid }) => {

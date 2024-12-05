@@ -85,7 +85,7 @@ export class PathView implements VirtualDOM<'div'> {
 
         const target = path.item || path.folders.slice(-1)[0]
         const folders = [...path.folders, path.item]
-            .filter((e) => e != undefined)
+            .filter((e) => e !== undefined)
             .map((entity) => {
                 const nav = Explorer.isInstanceOfItemResponse(entity)
                     ? `/explorer/${path.drive.groupId}/item_${entity.itemId}`

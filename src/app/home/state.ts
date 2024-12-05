@@ -8,10 +8,14 @@ import {
 } from 'rxjs'
 import { filter, switchMap, take } from 'rxjs/operators'
 import { setup } from '../../auto-generated'
-import { WebpmSessionsStorage } from '@w3nest/http-clients'
+import {
+    raiseHTTPErrors,
+    WebpmSessionsStorage,
+    JsonMap,
+} from '@w3nest/http-clients'
 import * as webpm from '@w3nest/webpm-client'
 import { AnyVirtualDOM } from 'rx-vdom'
-
+import * as mkdocsTs from 'mkdocs-ts'
 export type HomePageMode = 'view' | 'edit'
 
 const defaultJs = `
@@ -44,19 +48,21 @@ export class State {
         const defaultHomeURL = `../assets/home.md`
 
         combineLatest([
-            this.storageClient.getData$({
-                packageName: setup.name,
-                dataName: this.dataName,
-            }),
+            this.storageClient
+                .getData$({
+                    packageName: setup.name,
+                    dataName: this.dataName,
+                })
+                .pipe(raiseHTTPErrors()),
             from(fetch(defaultHomeURL).then((resp) => resp.text())),
         ])
             .pipe(take(1))
-            .subscribe(([customHome, defaultHome]) => {
+            .subscribe(([customHome, defaultHome]: [JsonMap, string]) => {
                 const content = {
                     md: customHome['md'] || defaultHome,
                     js: customHome['js'] || defaultJs,
                     css: customHome['css'] || '',
-                }
+                } as Content
                 this.content$.next(content)
                 this.tmpContent$.next(content)
             })
@@ -84,23 +90,28 @@ export class State {
 
     toggleMode() {
         const css = document.getElementById('home-css')
-        css && css.remove()
+        if (css) {
+            css.remove()
+        }
         if (this.mode$.value === 'edit') {
             this.content$.next(this.tmpContent$.value)
         }
-        this.mode$.value === 'view'
-            ? this.mode$.next('edit')
-            : this.mode$.next('view')
+        if (this.mode$.value === 'view') {
+            this.mode$.next('edit')
+        } else {
+            this.mode$.next('view')
+        }
     }
 
-    async generateView(content: Content): Promise<AnyVirtualDOM> {
+    generateView(content: Content): Promise<AnyVirtualDOM> {
         const styleElement = document.createElement('style')
         styleElement.id = 'home-css'
         styleElement.textContent = content.css
         document.head.appendChild(styleElement)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
         return new Function(content.js)()({
             webpm,
-            mkdocs: window['mkdocs-ts'],
+            mkdocs: mkdocsTs,
             mdSrc: content.md,
             router: this.appState.router,
         })

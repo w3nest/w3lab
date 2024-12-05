@@ -30,4 +30,7 @@ export default tseslint.config(
         },
     },
     eslintPluginPrettier,
+    {
+        ignores: ['src/tests/**'],
+    },
 )

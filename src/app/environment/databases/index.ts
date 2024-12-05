@@ -45,12 +45,11 @@ This folder persist the artifacts & manifests created when working with projects
                         new HdPathBookView({
                             appState,
                             path: appState.environment$.pipe(
-                                map(
-                                    (env) =>
-                                        env.pathsBook[
-                                            elem.getAttribute('type')
-                                        ],
-                                ),
+                                map((env) => {
+                                    return env.pathsBook[
+                                        elem.getAttribute('type') ?? ''
+                                    ] as string
+                                }),
                             ),
                             type: 'folder',
                         }),

@@ -85,12 +85,17 @@ export class ContextMenuView implements VirtualDOM<'div'> {
                 computePosition(refElement, elem, {
                     placement: 'bottom',
                     middleware: [flip()],
-                }).then(({ x, y }) => {
-                    Object.assign(elem.style, {
-                        left: `${x}px`,
-                        top: `${y}px`,
-                    })
-                })
+                }).then(
+                    ({ x, y }) => {
+                        Object.assign(elem.style, {
+                            left: `${x}px`,
+                            top: `${y}px`,
+                        })
+                    },
+                    () => {
+                        console.error('Failed to compute context menu position')
+                    },
+                )
             })
         }
         this.children = [

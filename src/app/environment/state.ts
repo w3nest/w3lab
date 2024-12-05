@@ -4,7 +4,6 @@ import {
     send$,
     WebSocketResponse$,
     Local,
-    Label,
 } from '@w3nest/http-clients'
 
 import { Observable } from 'rxjs'
@@ -21,7 +20,7 @@ export class CommandEvents {
     /**
      * @group Observables
      */
-    log$: WebSocketResponse$<unknown, Label>
+    log$: WebSocketResponse$<unknown>
 
     constructor(public readonly command: Local.Environment.Command) {
         this.log$ = new Local.Client().api.customCommands.webSocket.log$({})

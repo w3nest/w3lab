@@ -1,4 +1,4 @@
-require('./style.css')
+import './style.css'
 export {}
 import * as webpmClient from '@w3nest/webpm-client'
 

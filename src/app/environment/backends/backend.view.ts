@@ -32,8 +32,8 @@ export class BackendView implements VirtualDOM<'div'> {
         ).pipe(
             filter(
                 (resp) =>
-                    resp.name == backend.name &&
-                    resp.version == backend.version,
+                    resp.name === backend.name &&
+                    resp.version === backend.version,
             ),
             debounceTime(500),
             mergeMap(() =>

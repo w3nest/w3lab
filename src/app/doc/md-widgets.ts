@@ -1,10 +1,11 @@
 import { AnyVirtualDOM, child$ } from 'rx-vdom'
 import { Router } from 'mkdocs-ts'
-import { AppState } from '../app-state'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { icon } from '../projects/icons'
 import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { buttonsFactory } from '../common/buttons'
+import { copyInClipboard } from '../common/utlis-misc'
+import { getAppState } from '../common/patches'
 
 const inlineBlock = {
     style: {
@@ -13,7 +14,11 @@ const inlineBlock = {
 }
 
 export function apiLink(elem: HTMLElement): AnyVirtualDOM {
-    const target = ApiLinksDict[elem.getAttribute('target')]
+    const key = elem.getAttribute('target')
+    if (!key || !(key in ApiLinksDict)) {
+        return { tag: 'div' as const }
+    }
+    const target = ApiLinksDict[key]
     const href = `@nav/doc/api/${target.path}`
     let text = elem.textContent
     if (text === '') {
@@ -48,7 +53,11 @@ export function apiLink(elem: HTMLElement): AnyVirtualDOM {
 }
 
 export function navNode(elem: HTMLElement): AnyVirtualDOM {
-    const node = NodeLinksDict[elem.getAttribute('target')]
+    const key = elem.getAttribute('target')
+    if (!key || !(key in NodeLinksDict)) {
+        return { tag: 'div' as const }
+    }
+    const node = NodeLinksDict[key]
     return {
         tag: 'a',
         href: `@nav/${node.path}`,
@@ -130,7 +139,7 @@ export function copyClipboard(elem: HTMLElement): AnyVirtualDOM {
                             },
                         ],
                         onclick: () => {
-                            navigator.clipboard.writeText(elem.innerText)
+                            copyInClipboard(elem.innerText)
                         },
                     },
                 ],
@@ -143,11 +152,11 @@ export function projectNav(
     elem: HTMLElement,
     { router }: { router: Router },
 ): AnyVirtualDOM {
-    const appState: AppState = router['appState']
+    const appState = getAppState(router)
     const project = elem.getAttribute('project')
     const projectId = window.btoa(project)
     const nav$ = appState.projectsState.projects$.pipe(
-        map((projects) => projects.find((p) => p.id == projectId)),
+        map((projects) => projects.find((p) => p.id === projectId)),
         filter((p) => p !== undefined),
         switchMap((p) => {
             return appState.environment$.pipe(
@@ -206,12 +215,18 @@ export function defaultUserDrive(
     { router }: { router: Router },
 ): AnyVirtualDOM {
     const target = elem.getAttribute('target')
-    const factory = {
+    const factory: Record<
+        string,
+        { name: string; icon: string; attr: string }
+    > = {
         download: {
             name: 'Download',
             icon: 'fas fa-download',
             attr: 'downloadFolderId',
         },
+    }
+    if (!target || !(target in factory)) {
+        return { tag: 'div' }
     }
     const client = new AssetsGateway.Client().explorer
     const target$ = client.getDefaultUserDrive$().pipe(
@@ -283,7 +298,12 @@ export function rxvdomDoc(elem: HTMLElement): AnyVirtualDOM {
 export function todo(elem: HTMLElement): AnyVirtualDOM {
     return { tag: 'div', innerText: `⚠️ ${elem.textContent}` }
 }
-const ApiLinksDict = {
+
+interface ApiLink {
+    path: string
+    role: string
+}
+const ApiLinksDict: Record<string, ApiLink> = {
     ProjectsFinder: {
         path: 'youwol/app/environment/models.models_project.ProjectsFinder',
         role: 'class',
@@ -342,7 +362,12 @@ const ApiLinksDict = {
     },
 }
 
-const NodeLinksDict = {
+interface NodeLink {
+    path: string
+    name: string
+    icon: string
+}
+const NodeLinksDict: Record<string, NodeLink> = {
     Projects: {
         path: 'projects',
         name: 'Projects',

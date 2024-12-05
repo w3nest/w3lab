@@ -31,7 +31,7 @@ function lazyResolver(
     router: Router,
     appState: AppState,
 ) {
-    const parts = path.split('/').filter((d) => d != '')
+    const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const partitions = new Set(
             env.proxiedBackends.store.map((backend) => backend.partitionId),
@@ -55,7 +55,7 @@ function lazyResolver(
     }
     if (parts.length === 1) {
         const children = env.proxiedBackends.store
-            .filter((backend) => backend.partitionId == parts[0])
+            .filter((backend) => backend.partitionId === parts[0])
             .map((backend) => {
                 return {
                     name: backendName(backend),

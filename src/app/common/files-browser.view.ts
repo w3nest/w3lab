@@ -86,7 +86,7 @@ function originLocationView(
     startingFolder: string,
     originFolderIndex: number,
 ): VirtualDOM<'div'> {
-    if (originFolderIndex == 0) {
+    if (originFolderIndex === 0) {
         return { tag: 'div' }
     }
     return {

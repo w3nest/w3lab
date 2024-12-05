@@ -19,19 +19,15 @@ export class LogDataNode extends ImmutableTree.Node {
 
     constructor({ name, data }: { name: string; data: unknown }) {
         super({
-            id: `${Math.floor(Math.random() * 1e6)}`,
+            id: `${Math.floor(Math.random() * Math.pow(10, 6))}`,
             children: LogDataNode.getChildren(data),
         })
         this.name = name
         this.data = data
     }
 
-    static getChildren(data) {
-        const isObject =
-            data != null &&
-            typeof data != 'string' &&
-            typeof data != 'number' &&
-            typeof data != 'boolean'
+    static getChildren(data: unknown) {
+        const isObject = data !== null && typeof data === 'object'
         return isObject
             ? of(
                   Object.entries(data).map(
@@ -68,7 +64,7 @@ export class DataView implements VirtualDOM<'div'> {
         fontSize: 'small',
     }
 
-    constructor(data, expandRoot: boolean = false) {
+    constructor(data: unknown, expandRoot: boolean = false) {
         const rootNode = new LogDataNode({ name: 'data', data })
         const expandedNodes = expandRoot ? [rootNode.id] : []
         const treeState = new ImmutableTree.State({ rootNode, expandedNodes })
@@ -90,6 +86,7 @@ export class DataView implements VirtualDOM<'div'> {
                           {
                               tag: 'i',
                               class: 'px-2',
+                              // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
                               innerText: `${node.data}`,
                           },
                       ],

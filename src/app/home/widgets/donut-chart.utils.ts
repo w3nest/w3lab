@@ -5,7 +5,7 @@ import { AppState } from '../../app-state'
 import { withLatestFrom } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 type D3 = typeof d3
-
+/* eslint-disable */
 /**
  * Data model representing a section within a donut chart.
  *
@@ -101,8 +101,10 @@ export function createDonutChartD3<T>({
             const pie = d3.pie().value(function (d) {
                 return d[1].count
             })
+            // @ts-ignore
             const data_ready = pie(Object.entries(data))
 
+            // @ts-ignore
             svg.selectAll('path')
                 .data(data_ready)
                 .join('path')
@@ -110,6 +112,7 @@ export function createDonutChartD3<T>({
                 .attr('style', (d) => d.data[1].style)
                 .attr(
                     'd',
+                    // @ts-ignore
                     d3
                         .arc()
                         .innerRadius(radius / 3)
@@ -149,7 +152,6 @@ export function createDonutChartD3<T>({
         },
     }
 }
-
 /**
  * Base class for creating donut-style charts.
  *
@@ -194,6 +196,7 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
         ]
     }
 
+    /* eslint-enable */
     /**
      * Constructs a list of chart sections from the children of a given HTML element.
      *
@@ -226,7 +229,10 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
                 class: child.classList.value,
                 style: child.getAttribute('style'),
                 label: child.getAttribute('label'),
-                selector: new Function(child.textContent)(),
+                // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+                selector: new Function(child.textContent)() as (
+                    entity: unknown,
+                ) => boolean,
             }))
     }
 }

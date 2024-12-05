@@ -92,19 +92,21 @@ export class State {
             })
             .pipe(
                 raiseHTTPErrors(),
-                map((resp) => resp['js'] || defaultContent),
+                map((resp: { js: string }) => resp.js || defaultContent),
             )
     }
     async plugins(): Promise<PluginTrait[]> {
         const source = await firstValueFrom(this.jsContent$())
-        const fct = new Function(source)()
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+        const fct = new Function(source)() as PluginsLoader
         return await fct({ webpm })
     }
 
     async updateJs(source: string) {
         this.status$.next(undefined)
         try {
-            const fct: PluginsLoader = new Function(source)()
+            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+            const fct: PluginsLoader = new Function(source)() as PluginsLoader
             const plugins = await fct({ webpm })
             const client = new WebpmSessionsStorage.Client()
             await firstValueFrom(

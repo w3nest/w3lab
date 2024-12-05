@@ -50,7 +50,7 @@ export class FileContentView implements VirtualDOM<'div'> {
                         const language: CodeLanguage = Object.entries(
                             languages,
                         ).reduce((acc, [ext, lang]) => {
-                            if (acc != 'unknown') {
+                            if (acc !== 'unknown') {
                                 return acc
                             }
                             return path.endsWith(ext) ? lang : acc

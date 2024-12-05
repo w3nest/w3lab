@@ -13,7 +13,6 @@ import {
     raiseHTTPErrors,
     WebSocketResponse$,
     ContextMessage,
-    Label,
     Local,
     WebpmSessionsStorage,
 } from '@w3nest/http-clients'
@@ -37,7 +36,7 @@ export function instanceOfStepStatus(
         'stepId',
         'artifactFolder',
         'artifacts',
-    ].reduce((acc, e) => acc && data[e], true)
+    ].reduce((acc, e) => acc && data[e] !== undefined, true)
 }
 
 /**
@@ -52,7 +51,7 @@ export class ProjectEvents {
     /**
      * @group Observables
      */
-    public readonly messages$: WebSocketResponse$<unknown, Label>
+    public readonly messages$: WebSocketResponse$<unknown>
 
     /**
      * @group Observables
@@ -84,10 +83,7 @@ export class ProjectEvents {
     /**
      * @group Observables
      */
-    public readonly projectStatusResponse$: WebSocketResponse$<
-        Local.Projects.ProjectStatus,
-        Label
-    >
+    public readonly projectStatusResponse$: WebSocketResponse$<Local.Projects.ProjectStatus>
 
     constructor(public readonly project: Local.Projects.Project) {
         this.messages$ = Local.Client.ws.log$.pipe(
@@ -109,8 +105,8 @@ export class ProjectEvents {
                 map((message) => message.data),
                 filter(
                     (data: Local.Projects.PipelineStepEvent) =>
-                        data.event == 'runStarted' ||
-                        data.event == 'statusCheckStarted',
+                        data.event === 'runStarted' ||
+                        data.event === 'statusCheckStarted',
                 ),
             )
             .subscribe((data: Local.Projects.PipelineStepEvent) => {
@@ -144,7 +140,7 @@ export class ProjectEvents {
 
         this.selectedStep$
             .pipe(
-                filter(({ step }) => step != undefined),
+                filter(({ step }) => step !== undefined),
                 mergeMap(({ step }) => {
                     return this.projectsClient.getCiStepStatus$({
                         projectId: project.id,
@@ -269,7 +265,7 @@ export class State {
                 dataName: State.STORAGE_KEY,
             })
             .pipe(raiseHTTPErrors())
-            .subscribe((resp) => {
+            .subscribe((resp: { historic: string[] }) => {
                 this.updatePersistedHistoric({ open: resp['historic'] })
             })
     }
@@ -280,7 +276,7 @@ export class State {
 
     configureStep(projectId: string, stepId: string) {
         const events = this.projectEvents[projectId]
-        const step = events.project.pipeline.steps.find((s) => s.id == stepId)
+        const step = events.project.pipeline.steps.find((s) => s.id === stepId)
         this.projectEvents[projectId].configureStep$.next({
             step,
         })
@@ -320,7 +316,7 @@ export class State {
     }
     selectStep(projectId: string, stepId: string | undefined = undefined) {
         const events = this.projectEvents[projectId]
-        const step = events.project.pipeline.steps.find((s) => s.id == stepId)
+        const step = events.project.pipeline.steps.find((s) => s.id === stepId)
         events.selectedStep$.next(step ? { step } : { step: undefined })
     }
 

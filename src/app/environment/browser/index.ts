@@ -348,29 +348,31 @@ class DropDownPathsView implements VirtualDOM<'div'> {
                     {
                         tag: 'div',
                         class: 'dropdown-menu p-0',
-                        children: Object.keys(data).map((key) => {
-                            return {
-                                tag: 'button' as const,
-                                class: 'btn btn-sm btn-light w-100 border',
-                                innerText: key,
-                                style: {
-                                    display: 'block',
-                                },
-                                onclick: () => {
-                                    if (Object.keys(data[key]).length === 0) {
-                                        selected$.next(`${fullPath}/${key}`)
-                                    } else {
-                                        selected$.next(undefined)
-                                    }
+                        children: Object.entries(data).map(
+                            ([key, value]: [string, T]) => {
+                                return {
+                                    tag: 'button' as const,
+                                    class: 'btn btn-sm btn-light w-100 border',
+                                    innerText: key,
+                                    style: {
+                                        display: 'block',
+                                    },
+                                    onclick: () => {
+                                        if (Object.keys(value).length === 0) {
+                                            selected$.next(`${fullPath}/${key}`)
+                                        } else {
+                                            selected$.next(undefined)
+                                        }
 
-                                    next$.next({
-                                        title: key,
-                                        data: data[key],
-                                        fullPath: `${fullPath}/${key}`,
-                                    })
-                                },
-                            }
-                        }),
+                                        next$.next({
+                                            title: key,
+                                            data: value,
+                                            fullPath: `${fullPath}/${key}`,
+                                        })
+                                    },
+                                }
+                            },
+                        ),
                     },
                 ],
             },
@@ -504,8 +506,8 @@ function group(obj: object) {
         return obj
     }
     let modified = false
-    Object.entries(obj).forEach(([k, v]: [string, string[]]) => {
-        if (Object.keys(v).length == 1) {
+    Object.entries(obj).forEach(([k, v]: [string, Record<string, string>]) => {
+        if (Object.keys(v).length === 1) {
             const k2 = Object.keys(v)[0]
             r[`${k}/${k2}`] = v[k2]
             modified = true
@@ -552,7 +554,7 @@ function transformPaths(paths: string[]) {
     return result
 }
 
-function addPath(obj: object, components: string[], index: number) {
+function addPath(obj: unknown, components: string[], index: number) {
     if (index >= components.length) {
         return
     }

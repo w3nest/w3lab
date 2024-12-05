@@ -130,7 +130,7 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             class: attr$({
                 source$: mode$,
                 vdomMap: (mode): string =>
-                    mode == target ? 'fv-text-success' : '',
+                    mode === target ? 'fv-text-success' : '',
                 wrapper: (d: string) => `${d} fas ${icon} fv-pointer`,
             }),
             onclick: () => mode$.next(target),
@@ -145,7 +145,7 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
                         s === 'runStarted'
                             ? 'fas fa-spinner fa-spin'
                             : 'fas fa-play fv-pointer'
-                    return m == 'run' ? base + ' fv-text-success' : base
+                    return m === 'run' ? base + ' fv-text-success' : base
                 },
             }),
             onclick: () => {
@@ -205,6 +205,7 @@ export class ConfigView implements VirtualDOM<'div'> {
                 raiseHTTPErrors(),
                 mergeMap((js) =>
                     from(
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-implied-eval
                         new Function(js)()({
                             triggerRun: triggerRunHandler,
                             project,

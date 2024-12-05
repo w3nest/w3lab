@@ -1,6 +1,5 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets } from '@w3nest/http-clients'
-import { from, of } from 'rxjs'
 
 export class OverViews implements VirtualDOM<'div'> {
     public readonly tag = 'div'

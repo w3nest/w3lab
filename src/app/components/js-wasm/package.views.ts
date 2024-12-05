@@ -17,7 +17,6 @@ import {
 } from '@w3nest/http-clients'
 import {
     combineLatest,
-    from,
     Observable,
     ReplaySubject,
     Subject,
@@ -253,8 +252,9 @@ export class VersionsView implements VirtualDOM<'div'> {
                         }),
                     }
                 }),
-                onchange: (ev) => {
-                    params.selectedVersion$.next(ev.target['value'])
+                onchange: (ev: MouseEvent) => {
+                    const target = ev.target as HTMLSelectElement
+                    params.selectedVersion$.next(target.value)
                 },
             },
         ]
@@ -290,9 +290,6 @@ export class FilesView implements VirtualDOM<'div'> {
     }
 }
 
-type YwMetadata = {
-    links: { kind: string; name: string; url: string }[]
-}
 export class LinksView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike

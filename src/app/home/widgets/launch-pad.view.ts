@@ -99,7 +99,7 @@ export class AppIcon implements VirtualDOM<'button'> {
     static readonly appMetadata$ = (
         appName: string,
     ): Observable<ApplicationInfo> => {
-        if (AppIcon._appMetadata$[appName]) {
+        if (appName in AppIcon._appMetadata$) {
             return AppIcon._appMetadata$[appName]
         }
         AppIcon._appMetadata$[appName] = new AssetsGateway.Client().webpm
@@ -111,7 +111,8 @@ export class AppIcon implements VirtualDOM<'button'> {
             .pipe(raiseHTTPErrors(), shareReplay(1))
         return AppIcon._appMetadata$[appName]
     }
-    private static _appMetadata$ = {}
+    private static _appMetadata$: Record<string, Observable<ApplicationInfo>> =
+        {}
 
     constructor(params: {
         package: string
@@ -187,10 +188,10 @@ export class AppIcon implements VirtualDOM<'button'> {
      * @param size - The default size to apply if the `size` attribute is not specified on the element.
      * @returns A new instance of `AppIcon`.
      */
-    static fromHTMLElement(elem: Element, { size }): AppIcon {
+    static fromHTMLElement(elem: Element, { size }: { size: string }): AppIcon {
         const style: CSSAttribute = (elem.getAttribute('style') || '')
             .split(';')
-            .filter((d) => d != '')
+            .filter((d) => d !== '')
             .map((part) => {
                 const key = part.trim().split(':')[0].trim()
                 const val = part.trim().split(':')[1].trim()
@@ -205,6 +206,6 @@ export class AppIcon implements VirtualDOM<'button'> {
             label: elem.getAttribute('label'),
             size: elem.getAttribute('size') || '50px',
         }
-        return new AppIcon({ ...d, size: elem.getAttribute('size') || size })
+        return new AppIcon({ ...d, size: elem.getAttribute('size') ?? size })
     }
 }

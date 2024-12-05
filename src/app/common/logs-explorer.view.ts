@@ -11,7 +11,15 @@ import { Local, Label, raiseHTTPErrors } from '@w3nest/http-clients'
 import { ExpandableGroupView } from './expandable-group.view'
 import { DataView } from './data.view'
 
-export const labelMethodIcons = {
+type LabelMethod =
+    | 'Label.ADMIN'
+    | 'Label.API_GATEWAY'
+    | 'Label.MIDDLEWARE'
+    | 'Label.END_POINT'
+    | 'Label.APPLICATION'
+    | 'Label.LOG'
+
+export const labelMethodIcons: Record<LabelMethod, string> = {
     'Label.ADMIN': 'fas fa-users-cog',
     'Label.API_GATEWAY': 'fas fa-door-open',
     'Label.MIDDLEWARE': 'fas fa-ghost',
@@ -37,7 +45,7 @@ export class LogsExplorerState {
     public readonly stack$ = new BehaviorSubject<Local.System.LogResponse[]>([])
 
     private rootLogsResponse: Local.System.LogsResponse
-    public delta = {}
+    public delta: Record<string, number> = {}
 
     constructor(params: {
         rootLogs$: Observable<Local.System.QueryLogsResponse> | string
@@ -55,22 +63,24 @@ export class LogsExplorerState {
     }
     refresh() {
         this.fetchingLogs$.next(true)
-        this.stack$.value.length == 0 && this.t0$.next(Date.now())
-        this.stack$.value.length == 0
-            ? this.rootLogs$.subscribe((response) => {
-                  this.logs$.next(response)
-                  this.rootLogsResponse = response
-                  this.fetchingLogs$.next(false)
-              })
-            : new Local.Client().api.system
-                  .queryLogs$({
-                      parentId: this.stack$.value.slice(-1)[0].contextId,
-                  })
-                  .pipe(raiseHTTPErrors())
-                  .subscribe((response) => {
-                      this.logs$.next(response)
-                      this.fetchingLogs$.next(false)
-                  })
+        if (this.stack$.value.length === 0) {
+            this.t0$.next(Date.now())
+            this.rootLogs$.subscribe((response) => {
+                this.logs$.next(response)
+                this.rootLogsResponse = response
+                this.fetchingLogs$.next(false)
+            })
+        } else {
+            new Local.Client().api.system
+                .queryLogs$({
+                    parentId: this.stack$.value.slice(-1)[0].contextId,
+                })
+                .pipe(raiseHTTPErrors())
+                .subscribe((response) => {
+                    this.logs$.next(response)
+                    this.fetchingLogs$.next(false)
+                })
+        }
     }
 
     elapsedTime(log: Local.System.LogResponse): number | undefined {
@@ -156,7 +166,11 @@ const stepIntoIcon = (
     tag: 'div',
     class: 'fas fa-sign-in-alt fv-text-focus fv-pointer',
     onclick: () => {
-        log ? state.expandLog(log) : state.expandLog()
+        if (log) {
+            state.expandLog(log)
+        } else {
+            state.expandLog()
+        }
     },
 })
 
@@ -327,18 +341,25 @@ class LogLabelsView {
         state: LogsExplorerState
     }) {
         Object.assign(this, params, labelsStyle)
-        const labelsView: AnyVirtualDOM[] = this.log.labels
-            .filter((label) => label && labelMethodIcons[label])
-            .map((label) => {
+        function isLabelMethod(l: unknown): l is LabelMethod {
+            if (l === null || !(typeof l === 'string')) {
+                return false
+            }
+            return labelMethodIcons[l as LabelMethod] !== undefined
+        }
+        const labelsView = this.log.labels
+            .filter((label) => isLabelMethod(label))
+            .map((label: LabelMethod) => {
                 return {
                     tag: 'div' as const,
                     class: labelMethodIcons[label],
                 }
             })
-            .reduce((acc, e, index, array) => {
+            .reduce((acc: AnyVirtualDOM[], e, index, array) => {
                 acc.push(e)
-                index < array.length - 1 &&
+                if (index < array.length - 1) {
                     acc.push({ tag: 'i', style: { marginRight: '2px' } })
+                }
                 return acc
             }, [])
 

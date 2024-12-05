@@ -36,7 +36,7 @@ export class ExplorerNode {
         id = id || this.id
         const newStatus = this.status$
             .getValue()
-            .filter((s) => s.type != type && s.id != id)
+            .filter((s) => s.type !== type && s.id !== id)
         this.status$.next(newStatus)
     }
 }

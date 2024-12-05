@@ -6,6 +6,7 @@ import { install } from '@w3nest/webpm-client'
 import { delay, map, shareReplay, tap } from 'rxjs/operators'
 import { classesButton } from '../common'
 import { setup } from '../../auto-generated'
+import { CodeMirrorEditor } from '../common/patches'
 
 declare type CodeEditorModule = typeof import('@w3nest/rx-code-mirror-editors')
 
@@ -28,7 +29,14 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
                 ],
             }),
         ).pipe(
-            map((window) => window['codeMirrorEditors']),
+            map(
+                (window) =>
+                    (
+                        window as unknown as {
+                            codeMirrorEditors: CodeEditorModule
+                        }
+                    ).codeMirrorEditors,
+            ),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
 
@@ -159,9 +167,11 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
             path: './index.js',
             language: 'javascript',
         })
-        editor.nativeEditor$.pipe(delay(100)).subscribe((nativeEdtr) => {
-            nativeEdtr.refresh()
-        })
+        editor.nativeEditor$
+            .pipe(delay(100))
+            .subscribe((nativeEdtr: CodeMirrorEditor) => {
+                nativeEdtr.refresh()
+            })
         const generateButton = new GenerateButton({
             projectsState: this.projectsState,
             projectTemplate: this.projectTemplate,
@@ -246,10 +256,14 @@ export class GenerateButton implements VirtualDOM<'div'> {
         ]
         this.onclick = () => {
             creating$.next(true)
+            const parameters = JSON.parse(file$.getValue().content) as Record<
+                string,
+                string
+            >
             projectsState
                 .createProjectFromTemplate$({
                     type: projectTemplate.type,
-                    parameters: JSON.parse(file$.getValue().content),
+                    parameters,
                 })
                 .pipe(
                     tap(() => creating$.next(false)),

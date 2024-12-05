@@ -2,7 +2,7 @@ import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { BackendInstallEvent, State } from '../state'
 import { filter, map, takeUntil } from 'rxjs/operators'
 import { styleShellStdOut } from '../../../common'
-import { ContextMessage, Local } from '@w3nest/http-clients'
+
 import {
     AnyVirtualDOM,
     append$,
@@ -40,7 +40,7 @@ export class BackendInstallNotificationView extends ExpandableGroupView {
             class: attr$({
                 source$: done$,
                 vdomMap: (m) => {
-                    return m.event == 'succeeded'
+                    return m.event === 'succeeded'
                         ? 'fas fa-check text-success'
                         : 'fas fa-times text-danger'
                 },

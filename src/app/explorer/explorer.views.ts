@@ -153,7 +153,8 @@ export class ExplorerView implements VirtualDOM<'div'> {
         router: Router
         groupId: string
     }) {
-        const sortFct = (a, b) => a.name.localeCompare(b.name)
+        const sortFct = (a: { name: string }, b: { name: string }) =>
+            a.name.localeCompare(b.name)
         const isRoot = path.endsWith(groupId)
         const isTrash = path.split('/').slice(-1)[0].startsWith('trash_')
 

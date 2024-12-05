@@ -7,7 +7,8 @@ import { catchError, map, mergeMap, take, withLatestFrom } from 'rxjs/operators'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { install } from '@w3nest/webpm-client'
 import { ExpandableGroupView } from '../common/expandable-group.view'
-import { LogsExplorerView } from '../common/logs-explorer.view'
+import { LogsExplorerView } from '../common'
+import { getCodeEditor } from '../common/utlis-misc'
 
 /**
  * @category View
@@ -33,7 +34,7 @@ export class CommandsListView implements VirtualDOM<'div'> {
             source$: environmentState.environment$,
             vdomMap: (env) => {
                 return Object.entries(env.commands).map(
-                    ([_type, command]) =>
+                    ([, command]) =>
                         new ExpandableGroupView({
                             title: command.name,
                             icon: 'fas fa-play-circle',
@@ -119,7 +120,7 @@ export class CommandView implements VirtualDOM<'div'> {
                 text: 'URL',
                 value: url,
             }),
-            method == 'GET' || method == 'DELETE'
+            ['GET', 'DELETE'].includes(method)
                 ? new ExecuteNoBodyView({
                       environmentState: this.environmentState,
                       command: this.command,
@@ -141,6 +142,12 @@ export class CommandView implements VirtualDOM<'div'> {
     }
 }
 
+type ExecuteViewArgs = {
+    environmentState: State
+    command: Local.Environment.Command
+    method: Method
+    url: string
+}
 /**
  * @category View
  */
@@ -175,12 +182,7 @@ export class ExecuteView implements VirtualDOM<'div'> {
      */
     public readonly output$ = new Subject()
 
-    constructor(params: {
-        environmentState: State
-        command: Local.Environment.Command
-        method: Method
-        url: string
-    }) {
+    constructor(params: ExecuteViewArgs) {
         Object.assign(this, params)
     }
 }
@@ -194,7 +196,7 @@ export class ExecuteNoBodyView extends ExecuteView {
      */
     public readonly children: ChildrenLike
 
-    constructor(params) {
+    constructor(params: ExecuteViewArgs) {
         super(params)
         Object.assign(this, params)
 
@@ -233,7 +235,7 @@ export class ExecuteBodyView extends ExecuteView {
      */
     public readonly children: ChildrenLike
 
-    constructor(params) {
+    constructor(params: ExecuteViewArgs) {
         super(params)
 
         const bodyView = new BodyView({})
@@ -243,7 +245,7 @@ export class ExecuteBodyView extends ExecuteView {
                 withLatestFrom(bodyView.body$),
                 mergeMap(([, body]) => {
                     try {
-                        const jsonBody = JSON.parse(body)
+                        const jsonBody = JSON.parse(body) as unknown
                         return this.environmentState
                             .executeWithBodyCommand$({
                                 url: this.url,
@@ -382,14 +384,12 @@ export class BodyView implements VirtualDOM<'div'> {
                                 ...this.codeMirrorConfiguration,
                                 value: '{}',
                             }
-                            const editor = window['CodeMirror'](
-                                htmlElement,
-                                config,
-                            )
+                            const editor = getCodeEditor(htmlElement, config)
+
                             editor.on('changes', (_, changeObj) => {
                                 if (
-                                    changeObj.length == 1 &&
-                                    changeObj[0].origin == 'setValue'
+                                    changeObj.length === 1 &&
+                                    changeObj[0].origin === 'setValue'
                                 ) {
                                     return
                                 }

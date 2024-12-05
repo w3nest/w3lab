@@ -20,12 +20,7 @@ import {
 import { filter, map, shareReplay, take, tap } from 'rxjs/operators'
 import { AppState } from '../../app-state'
 import { styleShellStdOut } from '../../common'
-import {
-    ContextMessage,
-    Local,
-    onHTTPErrors,
-    AssetsGateway,
-} from '@w3nest/http-clients'
+import { Local, onHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 
 /**
  * @category View
@@ -89,7 +84,7 @@ class InstallManifestView implements VirtualDOM<'div'> {
                     take(1),
                     onHTTPErrors(() => undefined),
                 )
-                .subscribe((manifest) => {
+                .subscribe((manifest: string) => {
                     savedManifest$.next(manifest)
                 })
         getSavedManifest()
@@ -98,7 +93,7 @@ class InstallManifestView implements VirtualDOM<'div'> {
                 appState.notificationsState.backendEvents.installing$.pipe(
                     map((backends) =>
                         backends.find(
-                            (m) => m.name == name && m.version == version,
+                            (m) => m.name === name && m.version === version,
                         ),
                     ),
                     filter((backend) => backend !== undefined),
@@ -187,7 +182,12 @@ class InstallManifestView implements VirtualDOM<'div'> {
                               tag: 'div',
                               class: attr$({
                                   source$: displayCurrentInstall$,
-                                  vdomMap: (d) => (d ? '' : 'd-none'),
+                                  vdomMap: (d) => {
+                                      if (d) {
+                                          return ''
+                                      }
+                                      return 'd-none'
+                                  },
                               }),
                               children: [
                                   child$({

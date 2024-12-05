@@ -63,11 +63,11 @@ export function lazyResolver(
         pyodide: (params) => new PyodideView(params),
     }
     return ({ path }: { path: string }) => {
-        const parts = path.split('/').filter((d) => d != '')
+        const parts = path.split('/').filter((d) => d !== '')
         if (parts.length === 0) {
             return {
                 children: formatChildren(status, target),
-                html: ({ router }) => {
+                html: ({ router }: { router: Router }) => {
                     return new PackageView({
                         router,
                         appState,
@@ -79,7 +79,7 @@ export function lazyResolver(
         return {
             tableOfContent: Views.tocView,
             children: [],
-            html: ({ router }) => {
+            html: ({ router }: { router: Router }) => {
                 const params = {
                     appState,
                     router,

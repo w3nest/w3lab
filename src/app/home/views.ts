@@ -1,19 +1,10 @@
 import { ChildrenLike, VirtualDOM, AnyVirtualDOM, child$, attr$ } from 'rx-vdom'
 
 import { MdWidgets } from 'mkdocs-ts'
-import {
-    BehaviorSubject,
-    combineLatest,
-    debounceTime,
-    from,
-    Observable,
-    of,
-} from 'rxjs'
+import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'
 import { buttonsFactory, internalDocLink } from '../common/buttons'
-
-type HomePageMode = 'view' | 'edit'
 
 export const editHomeAction = (state: State): VirtualDOM<'i'> => ({
     tag: 'i' as const,
@@ -53,7 +44,7 @@ export class HomeView implements VirtualDOM<'div'> {
         ]).pipe(
             debounceTime(100),
             switchMap(([content, mode]) => {
-                return mode == 'view'
+                return mode === 'view'
                     ? from(this.state.generateView(content))
                     : of(new EditorView({ state: this.state, content }))
             }),

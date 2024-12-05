@@ -6,15 +6,17 @@ import {
     VirtualDOM,
 } from 'rx-vdom'
 import { Explorer } from '@w3nest/http-clients'
-import { Observable, of } from 'rxjs'
 import { ExplorerState, ItemCut } from './explorer.state'
 import { ContextMenuHandler } from './nav-context-menu.view'
 import { FolderNode, TrashNode } from './nodes'
-import { ApplicationInfo } from '../common/patches'
 
 export const classFolderFileBase =
     'colab-ExplorerItem mkdocs-text-0 text-decoration-none d-flex align-items-center my-1 px-1 rounded mkdocs-hover-bg-4 mkdocs-hover-text-5 fv-pointer'
 
+interface Origin {
+    local: boolean
+    remote: boolean
+}
 export class ItemView implements VirtualDOM<'a'> {
     public readonly tag = 'a'
     public readonly href: string
@@ -41,7 +43,7 @@ export class ItemView implements VirtualDOM<'a'> {
         })
         this.href = `@nav/explorer/${groupId}/item_${item.itemId}`
         this.children = [
-            new ItemIconView({ item }),
+            new ItemIconView(),
             { tag: 'span', class: 'mx-1' },
             {
                 tag: 'div',
@@ -56,7 +58,9 @@ export class ItemView implements VirtualDOM<'a'> {
                 class: 'fas fa-link',
                 style: { transform: 'scale(0.75)' },
             },
-            item['origin'] && new OriginView(item['origin']),
+            'origin' in item
+                ? new OriginView(item.origin as Origin)
+                : undefined,
             new ContextMenuHandler({
                 node: explorerState.getItemData(item),
                 explorerState: explorerState,
@@ -71,7 +75,7 @@ export class TrashedItemView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
     constructor({ item }: { item: Explorer.GetItemResponse }) {
         this.children = [
-            new ItemIconView({ item }),
+            new ItemIconView(),
             { tag: 'span', class: 'mx-1' },
             {
                 tag: 'div',
@@ -117,7 +121,9 @@ export class FolderView implements VirtualDOM<'a'> {
                 tag: 'div',
                 class: 'flex-grow-1',
             },
-            folder['origin'] && new OriginView(folder['origin']),
+            'origin' in folder
+                ? new OriginView(folder.origin as Origin)
+                : undefined,
             new ContextMenuHandler({
                 node: new FolderNode(folder),
                 explorerState: explorerState,
@@ -196,7 +202,7 @@ export class ItemIconView implements VirtualDOM<'div'> {
     }
     public readonly children: ChildrenLike
 
-    constructor({ item }: { item: Explorer.GetItemResponse }) {
+    constructor() {
         const defaultView = {
             tag: 'img' as const,
             src: '../assets/undefined_icon_file.svg',
