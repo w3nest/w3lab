@@ -25,6 +25,14 @@ export function getProjectNav$({
                 const finder = env.projects.finders.find((f) =>
                     project.path.startsWith(f.fromPath),
                 )
+                const maybeParent = projects.find(
+                    (maybeParent) =>
+                        project.path !== maybeParent.path &&
+                        project.path.startsWith(maybeParent.path),
+                )
+                if (maybeParent) {
+                    return `/projects/${window.btoa(finder.fromPath)}/${maybeParent.id}/${project.id}`
+                }
                 return `/projects/${window.btoa(finder.fromPath)}/${project.id}`
             }
             return undefined

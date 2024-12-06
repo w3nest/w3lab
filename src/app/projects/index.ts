@@ -1,6 +1,6 @@
 import { FailuresView, NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { Navigation, parseMd, Router, Views, NavNodeInput } from 'mkdocs-ts'
 import { attr$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { SearchView } from './search.view'
 import { pyYwDocLink } from '../common/py-yw-references.view'
@@ -177,27 +177,13 @@ function lazyResolver(
             html: undefined,
         }
     }
+
     if (parts.length === 1) {
         const prefix = window.atob(parts[0])
+        const children = getDirectChildren(prefix, projects)
         return {
             tableOfContent: Views.tocView,
-            children: projects
-                .filter((project) => project.path.startsWith(prefix))
-                .map((project) => ({
-                    ...project,
-                    name: skipNamespace(project.name),
-                }))
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((p) => {
-                    return {
-                        name: p.name,
-                        id: p.id,
-                        decoration: {
-                            icon: icon(p),
-                        },
-                        leaf: true,
-                    }
-                }),
+            children: formatChildren(children, projects),
             html: ({ router }: { router: Router }) => {
                 const finder = env.projects.finders.find(
                     (f) => f.fromPath === prefix,
@@ -206,6 +192,22 @@ function lazyResolver(
                     finder,
                     appState,
                     router,
+                })
+            },
+        }
+    }
+    if (parts.length === 2) {
+        const projectId = parts[1]
+        const project = projects.find((p) => p.id === projectId)
+        const children = getDirectChildren(project.path, projects)
+        return {
+            tableOfContent: Views.tocView,
+            children: formatChildren(children, projects),
+            html: ({ router }: { router: Router }) => {
+                return new ProjectView({
+                    router,
+                    project,
+                    appState,
                 })
             },
         }
@@ -221,4 +223,39 @@ function lazyResolver(
                 appState,
             }),
     }
+}
+
+function getDirectChildren(
+    prefix: string,
+    projects: Local.Projects.Project[],
+): Local.Projects.Project[] {
+    const children = projects.filter(
+        (p) => p.path.startsWith(prefix) && p.path !== prefix,
+    )
+    return children.filter((p) => {
+        const isChild = children.find(
+            (maybeParent) =>
+                p.path !== maybeParent.path &&
+                p.path.startsWith(maybeParent.path),
+        )
+        return !isChild
+    })
+}
+
+function formatChildren(
+    children: Local.Projects.Project[],
+    allProjects: Local.Projects.Project[],
+): NavNodeInput[] {
+    return children
+        .map((p) => {
+            return {
+                name: skipNamespace(p.name),
+                id: p.id,
+                decoration: {
+                    icon: icon(p),
+                },
+                leaf: getDirectChildren(p.path, allProjects).length === 0,
+            }
+        })
+        .sort((a, b) => a.name.localeCompare(b.name))
 }
