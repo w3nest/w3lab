@@ -30,12 +30,6 @@ function extraProjectLinks(
     if (!['application', 'library'].includes(project.target.family)) {
         return []
     }
-    if (
-        project.target.family === 'application' &&
-        !project.target.execution?.standalone
-    ) {
-        return []
-    }
 
     return [
         appState.cdnState.status$.pipe(
