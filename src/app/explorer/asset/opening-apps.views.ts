@@ -16,7 +16,7 @@ export class PackageLogoView implements VirtualDOM<'div'> {
             const source$ = new AssetsGateway.Client().webpm
                 .getResource$<Metadata>({
                     libraryId: asset.rawId,
-                    version: 'lates',
+                    version: 'latest',
                     restOfPath: '.yw_metadata.json',
                 })
                 .pipe(raiseHTTPErrors())
