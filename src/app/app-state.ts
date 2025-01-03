@@ -247,6 +247,7 @@ export class AppState {
         return {
             name: 'w3Lab',
             header: {
+                wrapperClass: `${DefaultLayout.NavHeaderView.DefaultWrapperClass} border-bottom p-1`,
                 icon: {
                     tag: 'img',
                     src: '../assets/favicon.svg',

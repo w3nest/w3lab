@@ -1,33 +1,41 @@
 import { ChildrenLike, VirtualDOM, AnyVirtualDOM, child$, attr$ } from 'rx-vdom'
 
-import { MdWidgets } from 'mkdocs-ts'
+import { DefaultLayout, MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'
-import { buttonsFactory, internalDocLink } from '../common/buttons'
+import { internalDocLink } from '../common/buttons'
 
-export const editHomeAction = (state: State): VirtualDOM<'i'> => ({
-    tag: 'i' as const,
-    class: 'flex-grow-1',
-    style: {
-        padding: '0px',
-    },
-    children: [
-        child$({
-            source$: state.mode$,
-            vdomMap: (mode) =>
-                mode === 'view'
-                    ? {
-                          ...buttonsFactory.HomeEdit,
-                          onclick: () => state.toggleMode(),
-                      }
-                    : {
-                          ...buttonsFactory.HomeView,
-                          onclick: () => state.toggleMode(),
-                      },
-        }),
-    ],
-})
+export const editHomeAction = (state: State) =>
+    new DefaultLayout.NavActionView({
+        content: {
+            tag: 'i' as const,
+            class: 'flex-grow-1',
+            style: {
+                padding: '0px',
+            },
+            children: [
+                child$({
+                    source$: state.mode$,
+                    vdomMap: (mode) =>
+                        mode === 'view'
+                            ? {
+                                  tag: 'i',
+                                  class: 'fas fa-pen' as string,
+                                  onclick: () => state.toggleMode(),
+                              }
+                            : {
+                                  tag: 'i',
+                                  class: 'fas fa-eye' as string,
+                                  onclick: () => state.toggleMode(),
+                              },
+                }),
+            ],
+        },
+        action: () => {
+            state.appState.router.fireNavigateTo({ path: '/' })
+        },
+    })
 
 export class HomeView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
