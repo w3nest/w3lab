@@ -185,7 +185,7 @@ export function projectNav(
                         onclick: (ev: MouseEvent) => {
                             ev.preventDefault()
                             ev.stopPropagation()
-                            router.navigateTo({ path })
+                            router.fireNavigateTo({ path })
                         },
                         class: 'd-flex',
                         children: [
@@ -246,7 +246,7 @@ export function defaultUserDrive(
                         onclick: (ev: MouseEvent) => {
                             ev.preventDefault()
                             ev.stopPropagation()
-                            router.navigateTo({ path })
+                            router.fireNavigateTo({ path })
                         },
                         class: 'd-flex align-items-center',
                         children: [

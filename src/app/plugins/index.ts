@@ -28,13 +28,16 @@
  * @module
  */
 import { AppState } from '../app-state'
-import { Views, MdWidgets, parseMd, Navigation } from 'mkdocs-ts'
+import { MdWidgets, parseMd, Navigation, DefaultLayout } from 'mkdocs-ts'
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { State } from './state'
+import { defaultLayout } from '../common/utils-nav'
 export * from './state'
 
-export async function navigation(appState: AppState): Promise<Navigation> {
+export async function navigation(
+    appState: AppState,
+): Promise<Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>> {
     const pluginsState = new State()
     const plugins = await pluginsState.plugins()
 
@@ -59,12 +62,11 @@ export async function navigation(appState: AppState): Promise<Navigation> {
 
     return {
         name: 'Plugins',
-        decoration: {
+        header: {
             icon: { tag: 'i' as const, class: `fas fa-puzzle-piece` },
         },
-        tableOfContent: Views.tocView,
-        html: () => new PluginsView({ appState }),
-        ...children,
+        layout: defaultLayout(() => new PluginsView({ appState })),
+        routes: children,
     }
 }
 

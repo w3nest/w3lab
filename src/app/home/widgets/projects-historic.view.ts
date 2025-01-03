@@ -116,7 +116,7 @@ export class ProjectHistoricItemView implements VirtualDOM<'div'> {
                         onclick: (ev) => {
                             ev.preventDefault()
                             if (nav) {
-                                appState.router.navigateTo({ path: nav })
+                                appState.router.fireNavigateTo({ path: nav })
                             }
                         },
                     }

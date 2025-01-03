@@ -1,19 +1,21 @@
 import { AppState } from '../../app-state'
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { AnyVirtualDOM, append$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AssetDownloadEvent, BackendInstallFlow, State } from './state'
 import { map } from 'rxjs/operators'
 import { BackendInstallNotificationView } from './backend/views'
 import { merge } from 'rxjs'
 import { AssetDownloadNotificationView } from './asset/views'
+import { defaultLayout } from '../../common/utils-nav'
 
 export * from './state'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Notifications',
-    html: ({ router }) => new PageView({ router, appState }),
-    tableOfContent: Views.tocView,
-    decoration: { icon: { tag: 'i', class: 'fas fa-envelope-open-text' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    header: { icon: { tag: 'i', class: 'fas fa-envelope-open-text' } },
 })
 
 export class PageView implements VirtualDOM<'div'> {

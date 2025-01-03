@@ -1,17 +1,25 @@
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import {
+    DefaultLayout,
+    LazyRoutes,
+    Navigation,
+    parseMd,
+    Router,
+} from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
 import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { EsmServerView } from './esm-server.view'
+import { defaultLayout } from '../../common/utils-nav'
 export { State } from './state'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'ESM',
-    decoration: { icon: { tag: 'i', class: 'fas fa-server' } },
-    tableOfContent: Views.tocView,
-    html: ({ router }) => new PageView({ router, appState }),
-    '...': appState.environment$.pipe(
+    header: { icon: { tag: 'i', class: 'fas fa-server' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: appState.environment$.pipe(
         map((env) => ({ path, router }: { path: string; router: Router }) => {
             return lazyResolver(path, env, router, appState)
         }),
@@ -23,36 +31,33 @@ function lazyResolver(
     env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
-) {
+): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const children = env.proxiedEsmServers.store.map(
             ({ package: packageName, uid }) => {
+                const esmServer = env.proxiedEsmServers.store.find(
+                    (esm) => esm.uid === uid,
+                )
+
                 return {
                     name: packageName,
                     id: uid,
-                    decoration: {
+                    header: {
                         icon: {
                             tag: 'i' as const,
                             class: 'fas fa-laptop-code',
                         },
                     },
+                    layout: defaultLayout(
+                        () =>
+                            new EsmServerView({ esmServer, appState, router }),
+                    ),
                     leaf: true,
                 }
             },
         )
-        return {
-            children: children,
-            html: undefined,
-        }
-    }
-
-    const esmServer = env.proxiedEsmServers.store.find(
-        ({ uid }) => uid === parts[0],
-    )
-    return {
-        children: [],
-        html: () => new EsmServerView({ esmServer, appState, router }),
+        return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
 }
 
@@ -114,7 +119,7 @@ class EsmServersListView implements VirtualDOM<'div'> {
                         ],
                         onclick: (ev: MouseEvent) => {
                             ev.preventDefault()
-                            appState.router.navigateTo({
+                            appState.router.fireNavigateTo({
                                 path: `/environment/esm-servers/${uid}`,
                             })
                         },

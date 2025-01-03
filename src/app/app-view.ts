@@ -1,6 +1,6 @@
 import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
-import { Views } from 'mkdocs-ts'
+import { DefaultLayout } from 'mkdocs-ts'
 import { DisconnectedView } from './disconnected.view'
 
 export class AppView implements VirtualDOM<'div'> {
@@ -15,10 +15,10 @@ export class AppView implements VirtualDOM<'div'> {
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
 
-        const mainView = new Views.DefaultLayoutView({
+        const mainView = new DefaultLayout.View({
             router: this.appState.router,
             page: ({ router }) =>
-                new Views.PageView({
+                new DefaultLayout.PageView({
                     router,
                     filter: (d) => {
                         const prefixCompanion =
@@ -29,11 +29,6 @@ export class AppView implements VirtualDOM<'div'> {
                         return !d.path.startsWith(prefixCompanion)
                     },
                 }),
-            footer: () => {
-                return parent.document === document
-                    ? new Views.FooterView()
-                    : { tag: 'div' }
-            },
             bookmarks$: this.appState.bookmarks$,
         })
         this.children = [
@@ -53,9 +48,8 @@ export class AppView implements VirtualDOM<'div'> {
                     if (target === undefined) {
                         return { tag: 'div' }
                     }
-                    if (this.appState.router.getCurrentPath() === target) {
-                        const parentPath = this.appState.router.getParentPath()
-                        this.appState.router.navigateTo({ path: parentPath })
+                    if (this.appState.router.parseUrl().path === target) {
+                        this.appState.router.fireNavigateTo({ path: '/' })
                     }
                     return {
                         tag: 'div',
@@ -64,7 +58,7 @@ export class AppView implements VirtualDOM<'div'> {
                             width: '40%',
                         },
                         children: [
-                            new Views.PageView({
+                            new DefaultLayout.PageView({
                                 router: this.appState.router,
                                 filter: (d) => {
                                     return d.path.startsWith(target)

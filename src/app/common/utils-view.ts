@@ -10,13 +10,8 @@ import { fromMarkdown, parseMd, Router } from 'mkdocs-ts'
 import { BehaviorSubject, mergeMap, Observable, of, Subject, timer } from 'rxjs'
 import { setup } from '../../auto-generated'
 import { AppState } from '../app-state'
-import { take } from 'rxjs/operators'
-import {
-    AssetsGateway,
-    Explorer,
-    onHTTPErrors,
-    raiseHTTPErrors,
-} from '@w3nest/http-clients'
+import { map, take } from 'rxjs/operators'
+import { AssetsGateway, Explorer, onHTTPErrors } from '@w3nest/http-clients'
 import { getProjectNav$ } from './utils-nav'
 
 /**
@@ -68,7 +63,7 @@ export class CoLabLogo implements VirtualDOM<'a'> {
     constructor({ router }: { router: Router }) {
         this.onclick = (ev) => {
             ev.preventDefault()
-            router.navigateTo({ path: '/' })
+            router.fireNavigateTo({ path: '/' })
         }
         this.children = [
             {
@@ -555,27 +550,22 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         }),
                     ),
                     onHTTPErrors(() => undefined),
-                    mergeMap((resp?: Explorer.ItemBase) => {
+                    map((resp?: Explorer.ItemBase) => {
                         if (resp === undefined) {
-                            return of(undefined)
+                            return undefined
                         }
-                        return client
-                            .getPath$({ itemId })
-                            .pipe(raiseHTTPErrors())
+                        return { groupId: resp.groupId, itemId: resp.itemId }
                     }),
                 ),
                 vdomMap: (resp) => {
-                    let nav = ''
-                    if (resp) {
-                        const folders = resp.folders.reduce(
-                            (acc, e) => `${acc}/folder_${e.folderId}`,
-                            `${resp.drive.groupId}/folder_${resp.drive.driveId}`,
-                        )
-                        nav = `/explorer/${folders}/item_${resp.item.itemId}`
-                    }
+                    const nav = resp ? `explorer/${resp.groupId}` : ''
+
                     return this.linkView({
                         icon: 'fa-folder',
                         nav,
+                        urlParams: resp
+                            ? { target: `item_${resp.itemId}` }
+                            : {},
                         enabled: resp !== undefined,
                     })
                 },
@@ -637,12 +627,14 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
         nav,
         onclick,
         hrefKind,
+        urlParams,
     }: {
         icon: string
         enabled: boolean
         nav?: string
-        onclick?: (ev) => void
+        onclick?: (ev: MouseEvent) => void
         hrefKind?: 'internal' | 'external'
+        urlParams?: Record<string, string>
     }): AnyVirtualDOM {
         const href = hrefKind && hrefKind === 'external' ? nav : `@nav/${nav}`
         if (enabled) {
@@ -660,8 +652,9 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                         window.open(href, '_blank')
                         return
                     }
-                    this.appState.router.navigateTo({
+                    this.appState.router.fireNavigateTo({
                         path: nav,
+                        parameters: urlParams ?? {},
                     })
                 },
             }

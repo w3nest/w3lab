@@ -34,7 +34,7 @@ export function internalDocLink({
                 href: nav,
                 onclick: (ev: MouseEvent) => {
                     ev.preventDefault()
-                    router.navigateTo({ path: nav })
+                    router.fireNavigateTo({ path: nav })
                 },
                 children: [
                     {

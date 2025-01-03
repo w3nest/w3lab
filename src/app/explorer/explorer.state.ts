@@ -110,12 +110,14 @@ export class ExplorerState {
             console.warn('This action is available only for regular folder.')
         }
         node.addStatus({ type: 'cut' })
+        const path = this.router.parseUrl().path
+        const parentPath = path.split('/').slice(0, -1).join('/')
         this.itemCut$.next({
             cutType: 'move',
             node,
             originRefreshPath: this.isInstanceItemNode(node)
                 ? this.getRefreshPathForItemAction()
-                : this.router.getParentPath(),
+                : parentPath,
         })
     }
 
@@ -191,7 +193,7 @@ export class ExplorerState {
     }
 
     refresh() {
-        this.router.navigateTo({ path: this.router.getCurrentPath() })
+        this.router.fireNavigateTo(this.router.parseUrl())
     }
 
     uploadAsset(node: ItemNode) {
@@ -231,8 +233,9 @@ export class ExplorerState {
     }
 
     private getRefreshPathForItemAction() {
-        const path = this.router.getCurrentPath()
+        const path = this.router.parseUrl().path
+        const parentPath = path.split('/').slice(0, -1).join('/')
         const lastPart = path.split('/').slice(-1)[0]
-        return lastPart.includes('asset_') ? this.router.getParentPath() : path
+        return lastPart.includes('asset_') ? parentPath : path
     }
 }

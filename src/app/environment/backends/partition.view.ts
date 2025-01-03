@@ -72,7 +72,7 @@ export class InstancesListView implements VirtualDOM<'div'> {
                                     innerText: `${backend.name}#${backend.version}`,
                                     onclick: (ev: MouseEvent) => {
                                         ev.preventDefault()
-                                        appState.router.navigateTo({
+                                        appState.router.fireNavigateTo({
                                             path: `/environment/backends/${partitionId}/${backend.uid}`,
                                         })
                                     },

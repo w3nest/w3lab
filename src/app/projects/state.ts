@@ -16,8 +16,8 @@ import {
     Local,
     WebpmSessionsStorage,
 } from '@w3nest/http-clients'
-import { getProjectNav$ } from '../common/utils-nav'
 import { setup } from '../../auto-generated'
+import { getProjectNav$ } from '../common/utils-nav'
 
 function projectLoadingIsSuccess(
     result: unknown,
@@ -300,8 +300,10 @@ export class State {
             appState: this.appState,
             timeout: 3000,
         }).subscribe((nav) => {
-            if (this.appState.router.getCurrentPath() !== nav) {
-                this.appState.router.navigateTo({ path: nav })
+            if (this.appState.router.parseUrl().path !== nav) {
+                this.appState.router.fireNavigateTo(
+                    this.appState.router.parseUrl(),
+                )
             }
         })
     }

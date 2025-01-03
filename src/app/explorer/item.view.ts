@@ -41,7 +41,7 @@ export class ItemView implements VirtualDOM<'a'> {
                     : { opacity: 1 }
             },
         })
-        this.href = `@nav/explorer/${groupId}/item_${item.itemId}`
+        this.href = `@nav/explorer/${groupId}&target=item_${item.itemId}`
         this.children = [
             new ItemIconView(),
             { tag: 'span', class: 'mx-1' },
@@ -109,7 +109,7 @@ export class FolderView implements VirtualDOM<'a'> {
             },
         })
 
-        this.href = `@nav/explorer/${groupId}/folder_${folder.folderId}`
+        this.href = `@nav/explorer/${groupId}&target=folder_${folder.folderId}`
         this.children = [
             new FolderIconView({ folder }),
             { tag: 'span', class: 'mx-1' },

@@ -1,11 +1,19 @@
 import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
-import { MdWidgets, Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import {
+    DefaultLayout,
+    MdWidgets,
+    Navigation,
+    parseMd,
+    Router,
+    LazyRoutes,
+} from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { map } from 'rxjs/operators'
 import { BackendView, TerminateButton } from './backend.view'
 import { InstancesListView, PartitionView } from './partition.view'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
+import { defaultLayout } from '../../common/utils-nav'
 
 export * from './state'
 
@@ -13,12 +21,13 @@ function backendName(backend: Local.Environment.ProxiedBackend) {
     return `${backend.name}#${backend.version}`
 }
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Backends',
-    decoration: { icon: { tag: 'i', class: 'fas fa-server' } },
-    tableOfContent: Views.tocView,
-    html: ({ router }) => new PageView({ router, appState }),
-    '...': appState.environment$.pipe(
+    header: { icon: { tag: 'i', class: 'fas fa-server' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: appState.environment$.pipe(
         map((env) => ({ path, router }: { path: string; router: Router }) => {
             return lazyResolver(path, env, router, appState)
         }),
@@ -30,7 +39,7 @@ function lazyResolver(
     env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
-) {
+): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const partitions = new Set(
@@ -40,18 +49,19 @@ function lazyResolver(
             return {
                 name: partition.split('~')[0],
                 id: partition,
-                decoration: {
+                header: {
                     icon: {
                         tag: 'i' as const,
                         class: 'fas fa-network-wired',
                     },
                 },
+                layout: defaultLayout(
+                    () =>
+                        new PartitionView({ partitionId: partition, appState }),
+                ),
             }
         })
-        return {
-            children: children,
-            html: undefined,
-        }
+        return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
     if (parts.length === 1) {
         const children = env.proxiedBackends.store
@@ -64,6 +74,9 @@ function lazyResolver(
             })
             .sort((a, b) => a['name'].localeCompare(b['name']))
             .map(({ name, id }) => {
+                const backend = env.proxiedBackends.store.find(
+                    (backend) => backend.uid === id,
+                )
                 return {
                     name,
                     id,
@@ -74,26 +87,16 @@ function lazyResolver(
                             class: 'fas fa-terminal',
                         },
                     },
+                    layout: defaultLayout(() => {
+                        return new BackendView({
+                            backend,
+                            router,
+                            appState,
+                        })
+                    }),
                 }
             })
-        return {
-            children,
-            html: () => new PartitionView({ partitionId: parts[0], appState }),
-        }
-    }
-    const backend = env.proxiedBackends.store.find(
-        (backend) => backend.uid === parts[1],
-    )
-    return {
-        tableOfContent: Views.tocView,
-        children: [],
-        html: () => {
-            return new BackendView({
-                backend,
-                router,
-                appState,
-            })
-        },
+        return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
 }
 
@@ -163,7 +166,7 @@ export class PartitionsListView implements VirtualDOM<'div'> {
                                     innerText: `${partitionId.split('~')[0]}`,
                                     onclick: (ev: MouseEvent) => {
                                         ev.preventDefault()
-                                        appState.router.navigateTo({
+                                        appState.router.fireNavigateTo({
                                             path: `/environment/backends/${partitionId}`,
                                         })
                                     },

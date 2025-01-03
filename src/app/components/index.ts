@@ -4,45 +4,28 @@ import * as JsWasm from './js-wasm'
 import * as Pyodide from './pyodide'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router, segment } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { PackageView } from './js-wasm/package.views'
 import { BackendView } from './backends/package.views'
 import { State } from './state'
 import { PyodideView } from './pyodide/package.views'
 import { example1 } from './examples'
+import { defaultLayout } from '../common/utils-nav'
 export * from './state'
 
-type Target = 'js/wasm' | 'backend' | 'pyodide'
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Components',
-    decoration: { icon: { tag: 'i', class: 'fas  fa-microchip' } },
-    html: ({ router }) => new PageView({ router, appState }),
-    '/js-wasm': JsWasm.navigation(appState),
-    '/pyodide': Pyodide.navigation(appState),
-    '/backends': Backends.navigation(appState),
+    header: { icon: { tag: 'i', class: 'fas  fa-microchip' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: {
+        [segment('/js-wasm')]: JsWasm.navigation(appState),
+        [segment('/pyodide')]: Pyodide.navigation(appState),
+        [segment('/backends')]: Backends.navigation(appState),
+    },
 })
-
-export function formatChildren(
-    { packages }: Local.Components.CdnStatusResponse,
-    target: Target,
-) {
-    return packages
-        .filter((elem) => {
-            return elem.versions[0].type === target
-        })
-        .sort((a, b) => a['name'].localeCompare(b['name']))
-        .map((component) => {
-            return {
-                name: component.name,
-                id: component.id,
-                leaf: true,
-                decoration: {
-                    icon: { tag: 'div' as const },
-                },
-            }
-        })
-}
 
 export function lazyResolver(
     status: Local.Components.CdnStatusResponse,
@@ -65,29 +48,36 @@ export function lazyResolver(
     return ({ path }: { path: string }) => {
         const parts = path.split('/').filter((d) => d !== '')
         if (parts.length === 0) {
-            return {
-                children: formatChildren(status, target),
-                html: ({ router }: { router: Router }) => {
-                    return new PackageView({
-                        router,
-                        appState,
-                        packageId: parts.slice(-1)[0],
-                    })
-                },
-            }
-        }
-        return {
-            tableOfContent: Views.tocView,
-            children: [],
-            html: ({ router }: { router: Router }) => {
-                const params = {
-                    appState,
-                    router,
-                    cdnState: appState.cdnState,
-                    packageId: parts.slice(-1)[0],
-                }
-                return htmlFactory[target](params)
-            },
+            const children = status.packages
+                .filter((elem) => {
+                    return elem.versions[0].type === target
+                })
+                .sort((a, b) => a['name'].localeCompare(b['name']))
+                .map((component) => {
+                    return {
+                        name: component.name,
+                        id: component.id,
+                        leaf: true,
+                        decoration: {
+                            icon: { tag: 'div' as const },
+                        },
+                        layout: defaultLayout(
+                            ({ router }: { router: Router }) => {
+                                const params = {
+                                    appState,
+                                    router,
+                                    cdnState: appState.cdnState,
+                                    packageId: component.id,
+                                }
+                                return htmlFactory[target](params)
+                            },
+                        ),
+                    }
+                })
+            return children.reduce(
+                (acc, c) => ({ ...acc, [`/${c.id}`]: c }),
+                {},
+            )
         }
     }
 }

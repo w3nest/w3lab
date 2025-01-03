@@ -107,6 +107,7 @@ export class HeaderView implements VirtualDOM<'div'> {
                 folderAnchorView({
                     name: 'trash',
                     nav: path,
+                    target: 'trash',
                     icon: 'fas fa-trash',
                     router,
                 }),

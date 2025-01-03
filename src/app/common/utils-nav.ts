@@ -1,8 +1,8 @@
 import { AppState } from '../app-state'
 import { combineLatest, Observable, timer } from 'rxjs'
 import { filter, map, take, takeUntil } from 'rxjs/operators'
-import { Views } from 'mkdocs-ts'
-import { attr$ } from 'rx-vdom'
+import { Router, DefaultLayout } from 'mkdocs-ts'
+import { AnyVirtualDOM, attr$ } from 'rx-vdom'
 
 export function getProjectNav$({
     projectName,
@@ -46,8 +46,8 @@ export function getProjectNav$({
 export function splitCompanionAction(
     path: string,
     appState: AppState,
-): Views.NavActionView {
-    return new Views.NavActionView({
+): DefaultLayout.NavActionView {
+    return new DefaultLayout.NavActionView({
         content: {
             tag: 'i',
             class: attr$({
@@ -67,4 +67,16 @@ export function splitCompanionAction(
             appState.companionPage$.next(path)
         },
     })
+}
+
+export function defaultLayout(
+    content: ({
+        router,
+    }: {
+        router: Router
+    }) => AnyVirtualDOM | Promise<AnyVirtualDOM>,
+) {
+    return {
+        content,
+    }
 }

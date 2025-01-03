@@ -1,16 +1,19 @@
 import { AppState } from '../../app-state'
-import { Navigation, parseMd, Router } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { NavIconSvg } from '../../common'
 import { debounceTime } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { lazyResolver } from '../index'
+import { defaultLayout } from '../../common/utils-nav'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'ESM',
-    decoration: { icon: new NavIconSvg({ filename: 'icon-js.svg' }) },
-    html: ({ router }) => new PageView({ router, appState }),
-    '...': appState.cdnState.status$
+    header: { icon: new NavIconSvg({ filename: 'icon-js.svg' }) },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: appState.cdnState.status$
         .pipe(debounceTime(500))
         .pipe(map((status) => lazyResolver(status, appState, 'js/wasm'))),
 })

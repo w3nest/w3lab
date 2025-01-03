@@ -1,16 +1,18 @@
 import { AppState } from '../../app-state'
 import { CodeEditorView } from '../../common/code-editor.view'
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { HdPathBookView } from '../../common'
 import { map, mergeMap } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
+import { defaultLayout } from '../../common/utils-nav'
 
-export const navigation = (appState: AppState): Navigation => ({
-    html: ({ router }) => new PageView({ appState, router }),
-    decoration: { icon: { tag: 'i', class: 'fas fa-wrench' } },
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
+    layout: defaultLayout(({ router }) => new PageView({ appState, router })),
+    header: { icon: { tag: 'i', class: 'fas fa-wrench' } },
     name: 'Server config.',
-    tableOfContent: Views.tocView,
 })
 
 class PageView implements VirtualDOM<'div'> {

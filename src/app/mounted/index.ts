@@ -1,10 +1,11 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState, MountedPath } from '../app-state'
-import { CatchAllNav, Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { FileContentView } from './file-content-view'
 import { map, take } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ExplorerView } from './explorer.view'
+import { defaultLayout } from '../common/utils-nav'
 
 export function encodeHdPath(str: string) {
     return window.btoa(encodeURIComponent(str))
@@ -14,12 +15,13 @@ export function decodeHdPath(encodedStr: string) {
     return decodeURIComponent(window.atob(encodedStr))
 }
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Mounted',
-    decoration: { icon: { tag: 'i', class: 'fas fa-laptop' } },
-    tableOfContent: Views.tocView,
-    html: ({ router }) => new PageView({ router, appState }),
-    '...': appState.mountedHdPaths$.pipe(
+    header: { icon: { tag: 'i', class: 'fas fa-laptop' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: appState.mountedHdPaths$.pipe(
         map(
             (folders: MountedPath[]) =>
                 ({ path, router }: { path: string; router: Router }) => {
@@ -70,76 +72,72 @@ function lazyResolver(
     mountedPaths: MountedPath[],
     path: string,
     router: Router,
-): CatchAllNav {
+) {
     const parts = path.split('/').filter((d) => d !== '')
 
     if (parts.length === 0) {
-        return {
-            children: mountedPaths.map((mountedPath) => {
-                const encodedPath = encodeHdPath(mountedPath.path)
-                const id =
-                    mountedPath.type === 'folder'
-                        ? encodedPath
-                        : `file_${encodedPath}`
-                return {
-                    id,
-                    leaf: true,
-                    name: mountedPath.path.split('/').slice(-1)[0],
-                    decoration: {
-                        icon: {
-                            tag: 'div' as const,
-                            class:
-                                mountedPath.type === 'folder'
-                                    ? 'fas fa-folder mx-2'
-                                    : 'fas fa-file mx-2',
-                        },
+        const children = mountedPaths.map((mountedPath) => {
+            const encodedOrigin = encodeHdPath(mountedPath.path)
+            const id =
+                mountedPath.type === 'folder'
+                    ? encodedOrigin
+                    : `file_${encodedOrigin}`
+            return {
+                id,
+                leaf: true,
+                name: mountedPath.path.split('/').slice(-1)[0],
+                header: {
+                    icon: {
+                        tag: 'div' as const,
+                        class:
+                            mountedPath.type === 'folder'
+                                ? 'fas fa-folder mx-2'
+                                : 'fas fa-file mx-2',
                     },
-                }
-            }),
-            html: undefined,
-        }
-    }
-    if (parts.slice(-1)[0].startsWith('file_')) {
-        parts[parts.length - 1] = parts[parts.length - 1].replace('file_', '')
-        const path = decodeHRef(`${parts[0]}/${parts.slice(1).join('/')}`)
-        return {
-            tableOfContent: Views.tocView,
-            children: [],
-            html: () =>
-                new FileContentView({
-                    // remove trailing '/'
-                    full: path.replace(/\/$/, ''),
-                    origin: parts[0], //path.replace(/\/$/, ''),
-                    path: decodeHRef(`${parts.slice(1).join('/')}`),
-                    router,
-                }),
-        }
-    }
-    const origin = parts[0]
-    const from = parts.slice(1).join('/')
+                },
+                layout: {
+                    content: () => {
+                        const encodedPath =
+                            router.parseUrl().parameters['target']
+                        if (
+                            mountedPath.type === 'file' ||
+                            (encodedPath && encodedPath.startsWith('file_'))
+                        ) {
+                            const path = encodedPath
+                                ? decodeHdPath(encodedPath.replace('file_', ''))
+                                : ''
+                            return new FileContentView({
+                                full: `${mountedPath.path}${path}`,
+                                origin: encodedOrigin,
+                                path,
+                                router,
+                            })
+                        }
+                        const path = encodedPath
+                            ? decodeHdPath(encodedPath)
+                            : ''
+                        const fullPath = `${mountedPath.path}${path}`
 
-    const fromDecoded = from === '' ? '' : decodeHRef(from)
-
-    return new Local.Client().api.system
-        .queryFolderContent$({
-            path: `${decodeHdPath(origin)}/${fromDecoded}`,
+                        return new Local.Client().api.system
+                            .queryFolderContent$({
+                                path: fullPath,
+                            })
+                            .pipe(
+                                raiseHTTPErrors(),
+                                take(1),
+                                map((response) => {
+                                    return new ExplorerView({
+                                        response,
+                                        path: path ?? '/',
+                                        router,
+                                        origin: encodedOrigin,
+                                    })
+                                }),
+                            )
+                    },
+                },
+            }
         })
-        .pipe(
-            raiseHTTPErrors(),
-            take(1),
-            map((response) => {
-                return {
-                    tableOfContent: Views.tocView,
-                    children: [],
-                    html: () => {
-                        return new ExplorerView({
-                            response,
-                            path: fromDecoded,
-                            router,
-                            origin,
-                        })
-                    },
-                }
-            }),
-        )
+        return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
+    }
 }

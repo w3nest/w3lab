@@ -125,7 +125,9 @@ export class SearchView implements VirtualDOM<'div'> {
                             ],
                             onclick: (ev) => {
                                 ev.preventDefault()
-                                router.navigateTo({ path: `/projects/${p.id}` })
+                                router.fireNavigateTo({
+                                    path: `/projects/${p.id}`,
+                                })
                             },
                         }))
                     },

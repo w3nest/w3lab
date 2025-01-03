@@ -3,15 +3,16 @@ import {
     Router,
     parseMd,
     Navigation,
-    Views,
     fromMarkdown,
     installCodeApiModule,
     installNotebookModule,
+    DefaultLayout,
+    segment,
 } from 'mkdocs-ts'
 import { pyYwDocLink } from '../common/py-yw-references.view'
 import { AppState } from '../app-state'
 import { setup } from '../../auto-generated'
-import { splitCompanionAction } from '../common/utils-nav'
+import { defaultLayout, splitCompanionAction } from '../common/utils-nav'
 
 function fromMd({
     file,
@@ -47,108 +48,128 @@ const configuration = {
     },
 }
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Doc',
-    decoration: {
+    header: {
         ...decoration('fa-book'),
         actions: [splitCompanionAction('/doc', appState)],
     },
-    tableOfContent: Views.tocView,
-    html: fromMd({
-        file: 'doc.md',
-    }),
-    '/tutorials': {
-        name: 'Tutorials',
-        decoration: decoration('fa-graduation-cap'),
-        tableOfContent: Views.tocView,
-        html: fromMd({
-            file: 'doc.tutorials.md',
+    layout: defaultLayout(
+        fromMd({
+            file: 'doc.md',
         }),
-        '/quick-tour': {
-            name: 'Quick Tour',
-            decoration: decoration(''),
-            tableOfContent: Views.tocView,
-            html: fromMd({
-                file: 'doc.tutorials.quick-tour.md',
-            }),
+    ),
+    routes: {
+        [segment('/tutorials')]: {
+            name: 'Tutorials',
+            header: decoration('fa-graduation-cap'),
+            layout: defaultLayout(
+                fromMd({
+                    file: 'doc.tutorials.md',
+                }),
+            ),
+            routes: {
+                [segment('/quick-tour')]: {
+                    name: 'Quick Tour',
+                    header: decoration(''),
+                    layout: defaultLayout(
+                        fromMd({
+                            file: 'doc.tutorials.quick-tour.md',
+                        }),
+                    ),
+                },
+            },
         },
-    },
-
-    '/how-to': {
-        name: 'How-To',
-        decoration: decoration('fa-question-circle'),
-        tableOfContent: Views.tocView,
-        html: fromMd({
-            file: 'doc.how-to.md',
-        }),
-        '/start-yw': {
-            name: 'Start YouWol',
-            tableOfContent: Views.tocView,
-            html: fromMarkdown({
-                url: `/apps/@youwol/py-youwol-doc/*/assets/how-to.start-youwol.md`,
-            }),
+        [segment('/how-to')]: {
+            name: 'How-To',
+            header: decoration('fa-question-circle'),
+            layout: defaultLayout(
+                fromMd({
+                    file: 'doc.how-to.md',
+                }),
+            ),
+            routes: {
+                [segment('/start-yw')]: {
+                    name: 'Start YouWol',
+                    layout: defaultLayout(
+                        fromMarkdown({
+                            url: `/apps/@youwol/py-youwol-doc/*/assets/how-to.start-youwol.md`,
+                        }),
+                    ),
+                },
+                [segment('/config')]: {
+                    name: 'Configuration',
+                    layout: defaultLayout(
+                        fromMd({
+                            file: 'doc.how-to.config.md',
+                        }),
+                    ),
+                    routes: {
+                        [segment('/projects')]: {
+                            name: 'Projects',
+                            header: decoration(''),
+                            layout: defaultLayout(
+                                fromMd({
+                                    file: 'doc.how-to.config.projects.md',
+                                }),
+                            ),
+                        },
+                    },
+                },
+                [segment('/custom-home')]: {
+                    name: 'Custom Home Page',
+                    layout: defaultLayout(
+                        ({ router }) =>
+                            new NotebookModule.NotebookPage({
+                                url: '../assets/doc.how-to.custom-home.md',
+                                router: router,
+                                options: notebookOptions,
+                            }),
+                    ),
+                },
+            },
         },
-        '/config': {
-            name: 'Configuration',
-            tableOfContent: Views.tocView,
-            html: fromMd({
-                file: 'doc.how-to.config.md',
-            }),
-            '/projects': {
-                name: 'Projects',
-                decoration: decoration(''),
-                tableOfContent: Views.tocView,
-                html: fromMd({
-                    file: 'doc.how-to.config.projects.md',
+        [segment('/api')]: {
+            name: 'API',
+            header: decoration('fa-code'),
+            layout: defaultLayout(
+                fromMd({
+                    file: 'doc.api.md',
+                }),
+            ),
+            routes: {
+                [segment('/youwol')]: CodeApiModule.codeApiEntryNode({
+                    name: 'youwol',
+                    icon: decoration('fa-box-open').icon,
+                    entryModule: 'youwol',
+                    docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
+                    configuration: configuration,
+                }),
+                [segment('/yw-clients')]: CodeApiModule.codeApiEntryNode({
+                    name: 'yw_clients',
+                    icon: decoration('fa-box-open').icon,
+                    entryModule: 'yw_clients',
+                    docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
+                    configuration: configuration,
+                }),
+                [segment('/co-lab')]: CodeApiModule.codeApiEntryNode({
+                    name: 'co-lab',
+                    icon: decoration('fa-box-open').icon,
+                    entryModule: 'co-lab',
+                    docBasePath: '../assets/api',
+                    configuration: CodeApiModule.configurationTsTypedoc,
                 }),
             },
         },
-        '/custom-home': {
-            name: 'Custom Home Page',
-            tableOfContent: Views.tocView,
-            html: ({ router }) =>
-                new NotebookModule.NotebookPage({
-                    url: '../assets/doc.how-to.custom-home.md',
-                    router: router,
-                    options: notebookOptions,
-                }),
-        },
-    },
-    '/api': {
-        name: 'API',
-        decoration: decoration('fa-code'),
-        tableOfContent: Views.tocView,
-        html: fromMd({
-            file: 'doc.api.md',
-        }),
-        '/youwol': CodeApiModule.codeApiEntryNode({
-            name: 'youwol',
-            decoration: decoration('fa-box-open'),
-            entryModule: 'youwol',
-            docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
-            configuration: configuration,
-        }),
-        '/yw-clients': CodeApiModule.codeApiEntryNode({
-            name: 'yw_clients',
-            decoration: decoration('fa-box-open'),
-            entryModule: 'yw_clients',
-            docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
-            configuration: configuration,
-        }),
-        '/co-lab': CodeApiModule.codeApiEntryNode({
-            name: 'co-lab',
-            decoration: decoration('fa-box-open'),
-            entryModule: 'co-lab',
-            docBasePath: '../assets/api',
-            configuration: CodeApiModule.configurationTsTypedoc,
-        }),
     },
 })
 
 const decoration = (icon: string) => {
     return {
         icon: { tag: 'i' as const, class: `fas ${icon}` },
-        wrapperClass: Views.NavigationHeader.DefaultWrapperClass,
+        wrapperClass: DefaultLayout.NavHeaderView.DefaultWrapperClass,
     }
 }
 

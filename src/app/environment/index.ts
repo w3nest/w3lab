@@ -1,5 +1,5 @@
 import { AppState } from '../app-state'
-import { parseMd, Router, Views, Navigation } from 'mkdocs-ts'
+import { parseMd, Router, Navigation, DefaultLayout, segment } from 'mkdocs-ts'
 
 import * as YwConfiguration from './yw-configuration'
 import * as Databases from './databases'
@@ -18,12 +18,14 @@ import {
     EsmServingView,
     NotificationsView,
 } from './nav-badges.view'
+import { defaultLayout } from '../common/utils-nav'
 export * from './state'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Environment',
-    tableOfContent: Views.tocView,
-    decoration: ({ router }) => ({
+    header: ({ router }) => ({
         icon: { tag: 'i', class: 'fas fa-tasks' },
         actions: [
             new NotificationsView({ appState, router }),
@@ -31,15 +33,18 @@ export const navigation = (appState: AppState): Navigation => ({
             new EsmServingView({ appState, router }),
         ],
     }),
-    html: ({ router }: { router: Router }) =>
-        new PageView({ appState, router }),
-    '/yw-configuration': YwConfiguration.navigation(appState),
-    '/databases': Databases.navigation(appState),
-    '/browser': Browser.navigation(appState),
-    '/logs': Logs.navigation(appState),
-    '/backends': Backends.navigation(appState),
-    '/esm-servers': EsmServers.navigation(appState),
-    '/notifications': Notifications.navigation(appState),
+    layout: defaultLayout(
+        ({ router }: { router: Router }) => new PageView({ appState, router }),
+    ),
+    routes: {
+        [segment('/yw-configuration')]: YwConfiguration.navigation(appState),
+        [segment('/databases')]: Databases.navigation(appState),
+        [segment('/browser')]: Browser.navigation(appState),
+        [segment('/logs')]: Logs.navigation(appState),
+        [segment('/backends')]: Backends.navigation(appState),
+        [segment('/esm-servers')]: EsmServers.navigation(appState),
+        [segment('/notifications')]: Notifications.navigation(appState),
+    },
 })
 
 export class PageView implements VirtualDOM<'div'> {

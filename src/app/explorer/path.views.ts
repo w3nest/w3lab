@@ -9,11 +9,13 @@ export function folderAnchorView({
     icon,
     name,
     nav,
+    target,
     router,
 }: {
     icon?: string
     name: string
     nav: string
+    target?: string
     router: Router
 }): AnyVirtualDOM {
     return {
@@ -26,10 +28,15 @@ export function folderAnchorView({
                 innerText: name,
             },
         ],
-        href: `${router.basePath}?nav=${nav}`,
+        href: target
+            ? `${router.basePath}?nav=${nav}&target=folder_${target}`
+            : `${router.basePath}?nav=${nav}`,
         onclick: (e: MouseEvent) => {
             e.preventDefault()
-            router.navigateTo({ path: nav })
+            router.fireNavigateTo({
+                path: nav,
+                parameters: target ? { target } : {},
+            })
         },
     }
 }
@@ -40,18 +47,21 @@ export function groupAnchorView({
     groupId: string
     router: Router
 }) {
+    const params = {
+        nav: `/explorer/${groupId}`,
+        target: undefined,
+        router,
+    }
     return groupId.startsWith('private_')
         ? folderAnchorView({
               name: 'private',
-              nav: `/explorer/${groupId}`,
               icon: 'fas fa-user',
-              router,
+              ...params,
           })
         : folderAnchorView({
               name: window.atob(groupId).split('/').slice(-1)[0],
-              nav: `/explorer/${groupId}`,
               icon: 'fas fa-users',
-              router,
+              ...params,
           })
 }
 
@@ -83,24 +93,26 @@ export class PathView implements VirtualDOM<'div'> {
             router,
         })
 
-        const target = path.item || path.folders.slice(-1)[0]
+        const target = path.item
         const folders = [...path.folders, target]
-            .filter((e) => e !== undefined)
+            .filter((e) => e ?? false)
             .map((entity) => {
-                const nav = Explorer.isInstanceOfItemResponse(entity)
-                    ? `/explorer/${path.drive.groupId}/item_${entity.itemId}`
-                    : `/explorer/${path.drive.groupId}/folder_${entity.folderId}`
                 return [
-                    folderAnchorView({ name: entity.name, nav: nav, router }),
+                    folderAnchorView({
+                        name: entity.name,
+                        nav: `/explorer/${path.drive.groupId}`,
+                        target: `folder_${entity.folderId}`,
+                        router,
+                    }),
                     separator,
                 ] as AnyVirtualDOM[]
             })
             .flat()
             .slice(0, -1)
         const ctxMenu = new ContextMenuHandler({
-            node: Explorer.isInstanceOfItemResponse(target)
+            node: target
                 ? new ItemNode(target)
-                : new FolderNode(target),
+                : new FolderNode(path.folders.slice(-1)[0]),
             explorerState: explorerState,
         })
         this.children = [

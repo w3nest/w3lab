@@ -1,14 +1,16 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { map } from 'rxjs/operators'
 import { AppState } from '../../app-state'
 import { HdPathBookView } from '../../common'
+import { defaultLayout } from '../../common/utils-nav'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Databases',
-    decoration: { icon: { tag: 'i', class: 'fas fa-database' } },
-    tableOfContent: Views.tocView,
-    html: ({ router }) => new PageView({ router, appState }),
+    header: { icon: { tag: 'i', class: 'fas fa-database' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
 })
 
 export class PageView implements VirtualDOM<'div'> {

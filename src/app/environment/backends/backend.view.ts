@@ -165,7 +165,7 @@ export class TerminateButton implements VirtualDOM<'button'> {
                             uid,
                         })
                         .subscribe(() =>
-                            router.navigateTo({
+                            router.fireNavigateTo({
                                 path: '/environment/backends',
                             }),
                         )

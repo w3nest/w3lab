@@ -1,18 +1,20 @@
 import { AppState } from '../../app-state'
 
-import { Navigation, parseMd, Router, Views } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { map } from 'rxjs/operators'
 import { Local } from '@w3nest/http-clients'
 import { HdPathBookView } from '../../common'
 import { BehaviorSubject, Subject } from 'rxjs'
+import { defaultLayout } from '../../common/utils-nav'
 export * from './state'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Browser',
-    html: ({ router }) => new PageView({ router, appState }),
-    tableOfContent: Views.tocView,
-    decoration: { icon: { tag: 'i', class: 'fas fa-window-maximize' } },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    header: { icon: { tag: 'i', class: 'fas fa-window-maximize' } },
 })
 
 export class PageView implements VirtualDOM<'div'> {

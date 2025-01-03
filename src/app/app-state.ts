@@ -19,7 +19,13 @@ import * as Explorer from './explorer'
 import * as Doc from './doc'
 import * as Plugins from './plugins'
 import { Local, Accounts, raiseHTTPErrors } from '@w3nest/http-clients'
-import { MdWidgets, Navigation, Router, Views } from 'mkdocs-ts'
+import {
+    MdWidgets,
+    Navigation,
+    Router,
+    DefaultLayout,
+    segment,
+} from 'mkdocs-ts'
 import * as Mounted from './mounted'
 import { setup } from '../auto-generated'
 import { encodeHdPath } from './mounted'
@@ -43,11 +49,17 @@ export class AppState {
     /**
      * @group Immutable Constants
      */
-    public readonly navigation: Navigation
+    public readonly navigation: Navigation<
+        DefaultLayout.NavLayout,
+        DefaultLayout.NavHeader
+    >
     /**
      * @group Immutable Constants
      */
-    public readonly router: Router
+    public readonly router: Router<
+        DefaultLayout.NavLayout,
+        DefaultLayout.NavHeader
+    >
 
     public readonly bookmarks$: BehaviorSubject<string[]>
     /**
@@ -217,21 +229,24 @@ export class AppState {
                     Patches.patchRequestObjectAlreadyUsed(),
                 )
                 .subscribe(() => {
-                    this.router.navigateTo({
+                    this.router.fireNavigateTo({
                         path: redirectNav,
                     })
                 })
             return
         }
-        this.router.navigateTo({
+        this.router.fireNavigateTo({
             path: redirectNav,
         })
     }
 
-    private getNav(): Navigation {
+    private getNav(): Navigation<
+        DefaultLayout.NavLayout,
+        DefaultLayout.NavHeader
+    > {
         return {
             name: 'W3Lab',
-            decoration: {
+            header: {
                 icon: {
                     tag: 'img',
                     src: '../assets/logo.svg',
@@ -241,17 +256,20 @@ export class AppState {
                 },
                 actions: [editHomeAction(this.homeState)],
             },
-            tableOfContent: Views.tocView,
-            html: () => new HomeView({ state: this.homeState }),
-            '/environment': Environment.navigation(this),
-            '/components': Components.navigation(this),
-            '/projects': Projects.navigation(this),
-            '/explorer': Explorer.navigation({
-                session$: this.session$,
-            }),
-            '/mounted': Mounted.navigation(this),
-            '/plugins': Plugins.navigation(this),
-            '/doc': Doc.navigation(this),
+            layout: {
+                content: () => new HomeView({ state: this.homeState }),
+            },
+            routes: {
+                [segment('/environment')]: Environment.navigation(this),
+                [segment('/components')]: Components.navigation(this),
+                [segment('/projects')]: Projects.navigation(this),
+                [segment('/explorer')]: Explorer.navigation({
+                    session$: this.session$,
+                }),
+                [segment('/mounted')]: Mounted.navigation(this),
+                [segment('/plugins')]: Plugins.navigation(this),
+                [segment('/doc')]: Doc.navigation(this),
+            },
         }
     }
 

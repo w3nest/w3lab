@@ -1,31 +1,32 @@
-import { Navigation, parseMd, Router, Views, CatchAllNav } from 'mkdocs-ts'
+import {
+    DefaultLayout,
+    LazyRoutes,
+    Navigation,
+    parseMd,
+    Router,
+} from 'mkdocs-ts'
 import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
 import { forkJoin, Observable, of } from 'rxjs'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
-import { groupNavNodeInput } from './utils'
-
-export { ExplorerState as State } from './explorer.state'
-
-const tableOfContent = Views.tocView
+import { defaultLayout } from '../common/utils-nav'
 
 export const navigation = ({
     session$,
 }: {
     session$?: Observable<Accounts.SessionDetails>
-}): Navigation => {
+}): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => {
     const explorerState = new ExplorerState()
     return {
         name: 'Explorer',
-        decoration: { icon: { tag: 'i', class: 'fas fa-folder' } },
-        tableOfContent,
-        html: ({ router }) => {
+        header: { icon: { tag: 'i', class: 'fas fa-folder' } },
+        layout: defaultLayout(({ router }) => {
             explorerState.setRouter(router)
             return new PageView({ router })
-        },
-        '...': (session$ || of(undefined)).pipe(
+        }),
+        routes: (session$ || of(undefined)).pipe(
             map(() => ({ router, path }) => {
                 explorerState.setRouter(router)
                 return lazyResolver({
@@ -65,165 +66,117 @@ function lazyResolver({
     path: string
     router: Router
     explorerState: ExplorerState
-}): CatchAllNav {
+}): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     const client = new AssetsGateway.Client()
     if (parts.length === 0) {
-        return lazyResolverGroups({ client })
-    }
-    if (parts.length === 1) {
-        return lazyResolverDrive({
-            groupId: parts[0],
-            client,
-            path,
-            explorerState,
-            router,
-        })
-    }
-    if (
-        parts.slice(-1)[0].startsWith('folder_') ||
-        parts.slice(-1)[0].startsWith('trash_')
-    ) {
-        return lazyResolverFolders({
-            path,
-            parentId: parts.slice(-1)[0].replace('folder_', ''),
-            client,
-            explorerState,
-            groupId: parts[0],
-            isDrive: parts.length === 2,
-            router,
-        })
-    }
-    if (parts.slice(-1)[0].startsWith('item_')) {
-        return lazyResolverItem({
-            itemId: parts.slice(-1)[0].replace('item_', ''),
-            client,
-            router,
-            path,
-            explorerState,
-        })
+        return client.accounts.getSessionDetails$().pipe(
+            raiseHTTPErrors(),
+            map((details) => {
+                const children = details.userInfo.groups.map((group) => {
+                    return {
+                        name: group.path.split('/').slice(-1)[0],
+                        header: {
+                            icon: {
+                                tag: 'div' as const,
+                                class: group.id.includes('private')
+                                    ? 'fas fa-user mx-2'
+                                    : 'fas fa-users mx-2',
+                            },
+                        },
+                        leaf: true,
+                        id: group.id,
+                        layout: {
+                            toc: () => Promise.resolve({ tag: 'div' as const }),
+                            content: () => {
+                                const target =
+                                    router.parseUrl().parameters['target']
+                                if (!target || target.startsWith('folder_')) {
+                                    return folderExplorerView({
+                                        client,
+                                        router,
+                                        groupId: group.id,
+                                        explorerState,
+                                    })
+                                }
+                                return assetExplorerView({
+                                    client,
+                                    router,
+                                    itemId: target.replace('item_', ''),
+                                    explorerState,
+                                })
+                            },
+                        },
+                    }
+                })
+                return children.reduce(
+                    (acc, c) => ({ ...acc, [`/${c.id}`]: c }),
+                    {},
+                )
+            }),
+        )
     }
 }
 
-function lazyResolverGroups({
+function folderExplorerView({
     client,
-}: {
-    client: AssetsGateway.Client
-}): CatchAllNav {
-    return client.accounts.getSessionDetails$().pipe(
-        raiseHTTPErrors(),
-        map((details) => {
-            return {
-                children: details.userInfo.groups.map((group) => {
-                    return groupNavNodeInput({ group })
-                }),
-                html: () => ({ tag: 'h1' as const, innerText: 'Groups' }),
-            }
-        }),
-    )
-}
-
-function lazyResolverDrive({
-    groupId,
-    client,
-    path,
-    explorerState,
     router,
+    groupId,
+    explorerState,
 }: {
-    groupId: string
     client: AssetsGateway.Client
-    path: string
-    explorerState: ExplorerState
     router: Router
-}): CatchAllNav {
+    groupId: string
+    explorerState: ExplorerState
+}): Observable<AnyVirtualDOM> {
     return client.explorer
         .getDefaultDrive$({
             groupId,
         })
         .pipe(
-            raiseHTTPErrors(),
             take(1),
+            raiseHTTPErrors(),
             switchMap(({ driveId }) => {
+                const target = router.parseUrl().parameters['target']
+
                 return client.explorer
-                    .queryChildren$({ parentId: driveId })
+                    .queryChildren$({
+                        parentId: target
+                            ? target.replace('folder_', '')
+                            : driveId,
+                    })
                     .pipe(
                         raiseHTTPErrors(),
-                        map((response) => ({ response, driveId })),
+                        map((response) => ({
+                            response,
+                            driveId,
+                            target,
+                        })),
                     )
             }),
-            map(({ response }) => {
-                return {
-                    isLeaf: true,
-                    children: [],
-                    html: () =>
-                        new ExplorerView({
-                            response,
-                            path,
-                            explorerState,
-                            router,
-                            groupId,
-                        }),
-                }
+            map(({ response, target }) => {
+                return new ExplorerView({
+                    response,
+                    path: target ?? groupId,
+                    explorerState,
+                    router,
+                    groupId,
+                })
             }),
         )
 }
 
-function lazyResolverFolders({
-    path,
-    parentId,
+function assetExplorerView({
     client,
-    explorerState,
-    groupId,
     router,
-}: {
-    path: string
-    parentId: string
-    client: AssetsGateway.Client
-    explorerState: ExplorerState
-    groupId: string
-    isDrive: boolean
-    router: Router
-}): CatchAllNav {
-    const source$ = parentId.startsWith('trash_')
-        ? client.explorer.queryDeleted$({
-              driveId: parentId.replace('trash_', ''),
-          })
-        : client.explorer.queryChildren$({
-              parentId,
-          })
-    return source$.pipe(
-        raiseHTTPErrors(),
-        take(1),
-        map((response) => {
-            return {
-                isLeaf: true,
-                children: [],
-                html: () =>
-                    new ExplorerView({
-                        response,
-                        path,
-                        explorerState,
-                        router,
-                        groupId,
-                    }),
-            }
-        }),
-    )
-}
-
-function lazyResolverItem({
-    path,
     itemId,
-    router,
-    client,
     explorerState,
 }: {
-    path: string
-    itemId: string
-    router: Router
     client: AssetsGateway.Client
+    router: Router
+    itemId: string
     explorerState: ExplorerState
-}): CatchAllNav {
+}): Observable<AnyVirtualDOM> {
     return client.explorer
         .getItem$({
             itemId,
@@ -246,19 +199,16 @@ function lazyResolverItem({
                     })),
                 ),
             ),
-            map(({ itemResponse, assetResponse, permissionResponse }) => ({
-                leaf: true,
-                children: [],
-                tableOfContent,
-                html: () =>
-                    new AssetView({
-                        itemResponse,
-                        asset: assetResponse,
-                        explorerState,
-                        router,
-                        path,
-                        writePermission: permissionResponse.write,
-                    }),
-            })),
+            map(({ itemResponse, assetResponse, permissionResponse }) => {
+                const target = router.parseUrl().parameters['target']
+                return new AssetView({
+                    itemResponse,
+                    asset: assetResponse,
+                    explorerState,
+                    router,
+                    path: target,
+                    writePermission: permissionResponse.write,
+                })
+            }),
         )
 }

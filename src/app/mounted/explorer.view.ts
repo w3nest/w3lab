@@ -44,7 +44,7 @@ export class HeaderView implements VirtualDOM<'div'> {
             path: string,
             parents: { name: string; nav: string; path: string }[] = [],
         ) => {
-            const nav = `@nav/mounted/${origin}/${encodeHRef(path)}`
+            const nav = `@nav/mounted/${origin}&target=${encodeHdPath(path)}`
             const name = path.split('/').slice(-1)[0]
             if (name !== '') {
                 parents.push({ name, nav, path })
@@ -80,6 +80,7 @@ export class HeaderView implements VirtualDOM<'div'> {
                         name: entity.name,
                         nav: entity.nav,
                         router,
+                        target: '',
                     }),
                     separator,
                 ] as AnyVirtualDOM[]
@@ -89,7 +90,7 @@ export class HeaderView implements VirtualDOM<'div'> {
         this.children = [
             ...pathItems,
             { tag: 'div', class: 'flex-grow-1' },
-            file === undefined && openView,
+            type === 'folder' && openView,
         ]
     }
 }
@@ -101,7 +102,7 @@ export class FolderView implements VirtualDOM<'a'> {
     public readonly children: ChildrenLike
     constructor(params: { name: string; parent: string; origin: string }) {
         const pathFromOrigin = encodeHdPath(`${params.parent}/${params.name}`)
-        this.href = `@nav/mounted/${params.origin}/${pathFromOrigin}`
+        this.href = `@nav/mounted/${params.origin}&target=${pathFromOrigin}`
         this.children = [
             {
                 tag: 'i',
@@ -122,7 +123,8 @@ export class FileView implements VirtualDOM<'a'> {
     public readonly class = classFolderFileBase
     public readonly children: ChildrenLike
     constructor(params: { parent: string; name: string; origin: string }) {
-        this.href = `@nav/mounted/${params.origin}/${encodeHdPath(params.parent)}/file_${encodeHdPath(params.name)}`
+        const fullPath = encodeHdPath(`${params.parent}/${params.name}`)
+        this.href = `@nav/mounted/${params.origin}&target=file_${fullPath}`
         this.children = [
             {
                 tag: 'i',

@@ -1,6 +1,6 @@
 import { FailuresView, NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
-import { Navigation, parseMd, Router, Views, NavNodeInput } from 'mkdocs-ts'
+import { Navigation, parseMd, Router, DefaultLayout } from 'mkdocs-ts'
 import { attr$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { SearchView } from './search.view'
 import { pyYwDocLink } from '../common/py-yw-references.view'
@@ -9,6 +9,8 @@ import { BehaviorSubject, combineLatest } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 import { icon } from './icons'
 import { ProjectsFinderView } from './projects-finder.view'
+import { defaultLayout } from '../common/utils-nav'
+import { NavNodeData } from 'mkdocs-ts/dist/src'
 
 export * from './state'
 
@@ -16,19 +18,22 @@ const skipNamespace = (name: string) => {
     return name.split('/').slice(-1)[0]
 }
 const refresh$ = new BehaviorSubject(false)
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Projects',
-    decoration: {
+    header: {
         icon: { tag: 'i', class: 'fas  fa-boxes' },
         actions: [refreshAction(appState)],
     },
-    tableOfContent: Views.tocView,
-    html: ({ router }) =>
-        new PageView({
-            router,
-            appState,
-        }),
-    '...': combineLatest([
+    layout: defaultLayout(
+        ({ router }) =>
+            new PageView({
+                router,
+                appState,
+            }),
+    ),
+    routes: combineLatest([
         appState.environment$,
         appState.projectsState.projects$,
     ]).pipe(
@@ -41,7 +46,7 @@ export const navigation = (appState: AppState): Navigation => ({
 })
 
 const refreshAction = (appState: AppState) =>
-    new Views.NavActionView({
+    new DefaultLayout.NavActionView({
         content: {
             tag: 'i',
             class: attr$({
@@ -158,70 +163,44 @@ function lazyResolver(
 ) {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
-        return {
-            tableOfContent: Views.tocView,
-            children: env.projects.finders
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((p) => {
-                    return {
-                        name: p.name,
-                        id: window.btoa(p['fromPath']),
-                        decoration: {
-                            icon: {
-                                tag: 'i' as const,
-                                class: 'fas fa-object-group',
-                            },
+        const children = env.projects.finders
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((p) => {
+                return {
+                    name: p.name,
+                    id: window.btoa(p.fromPath),
+                    header: {
+                        icon: {
+                            tag: 'i' as const,
+                            class: 'fas fa-object-group',
                         },
-                    }
-                }),
-            html: undefined,
-        }
+                    },
+                    layout: defaultLayout(({ router }: { router: Router }) => {
+                        const finder = env.projects.finders.find(
+                            (f) => f.fromPath === p.fromPath,
+                        )
+                        return new ProjectsFinderView({
+                            finder,
+                            appState,
+                            router,
+                        })
+                    }),
+                }
+            })
+        return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
-
     if (parts.length === 1) {
         const prefix = window.atob(parts[0])
-        const children = getDirectChildren(prefix, projects)
-        return {
-            tableOfContent: Views.tocView,
-            children: formatChildren(children, projects),
-            html: ({ router }: { router: Router }) => {
-                const finder = env.projects.finders.find(
-                    (f) => f.fromPath === prefix,
-                )
-                return new ProjectsFinderView({
-                    finder,
-                    appState,
-                    router,
-                })
-            },
-        }
+        const directChildren = getDirectChildren(prefix, projects)
+        const children = formatChildren(directChildren, projects, appState)
+        return children.reduce((acc, e) => ({ ...acc, [`/${e.id}`]: e }), {})
     }
     if (parts.length === 2) {
         const projectId = parts[1]
         const project = projects.find((p) => p.id === projectId)
-        const children = getDirectChildren(project.path, projects)
-        return {
-            tableOfContent: Views.tocView,
-            children: formatChildren(children, projects),
-            html: ({ router }: { router: Router }) => {
-                return new ProjectView({
-                    router,
-                    project,
-                    appState,
-                })
-            },
-        }
-    }
-    const project = projects.find((p) => p.id === parts.slice(-1)[0])
-    return {
-        tableOfContent: Views.tocView,
-        children: [],
-        html: ({ router }: { router: Router }) =>
-            new ProjectView({
-                router,
-                project,
-                appState,
-            }),
+        const directChildren = getDirectChildren(project.path, projects)
+        const children = formatChildren(directChildren, projects, appState)
+        return children.reduce((acc, e) => ({ ...acc, [`/${e.id}`]: e }), {})
     }
 }
 
@@ -245,15 +224,27 @@ function getDirectChildren(
 function formatChildren(
     children: Local.Projects.Project[],
     allProjects: Local.Projects.Project[],
-): NavNodeInput[] {
+    appState: AppState,
+): (NavNodeData<DefaultLayout.NavLayout, DefaultLayout.NavHeader> & {
+    id: string
+})[] {
     return children
         .map((p) => {
+            const project = allProjects.find((project) => project.id === p.id)
             return {
                 name: skipNamespace(p.name),
                 id: p.id,
-                decoration: {
+                header: {
                     icon: icon(p),
                 },
+                layout: defaultLayout(
+                    ({ router }: { router: Router }) =>
+                        new ProjectView({
+                            router,
+                            project,
+                            appState,
+                        }),
+                ),
                 leaf: getDirectChildren(p.path, allProjects).length === 0,
             }
         })

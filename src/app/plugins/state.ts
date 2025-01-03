@@ -5,7 +5,7 @@ import { firstValueFrom, Observable, Subject } from 'rxjs'
 import * as webpm from '@w3nest/webpm-client'
 import type * as WebPM from '@w3nest/webpm-client'
 import { AppState } from '../app-state'
-import { Navigation } from 'mkdocs-ts'
+import { DefaultLayout, Navigation } from 'mkdocs-ts'
 
 /**
  * Signature for the plugins loader implementation.
@@ -57,7 +57,9 @@ export type PluginTrait = {
     navigation: (params: {
         colabState: AppState
         basePath: string
-    }) => Navigation | Promise<Navigation>
+    }) =>
+        | Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>
+        | Promise<Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>>
 
     /**
      * Metadata for the plugin library.

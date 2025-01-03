@@ -1,19 +1,22 @@
 import { AppState } from '../../app-state'
 import { NavIconSvg } from '../../common'
 import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
-import { Navigation, parseMd, Router } from 'mkdocs-ts'
+import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
 import { debounceTime, distinctUntilChanged } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators'
 import { lazyResolver } from '../index'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { example1, example2, example3 } from './examples'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
+import { defaultLayout } from '../../common/utils-nav'
 
-export const navigation = (appState: AppState): Navigation => ({
+export const navigation = (
+    appState: AppState,
+): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Pyodide',
-    decoration: { icon: new NavIconSvg({ filename: 'icon-python.svg' }) },
-    html: ({ router }) => new PageView({ router, appState }),
-    '...': appState.cdnState.status$
+    header: { icon: new NavIconSvg({ filename: 'icon-python.svg' }) },
+    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    routes: appState.cdnState.status$
         .pipe(debounceTime(500))
         .pipe(map((status) => lazyResolver(status, appState, 'pyodide'))),
 })

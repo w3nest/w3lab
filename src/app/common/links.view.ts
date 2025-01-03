@@ -21,7 +21,7 @@ export const internalAnchor = ({
     onclick: (e: MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        router.navigateTo({ path })
+        router.fireNavigateTo({ path })
     },
 })
 
