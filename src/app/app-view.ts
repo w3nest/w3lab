@@ -29,7 +29,15 @@ export class AppView implements VirtualDOM<'div'> {
                         return !d.path.startsWith(prefixCompanion)
                     },
                 }),
+            sideNavFooter: () =>
+                new DefaultLayout.FooterView({
+                    sourceName: '@w3nest/w3lab',
+                    sourceUrl: 'https://github.com/w3nest/w3lab',
+                }),
             bookmarks$: this.appState.bookmarks$,
+            layoutOptions: {
+                bottomStickyPaddingMax: '2.5rem',
+            },
         })
         this.children = [
             {
