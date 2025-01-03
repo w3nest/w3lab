@@ -1,31 +1,37 @@
 from shutil import copyfile
 from pathlib import Path
 
-from w3nest.ci.ts_frontend import (ProjectConfig, PackageType, Dependencies, RunTimeDeps, DevServer, Bundles, MainModule,
-                                   generate_template)
+from w3nest.ci.ts_frontend import (
+    ProjectConfig,
+    PackageType,
+    Dependencies,
+    RunTimeDeps,
+    DevServer,
+    Bundles,
+    MainModule,
+    generate_template,
+)
 
 from w3nest.utils import parse_json
 
 project_folder = Path(__file__).parent.parent
 
-pkg_json = parse_json(project_folder / 'package.json')
+pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
     "mkdocs-ts": "^0.2.0",
     "rx-vdom": "^0.1.1",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.2",
-    '@w3nest/http-clients': '^0.1.3',
+    "@w3nest/http-clients": "^0.1.3",
     "@w3nest/rx-tree-views": "^0.2.0",
     "@w3nest/rx-code-mirror-editors": "^0.1.0",
     "@floating-ui/dom": "^1.6.3",
     "rxjs": "^7.5.6",
-    'd3': '^7.7.0',
+    "d3": "^7.7.0",
 }
 
-in_bundle_deps = {
-    "d3-dag": "0.8.2"
-}
+in_bundle_deps = {"d3-dag": "0.8.2"}
 dev_deps = {
     "lz-string": "^1.4.4",
 }
@@ -33,35 +39,27 @@ dev_deps = {
 config = ProjectConfig(
     path=project_folder,
     type=PackageType.APPLICATION,
-    name=pkg_json['name'],
-    version=pkg_json['version'],
-    shortDescription=pkg_json['description'],
-    author=pkg_json['author'],
+    name=pkg_json["name"],
+    version=pkg_json["version"],
+    shortDescription=pkg_json["description"],
+    author=pkg_json["author"],
     dependencies=Dependencies(
-        runTime=RunTimeDeps(
-            externals=externals_deps,
-            includedInBundle=in_bundle_deps
-        ),
-        devTime=dev_deps
+        runTime=RunTimeDeps(externals=externals_deps, includedInBundle=in_bundle_deps),
+        devTime=dev_deps,
     ),
     bundles=Bundles(
         mainModule=MainModule(
-            entryFile='./main.ts',
-            loadDependencies=list(externals_deps.keys())
+            entryFile="./main.ts", loadDependencies=list(externals_deps.keys())
         ),
     ),
     userGuide=True,
-    devServer=DevServer(
-        port=3023
-    ),
+    devServer=DevServer(port=3023),
     inPackageJson={
-        "scripts" :{
-            "doc": "typedoc && python doc.py"
-        },
-    }
+        "scripts": {"doc": "typedoc && python doc.py"},
+    },
 )
 
-template_folder = Path(__file__).parent / '.template'
+template_folder = Path(__file__).parent / ".template"
 
 generate_template(config=config, dst_folder=template_folder)
 
@@ -72,6 +70,6 @@ files = [
     "tsconfig.json",
     "jest.config.ts",
     "webpack.config.ts",
-    ]
+]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
