@@ -25,8 +25,6 @@ function projectLoadingIsSuccess(
     return result['failure'] === undefined
 }
 
-export type FlowId = string
-
 export function instanceOfStepStatus(
     data: unknown,
 ): data is Local.Projects.PipelineStepStatusResponse {

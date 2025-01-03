@@ -6,8 +6,8 @@ import {
     attr$,
     child$,
 } from 'rx-vdom'
-import { fromMarkdown, parseMd, Router } from 'mkdocs-ts'
-import { BehaviorSubject, mergeMap, Observable, of, Subject, timer } from 'rxjs'
+import { parseMd, Router } from 'mkdocs-ts'
+import { BehaviorSubject, mergeMap, Observable, of } from 'rxjs'
 import { setup } from '../../auto-generated'
 import { AppState } from '../app-state'
 import { map, take } from 'rxjs/operators'
@@ -49,67 +49,6 @@ export class NavIconSvg implements VirtualDOM<'div'> {
     }
 }
 
-export class CoLabLogo implements VirtualDOM<'a'> {
-    public readonly tag = 'a'
-    public readonly href = 'index.html?nav=/'
-    public readonly onclick: (ev: MouseEvent) => void
-    public readonly style = {
-        fontSize: '22px',
-        fontWeight: 700,
-    }
-    public readonly class = 'ilab d-flex  align-items-baseline fv-pointer'
-    public readonly children: ChildrenLike
-
-    constructor({ router }: { router: Router }) {
-        this.onclick = (ev) => {
-            ev.preventDefault()
-            router.fireNavigateTo({ path: '/' })
-        }
-        this.children = [
-            {
-                tag: 'img',
-                src: '../assets/logo.svg',
-                style: {
-                    height: '30px',
-                },
-            },
-            {
-                tag: 'div',
-                class: 'd-flex align-items-center',
-                style: {
-                    fontSize: '18px',
-                    color: '#e63946',
-                },
-                children: [
-                    {
-                        tag: 'div',
-                        style: {
-                            fontStyle: 'italic',
-                        },
-                        innerText: 'C',
-                    },
-                    {
-                        tag: 'div',
-                        class: ' me-1 fas fa-globe',
-                        style: {
-                            fontSize: '12px',
-                            fontStyle: 'italic',
-                        },
-                    },
-                ],
-            },
-            {
-                tag: 'span',
-                class: 'light',
-                style: {
-                    fontWeight: 'lighter',
-                    color: '#58a4b0',
-                },
-                innerText: 'Lab',
-            },
-        ]
-    }
-}
 export class InfoSectionView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
@@ -388,76 +327,6 @@ export class HdPathBookView implements VirtualDOM<'div'> {
                     }
                 },
             }),
-        ]
-    }
-}
-
-export function fromMd(file: string) {
-    return fromMarkdown({
-        url: `../assets/${file}`,
-    })
-}
-
-export class CoLabBanner implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly class = 'h-100 w-100 mb-5'
-    public readonly children: ChildrenLike
-    public readonly style = {
-        position: 'relative' as const,
-    }
-
-    constructor({
-        router,
-        loaded$,
-    }: {
-        loaded$: Subject<boolean>
-        router: Router
-    }) {
-        const timer$ = timer(0, 1000).pipe(take(2))
-        const basePath = `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets`
-        const style = { width: '100%', opacity: 0.1, filter: 'invert(1)' }
-        this.children = [
-            {
-                tag: 'img',
-                class: attr$({
-                    source$: timer$,
-                    vdomMap: (i) => (i === 0 ? '' : 'd-none'),
-                }),
-                style,
-                src: `${basePath}/co-lab-light.png`,
-                onload: () => loaded$.next(true),
-            },
-            {
-                tag: 'img',
-                class: attr$({
-                    source$: timer(0, 1000).pipe(take(2)),
-                    vdomMap: (i) => (i === 0 ? 'd-none' : ''),
-                }),
-                style,
-                src: `${basePath}/co-lab-high.png`,
-            },
-            {
-                tag: 'div',
-                class: attr$({
-                    source$: loaded$,
-                    vdomMap: () => 'w-100',
-                    untilFirst: 'd-none',
-                }),
-                style: {
-                    position: 'absolute' as const,
-                    top: '50%',
-                },
-                children: [
-                    {
-                        style: {
-                            transform: 'scale(3)',
-                        },
-                        tag: 'div',
-                        class: 'd-flex justify-content-center',
-                        children: [new CoLabLogo({ router })],
-                    },
-                ],
-            },
         ]
     }
 }
