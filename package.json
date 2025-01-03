@@ -1,7 +1,7 @@
 {
-    "name": "@w3nest/co-lab",
-    "description": "The W3Nest's collaborative laboratory application.",
-    "version": "0.7.2-wip",
+    "name": "@w3nest/w3lab",
+    "description": "The W3Nest's laboratory application.",
+    "version": "0.8.0-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/w3nest/co-lab#README.md",
     "main": "dist/index.html",

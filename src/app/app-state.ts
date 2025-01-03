@@ -245,11 +245,11 @@ export class AppState {
         DefaultLayout.NavHeader
     > {
         return {
-            name: 'W3Lab',
+            name: 'w3Lab',
             header: {
                 icon: {
                     tag: 'img',
-                    src: '../assets/logo.svg',
+                    src: '../assets/favicon.svg',
                     style: {
                         height: '30px',
                     },
