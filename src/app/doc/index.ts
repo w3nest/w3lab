@@ -142,21 +142,21 @@ export const navigation = (
             routes: {
                 [segment('/youwol')]: CodeApiModule.codeApiEntryNode({
                     name: 'youwol',
-                    icon: decoration('fa-box-open').icon,
+                    header: decoration('fa-box-open'),
                     entryModule: 'youwol',
                     docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
                     configuration: configuration,
                 }),
                 [segment('/yw-clients')]: CodeApiModule.codeApiEntryNode({
                     name: 'yw_clients',
-                    icon: decoration('fa-box-open').icon,
+                    header: decoration('fa-box-open'),
                     entryModule: 'yw_clients',
                     docBasePath: '/apps/@youwol/py-youwol-doc/*/assets/api',
                     configuration: configuration,
                 }),
                 [segment('/co-lab')]: CodeApiModule.codeApiEntryNode({
                     name: 'co-lab',
-                    icon: decoration('fa-box-open').icon,
+                    header: decoration('fa-box-open'),
                     entryModule: 'co-lab',
                     docBasePath: '../assets/api',
                     configuration: CodeApiModule.configurationTsTypedoc,

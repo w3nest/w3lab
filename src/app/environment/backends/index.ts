@@ -5,7 +5,7 @@ import {
     Navigation,
     parseMd,
     Router,
-    LazyRoutes,
+    LazyRoutesReturn,
 } from 'mkdocs-ts'
 import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
@@ -39,7 +39,7 @@ function lazyResolver(
     env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
-): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
+): LazyRoutesReturn<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const partitions = new Set(

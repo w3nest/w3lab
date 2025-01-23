@@ -1,6 +1,6 @@
 import {
     DefaultLayout,
-    LazyRoutes,
+    LazyRoutesReturn,
     Navigation,
     parseMd,
     Router,
@@ -31,7 +31,7 @@ function lazyResolver(
     env: Local.Environment.EnvironmentStatusResponse,
     router: Router,
     appState: AppState,
-): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
+): LazyRoutesReturn<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
         const children = env.proxiedEsmServers.store.map(

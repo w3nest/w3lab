@@ -1,6 +1,6 @@
 import {
     DefaultLayout,
-    LazyRoutes,
+    LazyRoutesReturn,
     Navigation,
     parseMd,
     Router,
@@ -66,7 +66,7 @@ function lazyResolver({
     path: string
     router: Router
     explorerState: ExplorerState
-}): LazyRoutes<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
+}): LazyRoutesReturn<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
     const client = new AssetsGateway.Client()
     if (parts.length === 0) {

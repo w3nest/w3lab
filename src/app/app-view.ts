@@ -15,7 +15,7 @@ export class AppView implements VirtualDOM<'div'> {
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
 
-        const mainView = new DefaultLayout.View({
+        const mainView = new DefaultLayout.Layout({
             router: this.appState.router,
             page: ({ router }) =>
                 new DefaultLayout.PageView({
@@ -35,8 +35,8 @@ export class AppView implements VirtualDOM<'div'> {
                     sourceUrl: 'https://github.com/w3nest/w3lab',
                 }),
             bookmarks$: this.appState.bookmarks$,
-            layoutOptions: {
-                bottomStickyPaddingMax: '2.5rem',
+            displayOptions: {
+                pageVertPadding: '2.5rem',
             },
         })
         this.children = [
