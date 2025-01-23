@@ -3,7 +3,6 @@ import { Router } from 'mkdocs-ts'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { icon } from '../projects/icons'
 import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
-import { buttonsFactory } from '../common/buttons'
 import { copyInClipboard } from '../common/utlis-misc'
 import { getAppState } from '../common/patches'
 
@@ -267,11 +266,6 @@ export function defaultUserDrive(
             }),
         ],
     }
-}
-
-export function colabButton(elem: HTMLElement): AnyVirtualDOM {
-    const target = elem.getAttribute('target')
-    return buttonsFactory[target]
 }
 
 function docLink(name: string, nav: string, text: string): AnyVirtualDOM {

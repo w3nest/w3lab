@@ -6,7 +6,6 @@ import { InfoSectionView } from './common'
 import { AppView } from './app-view'
 import {
     apiLink,
-    colabButton,
     copyClipboard,
     defaultUserDrive,
     label,
@@ -42,7 +41,6 @@ GlobalMarkdownViews.factory = {
     projectsHistoric,
     projectsDonutChart,
     componentsDonutChart,
-    colabButton,
     webpmDoc,
     mkdocsDoc,
     rxvdomDoc,
