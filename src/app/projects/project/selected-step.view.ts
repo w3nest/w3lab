@@ -5,6 +5,7 @@ import {
     child$,
     ChildrenLike,
     VirtualDOM,
+    EmptyDiv,
 } from 'rx-vdom'
 import { State } from '../state'
 import {
@@ -169,11 +170,15 @@ export class HeaderMenuView implements VirtualDOM<'div'> {
             playButton,
             child$({
                 source$: config$,
-                vdomMap: (d) =>
-                    d && {
-                        tag: 'div',
-                        children: [sep, button('config', 'fa-wrench')],
-                    },
+                vdomMap: (d) => {
+                    if (d) {
+                        return {
+                            tag: 'div',
+                            children: [sep, button('config', 'fa-wrench')],
+                        }
+                    }
+                    return EmptyDiv
+                },
             }),
             sep,
             button('manifest', 'fa-newspaper'),
