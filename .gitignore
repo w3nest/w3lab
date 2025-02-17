@@ -12,3 +12,4 @@ __pycache__
 /src/tests/**/result.zip
 *.egg-info
 /assets/api
+**/.local-dependencies
