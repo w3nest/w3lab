@@ -25,6 +25,7 @@ import {
     Router,
     DefaultLayout,
     segment,
+    UrlTarget,
 } from 'mkdocs-ts'
 import * as Mounted from './mounted'
 import { setup } from '../auto-generated'
@@ -128,9 +129,7 @@ export class AppState {
 
     public readonly mountedHdPaths$ = new BehaviorSubject<MountedPath[]>([])
 
-    public readonly companionPage$ = new BehaviorSubject<string | undefined>(
-        undefined,
-    )
+    public readonly companionPage$ = new BehaviorSubject<string[]>([])
 
     install(id: 'd3') {
         if (this._installed[id]) {
@@ -204,10 +203,9 @@ export class AppState {
         this.router = new Router({
             navigation: this.navigation,
             basePath: `/apps/${setup.name}/${setup.version}`,
-            redirects: (target) => this.getRedirects(target),
+            redirects: [(target) => this.getRedirects(target)],
+            userStore: this,
         })
-        // A workaround for now, it simplifies e.g. defining MD widgets where only the router is known
-        this.router['appState'] = this
     }
 
     mountHdPath(path: string, type: 'file' | 'folder') {
@@ -274,9 +272,9 @@ export class AppState {
         }
     }
 
-    async getRedirects(target: string) {
-        let to = target
-        if (target.startsWith('/doc')) {
+    async getRedirects(target: UrlTarget) {
+        let to = target.path
+        if (target.path.startsWith('/doc')) {
             // Documentation features examples using code snippets in python.
             // We await installing the dependencies such that the snippets are displayed right away,
             // and navigation to a given part of the page actually land at the right place.
@@ -291,12 +289,12 @@ export class AppState {
                 ),
             )
         }
-        if (target.startsWith('/api/youwol')) {
-            to = target.replace('/api/youwol', '/doc/api/youwol')
+        if (target.path.startsWith('/api/youwol')) {
+            to = target.path.replace('/api/youwol', '/doc/api/youwol')
         }
-        if (target.startsWith('/api/yw_utils')) {
-            to = target.replace('/api/yw_utils', '/doc/api/yw_utils')
+        if (target.path.startsWith('/api/yw_utils')) {
+            to = target.path.replace('/api/yw_utils', '/doc/api/yw_utils')
         }
-        return to
+        return { path: to }
     }
 }

@@ -4,7 +4,7 @@ import { filter, map, switchMap } from 'rxjs/operators'
 import { icon } from '../projects/icons'
 import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 import { copyInClipboard } from '../common/utlis-misc'
-import { getAppState } from '../common/patches'
+import { AppState } from '../app-state'
 
 const inlineBlock = {
     style: {
@@ -151,7 +151,7 @@ export function projectNav(
     elem: HTMLElement,
     { router }: { router: Router },
 ): AnyVirtualDOM {
-    const appState = getAppState(router)
+    const appState = router.userStore as AppState
     const project = elem.getAttribute('project')
     const projectId = window.btoa(project)
     const nav$ = appState.projectsState.projects$.pipe(

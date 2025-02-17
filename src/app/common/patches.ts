@@ -1,7 +1,5 @@
 import { delay } from 'rxjs/operators'
 import { AnyVirtualDOM } from 'rx-vdom'
-import { AppState } from '../app-state'
-import { Router } from 'mkdocs-ts'
 
 /**
  * This patch is used when mounting a local HD folder (during the redirect to the mounted folder).
@@ -50,7 +48,3 @@ export type CodeMirror = (
     element: HTMLElement,
     config: Record<string, unknown>,
 ) => CodeMirrorEditor
-
-export function getAppState(router: Router): AppState {
-    return router['appState'] as unknown as AppState
-}

@@ -151,7 +151,6 @@ export class PackageDetailsView implements VirtualDOM<'div'> {
     }) {
         this.children = [
             parseMd({
-                emitHtmlUpdated: true,
                 src: `
 ## Type
 

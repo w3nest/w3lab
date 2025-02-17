@@ -222,7 +222,6 @@ ${pyYwDocLink('documentation', '/')}.
 
   `,
                 router,
-                emitHtmlUpdated: true,
             }),
         ]
     }

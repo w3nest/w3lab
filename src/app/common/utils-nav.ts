@@ -52,19 +52,19 @@ export function splitCompanionAction(
             tag: 'i',
             class: attr$({
                 source$: appState.companionPage$.pipe(
-                    map((prefix) => path === prefix),
+                    map((paths) => paths.includes(path)),
                 ),
                 vdomMap: (toggled) =>
                     toggled ? 'fas fa-times' : 'fas fa-columns',
             }),
         },
         action: () => {
-            const selected = appState.companionPage$.value === path
+            const selected = appState.companionPage$.value.includes(path)
             if (selected) {
-                appState.companionPage$.next(undefined)
+                appState.companionPage$.next([])
                 return
             }
-            appState.companionPage$.next(path)
+            appState.companionPage$.next([path])
         },
     })
 }

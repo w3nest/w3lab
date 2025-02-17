@@ -5,7 +5,6 @@ import { Local } from '@w3nest/http-clients'
 import { AppState } from '../../app-state'
 import { getProjectNav$ } from '../../common/utils-nav'
 import { take } from 'rxjs/operators'
-import { getAppState } from '../../common/patches'
 
 /**
  * Represents a view that displays the most recently edited projects.
@@ -72,7 +71,7 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
         router: Router,
     ): ProjectsHistoricView {
         return new ProjectsHistoricView({
-            appState: getAppState(router),
+            appState: router.userStore as AppState,
             count: elem.getAttribute('count')
                 ? parseInt(elem.getAttribute('count'))
                 : 10,

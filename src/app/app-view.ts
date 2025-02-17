@@ -1,4 +1,4 @@
-import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
 import { DefaultLayout } from 'mkdocs-ts'
 import { DisconnectedView } from './disconnected.view'
@@ -14,68 +14,21 @@ export class AppView implements VirtualDOM<'div'> {
 
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
-
-        const mainView = new DefaultLayout.Layout({
+        const layout = new DefaultLayout.LayoutWithCompanion({
             router: this.appState.router,
-            page: ({ router }) =>
-                new DefaultLayout.PageView({
-                    router,
-                    filter: (d) => {
-                        const prefixCompanion =
-                            this.appState.companionPage$.value
-                        if (prefixCompanion === undefined) {
-                            return true
-                        }
-                        return !d.path.startsWith(prefixCompanion)
-                    },
-                }),
+            companionNodes$: this.appState.companionPage$,
+            bookmarks$: this.appState.bookmarks$,
+            displayOptions: {
+                pageVertPadding: '2.5rem',
+            },
             sideNavFooter: () =>
                 new DefaultLayout.FooterView({
                     sourceName: '@w3nest/w3lab',
                     sourceUrl: 'https://github.com/w3nest/w3lab',
                 }),
-            bookmarks$: this.appState.bookmarks$,
-            displayOptions: {
-                pageVertPadding: '2.5rem',
-            },
         })
         this.children = [
-            {
-                tag: 'div',
-                class: 'h-100',
-                style: attr$({
-                    source$: this.appState.companionPage$,
-                    vdomMap: (d) =>
-                        d === undefined ? { width: '100%' } : { width: '60%' },
-                }),
-                children: [mainView],
-            },
-            child$({
-                source$: this.appState.companionPage$,
-                vdomMap: (target) => {
-                    if (target === undefined) {
-                        return { tag: 'div' }
-                    }
-                    if (this.appState.router.parseUrl().path === target) {
-                        this.appState.router.fireNavigateTo({ path: '/' })
-                    }
-                    return {
-                        tag: 'div',
-                        class: 'h-100 px-5 pt-5 overflow-auto',
-                        style: {
-                            width: '40%',
-                        },
-                        children: [
-                            new DefaultLayout.PageView({
-                                router: this.appState.router,
-                                filter: (d) => {
-                                    return d.path.startsWith(target)
-                                },
-                            }),
-                        ],
-                    }
-                },
-            }),
+            layout,
             new DisconnectedView({ appState: this.appState }),
         ]
     }

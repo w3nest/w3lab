@@ -65,7 +65,7 @@ export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {
         router: Router,
     ): ProjectsDonutChart {
         return new ProjectsDonutChart({
-            appState: router['appState'] as unknown as AppState,
+            appState: router.userStore as AppState,
             margin: parseFloat(elem.getAttribute('margin')) || 75,
             width: elem.getAttribute('width') || '100%',
             sections: DonutChart.sections(elem),
