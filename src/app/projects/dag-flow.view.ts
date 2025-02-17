@@ -265,10 +265,14 @@ export class DagFlowView implements VirtualDOM<'div'> {
 
         // see https://github.com/erikbrinkman/d3-dag#typescript-notes for Dag<never, never>
         const { width, height } = layout(dag as Dag<never, never>)
+        const padding = 10
         const svgSelection = d3
             .select(svg)
             .on('click', () => this.projectsState.selectStep(this.project.id))
-        svgSelection.attr('viewBox', [0, 0, height, width].join(' '))
+        svgSelection.attr(
+            'viewBox',
+            [-padding, -padding, height + padding, width + padding].join(' '),
+        )
 
         withDefaultStyleAttributes(
             svgSelection
