@@ -1,6 +1,6 @@
 :root {
     --font-size-base: clamp(12px, 2.5vw, 18px);
-    --font-family-base: 'Georgia', serif;
+    --font-family-base: 'Georgia', 'Times New Roman', serif;
     --line-height-base: 1.6;
 }
 
