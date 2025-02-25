@@ -203,3 +203,47 @@ circle.pending {
     display: block;
     border-bottom: solid 2px;
 }
+
+/*
+Below should be removed
+*/
+
+.fv-pointer {
+    cursor: pointer;
+}
+.fv-hover-text-focus:hover {
+    color: #ffbb00;
+}
+.fv-hover-bg-background:hover {
+    background-color: #212529;
+}
+.fv-hover-bg-background-alt:hover {
+    background-color: #444;
+}
+.fv-text-disabled {
+    color: #bdbdbd;
+}
+.fv-text-focus {
+    color: #ffbb00;
+}
+.fv-text-error {
+    color: #b00020;
+}
+.fv-bg-secondary {
+    background-color: #be7200;
+}
+.fv-hover-xx-lighter:hover {
+    filter: brightness(1.3);
+}
+.fv-text-success {
+    color: green;
+}
+.fv-blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}

@@ -14,7 +14,6 @@ await setup.installMainModule({
             'bootstrap#5.3.3~bootstrap-utilities.min.css',
             'highlight.js#11.2.0~styles/default.css',
             'fontawesome#5.12.1~css/all.min.css',
-            '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
             `mkdocs-ts#${mkdocsVersion}~assets/mkdocs-light.css`,
         ],
         displayLoadingScreen: true,
