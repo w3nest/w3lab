@@ -113,7 +113,7 @@ export class ProjectEvents {
         this.messages$
             .pipe(
                 filterCtxMessage({
-                    withLabels: ['Label.PIPELINE_STEP_RUNNING'],
+                    withLabels: ['Label.RUN_PIPELINE_STEP'],
                     withAttributes: { projectId: this.project.id },
                 }),
             )

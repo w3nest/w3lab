@@ -147,9 +147,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
             attributes: {
                 class: 'menu-actions',
                 transform: (d) =>
-                    `translate( -${d.data.hasView ? 5 : 0}, ${
-                        DagFlowView.nodeRadius + 15
-                    })`,
+                    `translate( 0, ${DagFlowView.nodeRadius + 15})`,
             },
         },
         run: {
@@ -164,21 +162,6 @@ export class DagFlowView implements VirtualDOM<'div'> {
                 click: (n, { data }) => {
                     n.stopPropagation()
                     this.projectsState.runStep(this.project.id, data.id)
-                },
-            },
-        },
-        settings: {
-            attributes: {
-                class: 'fas fv-pointer dag-flow-node-settings fv-hover-xx-lighter',
-                transform: `translate(15, 0)`,
-            },
-            style: {
-                fill: '#d7e5ee',
-            },
-            on: {
-                click: (n, { data }) => {
-                    n.stopPropagation()
-                    this.projectsState.configureStep(this.project.id, data.id)
                 },
             },
         },
@@ -326,13 +309,6 @@ export class DagFlowView implements VirtualDOM<'div'> {
         withDefaultStyleAttributes(
             nodesMenuActions.append('text').text('\uf04b'),
             this.defaultStyle.run,
-        )
-        withDefaultStyleAttributes(
-            nodesMenuActions
-                .filter((d) => d.data.hasView)
-                .append('text')
-                .text('\uf0ad'),
-            this.defaultStyle.settings,
         )
     }
 

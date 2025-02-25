@@ -1,5 +1,6 @@
 import {
     AnyVirtualDOM,
+    attr$,
     child$,
     ChildrenLike,
     replace$,
@@ -18,9 +19,9 @@ import { ExpandableGroupView } from '../common/expandable-group.view'
 import { NewProjectFromTemplateView } from './new-project.view'
 import { debounceTime, merge, mergeMap, of } from 'rxjs'
 import { AppState } from '../app-state'
-import { SelectedStepView } from './project/selected-step.view'
+import { StepView } from './step.view'
 import { CdnLinkView, ExplorerLinkView } from '../common/links.view'
-import { map } from 'rxjs/operators'
+import { filter, map } from 'rxjs/operators'
 import { tryLibScript } from '../components/js-wasm/package.views'
 
 function extraProjectLinks(
@@ -81,6 +82,10 @@ export class ProjectView implements VirtualDOM<'div'> {
     }) {
         const projectsState = appState.projectsState
         projectsState.openProject(project)
+        const events = projectsState.projectEvents[project.id]
+        const selectedStep$ = events.selectedStep$.pipe(
+            filter(({ step }) => step !== undefined),
+        )
         this.children = [
             parseMd({
                 src: `
@@ -101,7 +106,7 @@ A project is a folder on your computer featuring a \`yw_pipeline.py\` file.
 
 <flow></flow>
 
-<selectedStep></selectedStep>
+<steps></steps>
 
 ## Artifacts
 
@@ -156,11 +161,35 @@ Publishing a components means to publish all or a part of those artifacts.
                             projectsState,
                             project,
                         }),
-                    selectedStep: () =>
-                        new SelectedStepView({
-                            projectsState,
-                            project,
-                        }),
+                    steps: () => {
+                        return {
+                            tag: 'div',
+                            children: project.pipeline.steps.map((step) => {
+                                return {
+                                    tag: 'div',
+                                    class: attr$({
+                                        source$: selectedStep$,
+                                        vdomMap: (selected) => {
+                                            if (selected === undefined) {
+                                                return 'd-none'
+                                            }
+                                            return selected.step.id === step.id
+                                                ? ''
+                                                : 'd-none'
+                                        },
+                                        untilFirst: 'd-none',
+                                    }),
+                                    children: [
+                                        new StepView({
+                                            projectsState,
+                                            project,
+                                            step,
+                                        }),
+                                    ],
+                                }
+                            }),
+                        }
+                    },
                     artifacts: () =>
                         new ArtifactsView({
                             router,
