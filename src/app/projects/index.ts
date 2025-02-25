@@ -6,7 +6,7 @@ import { SearchView } from './search.view'
 import { pyYwDocLink } from '../common/py-yw-references.view'
 import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, combineLatest } from 'rxjs'
-import { delay, map } from 'rxjs/operators'
+import { delay, distinctUntilChanged, map } from 'rxjs/operators'
 import { icon } from './icons'
 import { ProjectsFinderView } from './projects-finder.view'
 import { defaultLayout } from '../common/utils-nav'
@@ -37,6 +37,14 @@ export const navigation = (
         appState.environment$,
         appState.projectsState.projects$,
     ]).pipe(
+        distinctUntilChanged((prev, curr) => {
+            const isSameEnv =
+                JSON.stringify(prev[0].projects) ===
+                JSON.stringify(curr[0].projects)
+            const isSameProjects =
+                JSON.stringify(prev[1]) === JSON.stringify(curr[1])
+            return isSameProjects && isSameEnv
+        }),
         map(([env, projects]) => {
             return ({ path }: { path: string; router: Router }) => {
                 return lazyResolver(path, env, projects, appState)
@@ -163,30 +171,28 @@ function lazyResolver(
 ) {
     const parts = path.split('/').filter((d) => d !== '')
     if (parts.length === 0) {
-        const children = env.projects.finders
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((p) => {
-                return {
-                    name: p.name,
-                    id: window.btoa(p.fromPath),
-                    header: {
-                        icon: {
-                            tag: 'i' as const,
-                            class: 'fas fa-object-group',
-                        },
+        const children = env.projects.finders.map((p) => {
+            return {
+                name: p.name,
+                id: window.btoa(p.fromPath),
+                header: {
+                    icon: {
+                        tag: 'i' as const,
+                        class: 'fas fa-object-group',
                     },
-                    layout: defaultLayout(({ router }: { router: Router }) => {
-                        const finder = env.projects.finders.find(
-                            (f) => f.fromPath === p.fromPath,
-                        )
-                        return new ProjectsFinderView({
-                            finder,
-                            appState,
-                            router,
-                        })
-                    }),
-                }
-            })
+                },
+                layout: defaultLayout(({ router }: { router: Router }) => {
+                    const finder = env.projects.finders.find(
+                        (f) => f.fromPath === p.fromPath,
+                    )
+                    return new ProjectsFinderView({
+                        finder,
+                        appState,
+                        router,
+                    })
+                }),
+            }
+        })
         return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
     if (parts.length === 1) {
