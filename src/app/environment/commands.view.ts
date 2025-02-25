@@ -9,6 +9,7 @@ import { install } from '@w3nest/webpm-client'
 import { ExpandableGroupView } from '../common/expandable-group.view'
 import { LogsExplorerView } from '../common'
 import { getCodeEditor } from '../common/utlis-misc'
+import { Json } from '@w3nest/http-clients'
 
 /**
  * @category View
@@ -112,26 +113,23 @@ export class CommandView implements VirtualDOM<'div'> {
         if (this.command['doPut']) {
             method = 'PUT'
         }
-        const url = `/admin/custom-commands/${this.command.name}`
 
         this.children = [
             new AttributeView({ text: 'Method', value: method }),
             new AttributeView({
-                text: 'URL',
-                value: url,
+                text: 'Name',
+                value: this.command.name,
             }),
             ['GET', 'DELETE'].includes(method)
                 ? new ExecuteNoBodyView({
                       environmentState: this.environmentState,
                       command: this.command,
                       method,
-                      url,
                   })
                 : new ExecuteBodyView({
                       environmentState: this.environmentState,
                       command: this.command,
                       method,
-                      url,
                   }),
             { tag: 'div', class: 'flex-grow-1', style: { minHeight: '0px' } },
             new LogsTabView({
@@ -146,7 +144,6 @@ type ExecuteViewArgs = {
     environmentState: State
     command: Local.Environment.Command
     method: Method
-    url: string
 }
 /**
  * @category View
@@ -175,7 +172,7 @@ export class ExecuteView implements VirtualDOM<'div'> {
     /**
      * @group Immutable Constants
      */
-    public readonly url: string
+    public readonly command: Local.Environment.Command
 
     /**
      * @group Observables
@@ -206,8 +203,8 @@ export class ExecuteNoBodyView extends ExecuteView {
                 onclick: () =>
                     this.environmentState
                         .executeNoBodyCommand$({
-                            url: this.url,
-                            method: this.method,
+                            name: this.command.name,
+                            method: this.method as 'DELETE' | 'GET',
                         })
                         .pipe(
                             catchError((err) => of(new ErrorCommandExec(err))),
@@ -248,9 +245,9 @@ export class ExecuteBodyView extends ExecuteView {
                         const jsonBody = JSON.parse(body) as unknown
                         return this.environmentState
                             .executeWithBodyCommand$({
-                                url: this.url,
-                                body: jsonBody,
-                                method: this.method,
+                                name: this.command.name,
+                                body: jsonBody as Json,
+                                method: this.method as 'POST' | 'PUT',
                             })
                             .pipe(
                                 catchError((err) =>

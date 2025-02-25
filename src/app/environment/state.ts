@@ -1,9 +1,9 @@
 import { AppState } from '../app-state'
 import {
     raiseHTTPErrors,
-    send$,
     WebSocketResponse$,
     Local,
+    Json,
 } from '@w3nest/http-clients'
 
 import { Observable } from 'rxjs'
@@ -85,24 +85,35 @@ export class State {
         }
     }
 
-    executeNoBodyCommand$({ url, method }: { url: string; method: Method }) {
-        return send$('query', url, {
-            method,
-        }).pipe(raiseHTTPErrors())
+    executeNoBodyCommand$({
+        name,
+        method,
+    }: {
+        name: string
+        method: 'DELETE' | 'GET'
+    }) {
+        const client = new Local.Client().api.customCommands
+        const factory: Record<'DELETE' | 'GET', () => Observable<unknown>> = {
+            DELETE: () => client.doDelete$({ name }),
+            GET: () => client.doDelete$({ name }),
+        }
+        return factory[method]().pipe(raiseHTTPErrors())
     }
 
     executeWithBodyCommand$({
-        url,
+        name,
         body,
         method,
     }: {
-        url: string
-        method: Method
-        body: unknown
+        name: string
+        method: 'PUT' | 'POST'
+        body: Json
     }) {
-        return send$('update', url, {
-            method,
-            json: body,
-        }).pipe(raiseHTTPErrors())
+        const client = new Local.Client().api.customCommands
+        const factory: Record<'PUT' | 'POST', () => Observable<unknown>> = {
+            PUT: () => client.doPut$({ name, body }),
+            POST: () => client.doPost$({ name, body }),
+        }
+        return factory[method]().pipe(raiseHTTPErrors())
     }
 }
