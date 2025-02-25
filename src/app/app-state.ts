@@ -32,6 +32,7 @@ import { setup } from '../auto-generated'
 import { encodeHdPath } from './mounted'
 import { Patches } from './common'
 import { editHomeAction, HomeView } from './home/views'
+import { createRootContext } from './config.context'
 
 Local.Client.ws = new Local.WsRouter({
     autoReconnect: true,
@@ -200,12 +201,20 @@ export class AppState {
             '/plugins',
             '/doc',
         ])
-        this.router = new Router({
-            navigation: this.navigation,
-            basePath: `/apps/${setup.name}/${setup.version}`,
-            redirects: [(target) => this.getRedirects(target)],
-            userStore: this,
+        const ctx = createRootContext({
+            threadName: 'App',
+            labels: [],
         })
+
+        this.router = new Router(
+            {
+                navigation: this.navigation,
+                basePath: `/apps/${setup.name}/${setup.version}`,
+                redirects: [(target) => this.getRedirects(target)],
+                userStore: this,
+            },
+            ctx,
+        )
     }
 
     mountHdPath(path: string, type: 'file' | 'folder') {
