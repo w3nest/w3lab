@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
 import { HdPathBookView } from '../common'
 import { AppState } from '../app-state'
-import { FailuresView } from './project.view'
+import { FailuresView } from './failures.view'
 import { Local } from '@w3nest/http-clients'
 
 export class ProjectsFinderView implements VirtualDOM<'div'> {

@@ -1,4 +1,4 @@
-import { FailuresView, NewProjectsCard, ProjectView } from './project.view'
+import { NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
 import { Navigation, parseMd, Router, DefaultLayout } from 'mkdocs-ts'
 import { attr$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
@@ -11,6 +11,7 @@ import { icon } from './icons'
 import { ProjectsFinderView } from './projects-finder.view'
 import { defaultLayout } from '../common/utils-nav'
 import { NavNodeData } from 'mkdocs-ts/dist/src'
+import { FailuresView } from './failures.view'
 
 export * from './state'
 
