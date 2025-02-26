@@ -27,14 +27,11 @@ function projectLoadingIsSuccess(
 
 export function instanceOfStepStatus(
     data: unknown,
-): data is Local.Projects.PipelineStepStatusResponse {
-    return [
-        'projectId',
-        'flowId',
-        'stepId',
-        'artifactFolder',
-        'artifacts',
-    ].reduce((acc, e) => acc && data[e] !== undefined, true)
+): data is Local.Projects.CIStepStatusResponse {
+    return ['projectId', 'stepId', 'artifactFolder', 'artifacts'].reduce(
+        (acc, e) => acc && data[e] !== undefined,
+        true,
+    )
 }
 
 /**
@@ -55,14 +52,14 @@ export class ProjectEvents {
      * @group Observables
      */
     public readonly selectedStep$: BehaviorSubject<{
-        step: Local.Projects.PipelineStep | undefined
+        step: Local.Projects.CIStep | undefined
     }>
 
     /**
      * @group Observables
      */
     public readonly configureStep$: Subject<{
-        step: Local.Projects.PipelineStep | undefined
+        step: Local.Projects.CIStep | undefined
     }> = new Subject()
 
     /**
@@ -71,8 +68,8 @@ export class ProjectEvents {
     public readonly step$: {
         [k: string]: {
             status$: ReplaySubject<
-                | Local.Projects.PipelineStepEventKind
-                | Local.Projects.PipelineStepStatusResponse
+                | Local.Projects.CIStepEventKind
+                | Local.Projects.CIStepStatusResponse
             >
             log$: Subject<ContextMessage>
         }
@@ -92,7 +89,7 @@ export class ProjectEvents {
         )
 
         this.selectedStep$ = new BehaviorSubject<{
-            step: Local.Projects.PipelineStep | undefined
+            step: Local.Projects.CIStep | undefined
         }>({
             step: undefined,
         })
@@ -102,18 +99,18 @@ export class ProjectEvents {
             .pipe(
                 map((message) => message.data),
                 filter(
-                    (data: Local.Projects.PipelineStepEvent) =>
+                    (data: Local.Projects.CIStepEvent) =>
                         data.event === 'runStarted' ||
                         data.event === 'statusCheckStarted',
                 ),
             )
-            .subscribe((data: Local.Projects.PipelineStepEvent) => {
+            .subscribe((data: Local.Projects.CIStepEvent) => {
                 this.getStep$(data.stepId).status$.next(data.event)
             })
         this.messages$
             .pipe(
                 filterCtxMessage({
-                    withLabels: ['Label.RUN_PIPELINE_STEP'],
+                    withLabels: ['Label.RUN_CI_STEP'],
                     withAttributes: { projectId: this.project.id },
                 }),
             )
@@ -128,6 +125,7 @@ export class ProjectEvents {
             })
             .pipe(map((message) => message.data))
             .subscribe((status) => {
+                console.log('CI STEP STATUS', status)
                 this.getStep$(status.stepId).status$.next(status)
             })
         this.projectStatusResponse$ = this.projectsClient.webSocket
@@ -274,7 +272,7 @@ export class State {
 
     configureStep(projectId: string, stepId: string) {
         const events = this.projectEvents[projectId]
-        const step = events.project.pipeline.steps.find((s) => s.id === stepId)
+        const step = events.project.ci.steps.find((s) => s.id === stepId)
         this.projectEvents[projectId].configureStep$.next({
             step,
         })
@@ -316,7 +314,7 @@ export class State {
     }
     selectStep(projectId: string, stepId: string | undefined = undefined) {
         const events = this.projectEvents[projectId]
-        const step = events.project.pipeline.steps.find((s) => s.id === stepId)
+        const step = events.project.ci.steps.find((s) => s.id === stepId)
         events.selectedStep$.next(step ? { step } : { step: undefined })
     }
 

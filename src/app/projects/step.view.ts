@@ -28,7 +28,7 @@ export class StepView implements VirtualDOM<'div'> {
     }: {
         projectsState: State
         project: Local.Projects.Project
-        step: Local.Projects.PipelineStep
+        step: Local.Projects.CIStep
     }) {
         const events = projectsState.projectEvents[project.id]
         const status$ = events.getStep$(step.id).status$
@@ -154,8 +154,7 @@ export class ManifestView implements VirtualDOM<'div'> {
     }: {
         project: Local.Projects.Project
         status$: Observable<
-            | Local.Projects.PipelineStepEventKind
-            | Local.Projects.PipelineStepStatusResponse
+            Local.Projects.CIStepEventKind | Local.Projects.CIStepStatusResponse
         >
     }) {
         const fingerPrint = (
@@ -251,8 +250,8 @@ export class ManifestView implements VirtualDOM<'div'> {
             })
         }
 
-        type Event = Local.Projects.PipelineStepEventKind
-        type Status = Local.Projects.PipelineStepStatusResponse
+        type Event = Local.Projects.CIStepEventKind
+        type Status = Local.Projects.CIStepStatusResponse
         function isStatusResponse(d: Event | Status): d is Status {
             return (d as Status).manifest !== undefined
         }
@@ -315,8 +314,7 @@ export class RunStdOutView implements VirtualDOM<'div'> {
     }: {
         messages$: Observable<ContextMessage>
         status$: Observable<
-            | Local.Projects.PipelineStepEventKind
-            | Local.Projects.PipelineStepStatusResponse
+            Local.Projects.CIStepEventKind | Local.Projects.CIStepStatusResponse
         >
     }) {
         const data$ = new BehaviorSubject<unknown>(undefined)
@@ -325,7 +323,7 @@ export class RunStdOutView implements VirtualDOM<'div'> {
             filter((m) => {
                 return (
                     m.labels.includes('Label.STD_OUTPUT') &&
-                    m.labels.includes('Label.PIPELINE_STEP_RUNNING')
+                    m.labels.includes('Label.CI_STEP_RUNNING')
                 )
             }),
         )

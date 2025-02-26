@@ -26,7 +26,7 @@ export class SearchView implements VirtualDOM<'div'> {
                     new Set(
                         projects
                             .map((p) => {
-                                return p.pipeline.tags
+                                return p.ci.tags
                             })
                             .flat(),
                     ),
@@ -41,8 +41,7 @@ export class SearchView implements VirtualDOM<'div'> {
                 return projects
                     .filter((project) => {
                         return tags.reduce(
-                            (acc, tag) =>
-                                acc || project.pipeline.tags.includes(tag),
+                            (acc, tag) => acc || project.ci.tags.includes(tag),
                             false,
                         )
                     })

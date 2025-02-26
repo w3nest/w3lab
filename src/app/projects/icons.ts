@@ -9,13 +9,13 @@ export function icon(project: Local.Projects.Project): AnyVirtualDOM {
         javascript: 'icon-js.svg',
     }
     let filename = ''
-    if (project.pipeline.tags.includes('typescript')) {
+    if (project.ci.tags.includes('typescript')) {
         filename = filenames.typescript
     }
-    if (project.pipeline.tags.includes('python')) {
+    if (project.ci.tags.includes('python')) {
         filename = filenames.python
     }
-    if (project.pipeline.tags.includes('javascript')) {
+    if (project.ci.tags.includes('javascript')) {
         filename = filenames.javascript
     }
     if (filename === '') {

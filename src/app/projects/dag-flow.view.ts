@@ -313,7 +313,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
     }
 
     applyStyle(
-        selected: { step: Local.Projects.PipelineStep },
+        selected: { step: Local.Projects.CIStep },
         event: {
             stepId
             status
@@ -363,10 +363,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
             `${this.defaultStyle.thumbnail.attributes.class} ${pendingClass}`,
         )
 
-        const factoryPending: Record<
-            Local.Projects.PipelineStepEventKind,
-            string
-        > = {
+        const factoryPending: Record<Local.Projects.CIStepEventKind, string> = {
             runStarted: '',
             runDone: '',
             statusCheckStarted: '',
@@ -389,10 +386,9 @@ export class DagFlowView implements VirtualDOM<'div'> {
 }
 
 function parseDag(project: Local.Projects.Project) {
-    const flow = project.pipeline.flow
-    const availableSteps = project.pipeline.steps.map((s) => s.id)
+    const availableSteps = project.ci.steps.map((s) => s.id)
     const includedSteps = new Set(
-        flow.dag.flatMap((branch) => {
+        project.ci.dag.flatMap((branch) => {
             return branch
                 .split('>')
                 .map((elem) => elem.trim())
@@ -408,7 +404,7 @@ function parseDag(project: Local.Projects.Project) {
         (acc, e) => ({ ...acc, [e]: [] }),
         {},
     )
-    flow.dag.forEach((branch) => {
+    project.ci.dag.forEach((branch) => {
         let previous = undefined
         branch
             .split('>')
@@ -424,9 +420,7 @@ function parseDag(project: Local.Projects.Project) {
         return {
             id: stepId,
             parentIds: parentIds[stepId],
-            hasView: project.pipeline.steps.find((s) => s.id === stepId)[
-                'view'
-            ],
+            hasView: project.ci.steps.find((s) => s.id === stepId)['view'],
         }
     })
     return {

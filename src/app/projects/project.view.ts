@@ -28,7 +28,7 @@ function extraProjectLinks(
     appState: AppState,
     project: Local.Projects.Project,
 ) {
-    if (!['application', 'library'].includes(project.target.family)) {
+    if (project.webpmSpec.specification.kind === 'backend') {
         return []
     }
 
@@ -44,7 +44,7 @@ function extraProjectLinks(
                 if (!version) {
                     return { icon: 'fas fa-play', enabled: false, nav: `` }
                 }
-                if (project.target.family === 'application') {
+                if (project.webpmSpec.specification.kind === 'webapp') {
                     return {
                         icon: 'fas fa-play',
                         enabled: true,
@@ -59,7 +59,7 @@ function extraProjectLinks(
                 return {
                     icon: 'fas fa-play',
                     enabled: true,
-                    nav: `/apps/@youwol/js-playground/latest?content=${uri}`,
+                    nav: `/apps/@w3nest/js-playground/latest?content=${uri}`,
                     hrefKind: 'external' as const,
                 }
             }),
@@ -164,7 +164,7 @@ Publishing a components means to publish all or a part of those artifacts.
                     steps: () => {
                         return {
                             tag: 'div',
-                            children: project.pipeline.steps.map((step) => {
+                            children: project.ci.steps.map((step) => {
                                 return {
                                     tag: 'div',
                                     class: attr$({
@@ -236,7 +236,7 @@ export class ArtifactsView implements VirtualDOM<'div'> {
     }) {
         const event$ = projectsState.projectEvents[project.id].messages$.pipe(
             filterCtxMessage({
-                withLabels: ['PipelineStepStatusResponse'],
+                withLabels: ['CIStepStatusResponse'],
                 withAttributes: { projectId: project.id },
             }),
             debounceTime(1000),
