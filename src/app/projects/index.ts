@@ -10,7 +10,7 @@ import { delay, distinctUntilChanged, map } from 'rxjs/operators'
 import { icon } from './icons'
 import { ProjectsFinderView } from './projects-finder.view'
 import { defaultLayout } from '../common/utils-nav'
-import { NavNodeData } from 'mkdocs-ts/dist/src'
+import { NavNodeData } from 'mkdocs-ts'
 import { FailuresView } from './failures.view'
 
 export * from './state'
