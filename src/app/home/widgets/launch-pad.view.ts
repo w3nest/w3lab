@@ -1,14 +1,7 @@
-import {
-    AnyVirtualDOM,
-    child$,
-    ChildrenLike,
-    CSSAttribute,
-    VirtualDOM,
-} from 'rx-vdom'
-import { raiseHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
+import { child$, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
+import { raiseHTTPErrors, AssetsGateway, Webpm } from '@w3nest/http-clients'
 import { shareReplay } from 'rxjs/operators'
 import { colabClassPrefix } from '../../common'
-import { ApplicationInfo } from '../../common/patches'
 import { Observable } from 'rxjs'
 
 /**
@@ -98,21 +91,22 @@ export class AppIcon implements VirtualDOM<'button'> {
 
     static readonly appMetadata$ = (
         appName: string,
-    ): Observable<ApplicationInfo> => {
+    ): Observable<Webpm.GetVersionMetadataResponse> => {
         if (appName in AppIcon._appMetadata$) {
             return AppIcon._appMetadata$[appName]
         }
         AppIcon._appMetadata$[appName] = new AssetsGateway.Client().webpm
-            .getResource$<ApplicationInfo>({
+            .getMetadataInfo$({
                 libraryId: window.btoa(appName),
                 version: 'latest',
-                restOfPath: '.yw_metadata.json',
             })
             .pipe(raiseHTTPErrors(), shareReplay(1))
         return AppIcon._appMetadata$[appName]
     }
-    private static _appMetadata$: Record<string, Observable<ApplicationInfo>> =
-        {}
+    private static _appMetadata$: Record<
+        string,
+        Observable<Webpm.GetVersionMetadataResponse>
+    > = {}
 
     constructor(params: {
         package: string
@@ -139,16 +133,12 @@ export class AppIcon implements VirtualDOM<'button'> {
                         target: '_blank',
                         children: [
                             {
-                                tag: 'div',
-                                class: 'colab-Icon',
+                                tag: 'img',
                                 style: {
                                     width: params.size,
                                     height: params.size,
                                 },
-                                children: [
-                                    appInfo.graphics
-                                        .appIcon as unknown as AnyVirtualDOM,
-                                ],
+                                src: appInfo.icon,
                             },
                             {
                                 tag: 'i',
