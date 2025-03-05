@@ -18,7 +18,7 @@ import {
 import { AnyVirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
 import { fromFetch } from 'rxjs/fetch'
-import { tryLibScript } from '../components/js-wasm/package.views'
+import { tryLibScript } from '../components/esm/esm.view'
 
 export type Section =
     | 'Modify'

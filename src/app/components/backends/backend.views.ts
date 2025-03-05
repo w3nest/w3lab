@@ -1,5 +1,5 @@
 import { parseMd, Router } from 'mkdocs-ts'
-import { PackageView } from '../js-wasm/package.views'
+import { PackageView } from '../package.views'
 import {
     AnyVirtualDOM,
     append$,

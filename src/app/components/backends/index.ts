@@ -14,7 +14,7 @@ export const navigation = (
     header: {
         icon: {
             tag: 'div',
-            class: 'fas fa-server',
+            class: 'fas fa-network-wired',
         },
     },
     layout: defaultLayout(({ router }) => new PageView({ router, appState })),

@@ -22,7 +22,7 @@ import { AppState } from '../app-state'
 import { StepView } from './step.view'
 import { CdnLinkView, ExplorerLinkView } from '../common/links.view'
 import { filter, map } from 'rxjs/operators'
-import { tryLibScript } from '../components/js-wasm/package.views'
+import { tryLibScript } from '../components/esm/esm.view'
 
 function extraProjectLinks(
     appState: AppState,

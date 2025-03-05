@@ -3,7 +3,7 @@ import { State } from '../state'
 
 import { ReplaySubject } from 'rxjs'
 import { parseMd, Router } from 'mkdocs-ts'
-import { VersionsView } from '../js-wasm/package.views'
+import { VersionsView } from '../package.views'
 
 /**
  * @category View

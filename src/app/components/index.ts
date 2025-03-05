@@ -1,27 +1,30 @@
 import { AppState } from '../app-state'
 import * as Backends from './backends'
-import * as JsWasm from './js-wasm'
+import * as ESM from './esm'
+import * as WebApps from './webapps'
 import * as Pyodide from './pyodide'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
 import { DefaultLayout, Navigation, parseMd, Router, segment } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
-import { PackageView } from './js-wasm/package.views'
-import { BackendView } from './backends/package.views'
+import { PackageView } from './package.views'
+import { BackendView } from './backends/backend.views'
 import { State } from './state'
-import { PyodideView } from './pyodide/package.views'
 import { example1 } from './examples'
 import { defaultLayout } from '../common/utils-nav'
+import { WebAppView } from './webapps/webapp.views'
+import { EsmView } from './esm/esm.view'
 export * from './state'
 
 export const navigation = (
     appState: AppState,
 ): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
-    name: 'Components',
+    name: 'WebPM',
     header: { icon: { tag: 'i', class: 'fas  fa-microchip' } },
     layout: defaultLayout(({ router }) => new PageView({ router, appState })),
     routes: {
-        [segment('/js-wasm')]: JsWasm.navigation(appState),
+        [segment('/webapps')]: WebApps.navigation(appState),
+        [segment('/esm')]: ESM.navigation(appState),
         [segment('/pyodide')]: Pyodide.navigation(appState),
         [segment('/backends')]: Backends.navigation(appState),
     },
@@ -30,10 +33,10 @@ export const navigation = (
 export function lazyResolver(
     status: Local.Components.CdnStatusResponse,
     appState: AppState,
-    target: Local.Components.WebpmLibraryType,
+    target: Local.Components.WebpmKind,
 ) {
     const htmlFactory: Record<
-        Local.Components.WebpmLibraryType,
+        Local.Components.WebpmKind,
         (p: {
             appState: AppState
             cdnState: State
@@ -41,16 +44,17 @@ export function lazyResolver(
             packageId: string
         }) => AnyVirtualDOM
     > = {
-        'js/wasm': (params) => new PackageView(params),
+        webapp: (params) => new WebAppView(params),
+        esm: (params) => new EsmView(params),
         backend: (params) => new BackendView(params),
-        pyodide: (params) => new PyodideView(params),
+        pyodide: (params) => new PackageView(params),
     }
     return ({ path }: { path: string }) => {
         const parts = path.split('/').filter((d) => d !== '')
         if (parts.length === 0) {
             const children = status.packages
                 .filter((elem) => {
-                    return elem.versions[0].type === target
+                    return elem.versions[0].kind === target
                 })
                 .sort((a, b) => a['name'].localeCompare(b['name']))
                 .map((component) => {

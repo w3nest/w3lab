@@ -14,7 +14,12 @@ export const navigation = (
     appState: AppState,
 ): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Pyodide',
-    header: { icon: new NavIconSvg({ filename: 'icon-python.svg' }) },
+    header: {
+        icon: {
+            tag: 'div',
+            class: 'fab fa-python',
+        },
+    },
     layout: defaultLayout(({ router }) => new PageView({ router, appState })),
     routes: appState.cdnState.status$
         .pipe(debounceTime(500))
