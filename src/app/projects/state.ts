@@ -125,7 +125,6 @@ export class ProjectEvents {
             })
             .pipe(map((message) => message.data))
             .subscribe((status) => {
-                console.log('CI STEP STATUS', status)
                 this.getStep$(status.stepId).status$.next(status)
             })
         this.projectStatusResponse$ = this.projectsClient.webSocket
