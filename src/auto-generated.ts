@@ -8,7 +8,7 @@ const runTimeDependencies = {
         "@w3nest/webpm-client": "^0.1.2",
         "bootstrap": "^5.3.0",
         "d3": "^7.7.0",
-        "mkdocs-ts": "^0.2.0",
+        "mkdocs-ts": "^0.3.0",
         "rx-vdom": "^0.1.1",
         "rxjs": "^7.5.6"
     },
@@ -24,7 +24,7 @@ const externals = {
     "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
     "bootstrap": "window['bootstrap_APIv5']",
     "d3": "window['d3_APIv7']",
-    "mkdocs-ts": "window['mkdocs-ts_APIv02']",
+    "mkdocs-ts": "window['mkdocs-ts_APIv03']",
     "rx-vdom": "window['rx-vdom_APIv01']",
     "rxjs": "window['rxjs_APIv7']",
     "rxjs/fetch": "window['rxjs_APIv7']['fetch']",
@@ -60,7 +60,7 @@ const exportedSymbols = {
         "exportedSymbol": "d3"
     },
     "mkdocs-ts": {
-        "apiKey": "02",
+        "apiKey": "03",
         "exportedSymbol": "mkdocs-ts"
     },
     "rx-vdom": {
@@ -73,7 +73,8 @@ const exportedSymbols = {
     }
 }
 
-const mainEntry : {entryFile: string,loadDependencies:string[]} = {
+const mainEntry: { entryFile: string; loadDependencies: string[] } =
+    {
     "entryFile": "./main.ts",
     "loadDependencies": [
         "mkdocs-ts",
@@ -89,81 +90,107 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     ]
 }
 
-const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {}
+const secondaryEntries: {
+    [k: string]: { entryFile: string; name: string; loadDependencies: string[] }
+} = {}
 
 const entries = {
-     '@w3nest/co-lab': './main.ts',
-    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@w3nest/co-lab/${e.name}`]:e.entryFile}), {})
+    '@w3nest/w3lab': './main.ts',
+    ...Object.values(secondaryEntries).reduce(
+        (acc, e) => ({ ...acc, [e.name]: e.entryFile }),
+        {},
+    ),
 }
 export const setup = {
-    name:'@w3nest/co-lab',
-        assetId:'QHczbmVzdC9jby1sYWI=',
-    version:'0.7.2-wip',
-    shortDescription:"The W3Nest's collaborative laboratory application.",
-    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@w3nest/co-lab&tab=doc',
-    npmPackage:'https://www.npmjs.com/package/@w3nest/co-lab',
-    sourceGithub:'https://github.com/w3nest/co-lab',
-    userGuide:'https://l.youwol.com/doc/@w3nest/co-lab',
-    apiVersion:'07',
+    name: '@w3nest/w3lab',
+    assetId: 'QHczbmVzdC93M2xhYg==',
+    version: '0.8.0',
+    webpmPath: '/api/assets-gateway/webpm/resources/QHczbmVzdC93M2xhYg==/0.8.0',
+    apiVersion: '08',
     runTimeDependencies,
     externals,
     exportedSymbols,
     entries,
     secondaryEntries,
-    getDependencySymbolExported: (module:string) => {
+    getDependencySymbolExported: (module: string) => {
         return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
     },
 
-    installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
+    installMainModule: ({
+        cdnClient,
+        installParameters,
+    }: {
+        cdnClient: {
+            install: (_: unknown) => Promise<WindowOrWorkerGlobalScope>
+        }
         installParameters?
     }) => {
         const parameters = installParameters || {}
         const scripts = parameters.scripts || []
         const modules = [
             ...(parameters.modules || []),
-            ...mainEntry.loadDependencies.map( d => `${d}#${runTimeDependencies.externals[d]}`)
+            ...mainEntry.loadDependencies.map(
+                (d) => `${d}#${runTimeDependencies.externals[d]}`,
+            ),
         ]
-        return cdnClient.install({
-            ...parameters,
-            modules,
-            scripts,
-        }).then(() => {
-            return window[`@w3nest/co-lab_APIv07`]
-        })
+        return cdnClient
+            .install({
+                ...parameters,
+                modules,
+                scripts,
+            })
+            .then(() => {
+                return window[`@w3nest/w3lab_APIv08`]
+            })
     },
-    installAuxiliaryModule: ({name, cdnClient, installParameters}:{
-        name: string,
-        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
+    installAuxiliaryModule: ({
+        name,
+        cdnClient,
+        installParameters,
+    }: {
+        name: string
+        cdnClient: {
+            install: (_: unknown) => Promise<WindowOrWorkerGlobalScope>
+        }
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
-        if(!entry){
-            throw Error(`Can not find the secondary entry '${name}'. Referenced in template.py?`)
+        if (!entry) {
+            throw Error(
+                `Can not find the secondary entry '${name}'. Referenced in template.py?`,
+            )
         }
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@w3nest/co-lab#0.7.2-wip~dist/@w3nest/co-lab/${entry.name}.js`
+            `@w3nest/w3lab#0.8.0~dist/${entry.name}.js`,
         ]
         const modules = [
             ...(parameters.modules || []),
-            ...entry.loadDependencies.map( d => `${d}#${runTimeDependencies.externals[d]}`)
+            ...entry.loadDependencies.map(
+                (d) => `${d}#${runTimeDependencies.externals[d]}`,
+            ),
         ]
-        return cdnClient.install({
-            ...parameters,
-            modules,
-            scripts,
-        }).then(() => {
-            return window[`@w3nest/co-lab/${entry.name}_APIv07`]
-        })
+        return cdnClient
+            .install({
+                ...parameters,
+                modules,
+                scripts,
+            })
+            .then(() => {
+                return window[`@w3nest/w3lab_APIv08`][`${entry.name}`]
+            })
     },
-    getCdnDependencies(name?: string){
-        if(name && !secondaryEntries[name]){
-            throw Error(`Can not find the secondary entry '${name}'. Referenced in template.py?`)
+    getCdnDependencies(name?: string) {
+        if (name && !secondaryEntries[name]) {
+            throw Error(
+                `Can not find the secondary entry '${name}'. Referenced in template.py?`,
+            )
         }
-        const deps = name ? secondaryEntries[name].loadDependencies : mainEntry.loadDependencies
+        const deps = name
+            ? secondaryEntries[name].loadDependencies
+            : mainEntry.loadDependencies
 
-        return deps.map( d => `${d}#${runTimeDependencies.externals[d]}`)
-    }
+        return deps.map((d) => `${d}#${runTimeDependencies.externals[d]}`)
+    },
 }
