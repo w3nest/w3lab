@@ -1,8 +1,0 @@
-{
-    "name": "colab_backend",
-    "version": "0.1.0",
-    "main": "dist/colab_backend-0.1.0-py3-none-any.whl",
-    "webpm": {
-        "type": "backend"
-    }
-}
