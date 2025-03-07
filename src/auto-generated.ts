@@ -104,8 +104,8 @@ const entries = {
 export const setup = {
     name: '@w3nest/w3lab',
     assetId: 'QHczbmVzdC93M2xhYg==',
-    version: '0.8.0',
-    webpmPath: '/api/assets-gateway/webpm/resources/QHczbmVzdC93M2xhYg==/0.8.0',
+    version: '0.8.1-wip',
+    webpmPath: '/api/assets-gateway/webpm/resources/QHczbmVzdC93M2xhYg==/0.8.1-wip',
     apiVersion: '08',
     runTimeDependencies,
     externals,
@@ -163,7 +163,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@w3nest/w3lab#0.8.0~dist/${entry.name}.js`,
+            `@w3nest/w3lab#0.8.1-wip~dist/${entry.name}.js`,
         ]
         const modules = [
             ...(parameters.modules || []),

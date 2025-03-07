@@ -1,7 +1,7 @@
 {
     "name": "@w3nest/w3lab",
     "description": "The W3Nest's laboratory application.",
-    "version": "0.8.0",
+    "version": "0.8.1-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/w3nest/w3lab#README.md",
     "main": "./dist/@w3nest/w3lab.js",
