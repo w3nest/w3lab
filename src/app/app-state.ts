@@ -304,6 +304,6 @@ export class AppState {
         if (target.path.startsWith('/api/yw_utils')) {
             to = target.path.replace('/api/yw_utils', '/doc/api/yw_utils')
         }
-        return { path: to }
+        return { ...target, path: to }
     }
 }
