@@ -19,11 +19,11 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
-    "mkdocs-ts": "^0.3.0",
-    "rx-vdom": "^0.1.1",
+    "mkdocs-ts": "^0.3.1",
+    "rx-vdom": "^0.1.3",
     "bootstrap": "^5.3.0",
-    "@w3nest/webpm-client": "^0.1.2",
-    "@w3nest/http-clients": "^0.1.3",
+    "@w3nest/webpm-client": "^0.1.4",
+    "@w3nest/http-clients": "^0.1.6",
     "@w3nest/rx-tree-views": "^0.2.0",
     "@w3nest/rx-code-mirror-editors": "^0.1.0",
     "@floating-ui/dom": "^1.6.3",
