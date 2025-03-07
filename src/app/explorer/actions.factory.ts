@@ -1,7 +1,8 @@
 import { forkJoin, Observable, of } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 import {
     Assets,
+    AssetsGateway,
     AssetsGateway as Gtw,
     raiseHTTPErrors,
 } from '@w3nest/http-clients'
@@ -17,7 +18,6 @@ import {
 
 import { AnyVirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
-import { fromFetch } from 'rxjs/fetch'
 import { tryLibScript } from '../components/esm/esm.view'
 
 export type Section =
@@ -474,32 +474,36 @@ export const GENERIC_ACTIONS: { [k: string]: ActionConstructor } = {
 }
 
 export type LaunchPackageData = {
-    type: 'app' | 'lib'
+    kind: 'webapp' | 'esm'
     href: string
 }
 export const launchPackage$ = (
     rawId: string,
 ): Observable<LaunchPackageData | undefined> => {
-    return fromFetch(
-        `/api/assets-gateway/webpm/resources/${rawId}/latest/.yw_metadata.json`,
-    ).pipe(
-        switchMap((resp) => resp.json()),
-        map((resp: { family: string; execution?: { standalone: boolean } }) => {
-            const packageName = window.atob(rawId)
-            if (resp.family === 'application' && resp.execution?.standalone) {
-                const href = `/apps/${packageName}/latest`
-                return { type: 'app', href }
-            }
-            if (resp.family === 'library') {
-                const uri = encodeURIComponent(
-                    tryLibScript(packageName, 'latest'),
-                )
-                const href = `/apps/@youwol/js-playground/latest?content=${uri}`
-                return { type: 'lib', href }
-            }
-            return undefined
-        }),
-    )
+    return new AssetsGateway.Client().webpm
+        .getMetadataInfo$({ libraryId: rawId, version: 'latest' })
+        .pipe(
+            raiseHTTPErrors(),
+            map((resp) => {
+                const packageName = window.atob(rawId)
+                const kind = resp.specification.kind
+                if (
+                    kind === 'webapp' &&
+                    resp.specification.execution?.standalone
+                ) {
+                    const href = `/apps/${packageName}/latest`
+                    return { kind, href }
+                }
+                if (kind === 'esm') {
+                    const uri = encodeURIComponent(
+                        tryLibScript(packageName, 'latest'),
+                    )
+                    const href = `/apps/@w3nest/js-playground/latest?content=${uri}`
+                    return { kind, href }
+                }
+                return undefined
+            }),
+        )
 }
 
 export function getActions$(
@@ -543,9 +547,11 @@ export function getActions$(
                 icon: {
                     tag: 'div',
                     class:
-                        launch.type === 'app' ? 'fas fa-play' : 'fas fa-code',
+                        launch.kind === 'webapp'
+                            ? 'fas fa-play'
+                            : 'fas fa-code',
                 },
-                name: launch.type === 'app' ? 'Launch app.' : 'Try lib.',
+                name: launch.kind === 'esm' ? 'Launch app.' : 'Try lib.',
                 section: 'Open',
                 enabled: () => true,
                 applicable: () => {

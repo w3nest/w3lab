@@ -10,28 +10,21 @@ export class PackageLogoView implements VirtualDOM<'div'> {
     public readonly style = {}
     constructor({ asset }: { asset: Assets.GetAssetResponse }) {
         if (asset.kind === 'package') {
-            type Metadata = {
-                graphics: { appIcon: AnyVirtualDOM }
-            }
             const source$ = new AssetsGateway.Client().webpm
-                .getResource$<Metadata>({
-                    libraryId: asset.rawId,
-                    version: 'latest',
-                    restOfPath: '.yw_metadata.json',
-                })
+                .getMetadataInfo$({ libraryId: asset.rawId, version: 'latest' })
                 .pipe(raiseHTTPErrors())
             this.children = [
                 child$({
                     source$,
                     untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
                     vdomMap: (resp) => {
-                        if (resp.graphics?.appIcon === undefined) {
+                        if (resp.icon === undefined) {
                             return {
                                 tag: 'div',
                                 class: 'fas fa-microchip fa-2x',
                             }
                         }
-                        return new CustomIconView(resp.graphics.appIcon)
+                        return new CustomIconView(resp.icon)
                     },
                 }),
             ]
@@ -39,31 +32,16 @@ export class PackageLogoView implements VirtualDOM<'div'> {
     }
 }
 
-export class CustomIconView implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
+export class CustomIconView implements VirtualDOM<'img'> {
+    public readonly tag = 'img'
     public readonly style = {
         width: '80px',
         height: '80px',
     }
     public readonly children: ChildrenLike
-
-    constructor(icon: AnyVirtualDOM) {
-        if (
-            typeof icon.class === 'string' &&
-            (icon.class.includes('fas') ||
-                icon.class.includes('far') ||
-                icon.class.includes('fab'))
-        ) {
-            this.children = [
-                {
-                    tag: 'div',
-                    class: 'd-flex flex-column justify-content-center h-100 w-100 text-center',
-                    children: [icon],
-                },
-            ]
-            return
-        }
-        this.children = [icon]
+    public readonly src: string
+    constructor(iconUrl: string) {
+        this.src = iconUrl
     }
 }
 export class LaunchView implements VirtualDOM<'div'> {
@@ -72,6 +50,9 @@ export class LaunchView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ asset }: { asset: Assets.GetAssetResponse }) {
+        if (asset.kind !== 'package') {
+            return
+        }
         const labelView = (
             href: string,
             innerText: string,
@@ -96,36 +77,29 @@ export class LaunchView implements VirtualDOM<'div'> {
                 },
             ],
         })
+        const source$ = launchPackage$(asset.rawId)
 
-        if (asset.kind === 'package') {
-            const source$ = launchPackage$(asset.rawId)
-
-            this.children = [
-                child$({
-                    source$,
-                    untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
-                    vdomMap: (resp) => {
-                        if (!resp) {
-                            return { tag: 'div' }
-                        }
-                        if (resp?.type === 'app') {
-                            return labelView(
-                                resp.href,
-                                'Launch App.',
-                                'fas fa-play',
-                            )
-                        }
-                        if (resp?.type === 'lib') {
-                            return labelView(
-                                resp.href,
-                                'Try Lib.',
-                                'fas fa-code',
-                            )
-                        }
+        this.children = [
+            child$({
+                source$,
+                untilFirst: { tag: 'i', class: 'fas fa-spinner fa-spin' },
+                vdomMap: (resp) => {
+                    if (!resp) {
                         return { tag: 'div' }
-                    },
-                }),
-            ]
-        }
+                    }
+                    if (resp?.kind === 'webapp') {
+                        return labelView(
+                            resp.href,
+                            'Launch App.',
+                            'fas fa-play',
+                        )
+                    }
+                    if (resp?.kind === 'esm') {
+                        return labelView(resp.href, 'Try Lib.', 'fas fa-code')
+                    }
+                    return { tag: 'div' }
+                },
+            }),
+        ]
     }
 }
