@@ -102,7 +102,7 @@ export class ContentBackendInstallView implements VirtualDOM<'div'> {
                 source$: dynamicSource$,
                 vdomMap: (m) => ({
                     tag: 'span',
-                    innerText: m.text,
+                    innerText: `${m.text}\n`,
                 }),
             }),
         }
