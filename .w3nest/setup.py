@@ -49,7 +49,7 @@ config = ProjectConfig(
     ),
     bundles=Bundles(
         mainModule=MainModule(
-            entryFile="./main.ts", loadDependencies=list(externals_deps.keys())
+            entryFile="./app/main.ts", loadDependencies=list(externals_deps.keys())
         ),
     ),
     userGuide=True,
@@ -64,7 +64,6 @@ template_folder = Path(__file__).parent / ".template"
 generate_template(config=config, dst_folder=template_folder)
 
 files = [
-    Path("src") / "auto-generated.ts",
     "README.md",
     "package.json",
     "tsconfig.json",

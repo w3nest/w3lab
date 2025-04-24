@@ -11,7 +11,7 @@ import {
 } from 'mkdocs-ts'
 import { pyYwDocLink } from '../common/py-yw-references.view'
 import { AppState } from '../app-state'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { defaultLayout, splitCompanionAction } from '../common/utils-nav'
 
 function fromMd({
@@ -21,8 +21,9 @@ function fromMd({
     file: string
     placeholders?: { [_: string]: string }
 }) {
+    const assetId = window.btoa(pkgJson.name)
     return fromMarkdown({
-        url: `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets/${file}`,
+        url: `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.version}/assets/${file}`,
         placeholders,
     })
 }
@@ -41,9 +42,9 @@ const configuration = {
     ...CodeApiModule.configurationPython,
     codeUrl: ({ path, startLine }: { path: string; startLine: number }) => {
         const baseUrl = 'https://github.com/youwol/py-youwol/tree'
-        const target = setup.version.endsWith('-wip')
+        const target = pkgJson.version.endsWith('-wip')
             ? 'main'
-            : `v${setup.version}`
+            : `v${pkgJson.version}`
         return `${baseUrl}/${target}/src/youwol/${path}#L${startLine}`
     },
 }

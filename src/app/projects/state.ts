@@ -16,7 +16,7 @@ import {
     Local,
     WebpmSessionsStorage,
 } from '@w3nest/http-clients'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { getProjectNav$ } from '../common/utils-nav'
 
 function projectLoadingIsSuccess(
@@ -245,7 +245,7 @@ export class State {
                 mergeMap((historic) => {
                     return from(
                         this.storageClient.postData$({
-                            packageName: setup.name,
+                            packageName: pkgJson.name,
                             dataName: State.STORAGE_KEY,
                             body: { historic },
                         }),
@@ -256,7 +256,7 @@ export class State {
 
         this.storageClient
             .getData$({
-                packageName: setup.name,
+                packageName: pkgJson.name,
                 dataName: State.STORAGE_KEY,
             })
             .pipe(raiseHTTPErrors())

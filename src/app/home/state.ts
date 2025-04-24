@@ -7,7 +7,7 @@ import {
     ReplaySubject,
 } from 'rxjs'
 import { filter, switchMap, take } from 'rxjs/operators'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import {
     raiseHTTPErrors,
     WebpmSessionsStorage,
@@ -50,7 +50,7 @@ export class State {
         combineLatest([
             this.storageClient
                 .getData$({
-                    packageName: setup.name,
+                    packageName: pkgJson.name,
                     dataName: this.dataName,
                 })
                 .pipe(raiseHTTPErrors()),
@@ -73,7 +73,7 @@ export class State {
                 debounceTime(1000),
                 switchMap((content) => {
                     return this.storageClient.postData$({
-                        packageName: setup.name,
+                        packageName: pkgJson.name,
                         dataName: this.dataName,
                         body: content,
                     })

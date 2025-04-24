@@ -8,7 +8,7 @@ import {
 } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
 import { BehaviorSubject, mergeMap, Observable, of } from 'rxjs'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { AppState } from '../app-state'
 import { map, take } from 'rxjs/operators'
 import { AssetsGateway, Explorer, onHTTPErrors } from '@w3nest/http-clients'
@@ -38,7 +38,8 @@ export class NavIconSvg implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly style: CSSAttribute
     constructor({ filename }: { filename: string }) {
-        const basePath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}`
+        const assetId = window.btoa(pkgJson.name)
+        const basePath = `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.version}`
         this.style = {
             width: '20px',
             backgroundSize: 'cover',

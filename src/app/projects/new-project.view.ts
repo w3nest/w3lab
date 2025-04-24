@@ -5,7 +5,7 @@ import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { delay, map, shareReplay, tap } from 'rxjs/operators'
 import { classesButton } from '../common'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { CodeMirrorEditor } from '../common/patches'
 
 declare type CodeEditorModule = typeof import('@w3nest/rx-code-mirror-editors')
@@ -20,7 +20,7 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
         from(
             install({
                 modules: [
-                    `@w3nest/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@w3nest/rx-code-mirror-editors']} as codeMirrorEditors`,
+                    `@w3nest/rx-code-mirror-editors#${pkgJson.webpm.dependencies['@w3nest/rx-code-mirror-editors']} as codeMirrorEditors`,
                 ],
                 scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
                 css: [

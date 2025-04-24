@@ -28,7 +28,7 @@ import {
     UrlTarget,
 } from 'mkdocs-ts'
 import * as Mounted from './mounted'
-import { setup } from '../auto-generated'
+import pkgJson from '../../package.json'
 import { encodeHdPath } from './mounted'
 import { Patches } from './common'
 import { editHomeAction, HomeView } from './home/views'
@@ -143,7 +143,7 @@ export class AppState {
     }
     private dynamicInstallBodies = {
         d3: {
-            esm: [`d3#${setup.runTimeDependencies.externals.d3} as d3`],
+            esm: [`d3#${pkgJson.webpm.dependencies.d3} as d3`],
         },
     }
     private _installed: { [k: string]: Observable<WindowOrWorkerGlobalScope> } =
@@ -209,7 +209,7 @@ export class AppState {
         this.router = new Router(
             {
                 navigation: this.navigation,
-                basePath: `/apps/${setup.name}/${setup.version}`,
+                basePath: `/apps/${pkgJson.name}/${pkgJson.version}`,
                 redirects: [(target) => this.getRedirects(target)],
                 userStore: this,
             },

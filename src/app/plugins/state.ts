@@ -1,5 +1,5 @@
 import { WebpmSessionsStorage, raiseHTTPErrors } from '@w3nest/http-clients'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { map } from 'rxjs/operators'
 import { firstValueFrom, Observable, Subject } from 'rxjs'
 import * as webpm from '@w3nest/webpm-client'
@@ -89,7 +89,7 @@ export class State {
         const client = new WebpmSessionsStorage.Client()
         return client
             .getData$({
-                packageName: setup.name,
+                packageName: pkgJson.name,
                 dataName: 'plugins',
             })
             .pipe(
@@ -113,7 +113,7 @@ export class State {
             const client = new WebpmSessionsStorage.Client()
             await firstValueFrom(
                 client.postData$({
-                    packageName: setup.name,
+                    packageName: pkgJson.name,
                     dataName: 'plugins',
                     body: {
                         js: source,
