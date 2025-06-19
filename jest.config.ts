@@ -1,6 +1,9 @@
-import { Config } from "jest";
+import { Config } from 'jest'
 
 const jestConfig: Config = {
-    modulePathIgnorePatterns: ["<rootDir>/.w3nest", "<rootDir>/dist"],
-};
-export default jestConfig;
+    transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
+    testRunner: 'jest-circus',
+    testEnvironment: 'jsdom',
+    modulePathIgnorePatterns: ['<rootDir>/.w3nest', '<rootDir>/dist'],
+}
+export default jestConfig
