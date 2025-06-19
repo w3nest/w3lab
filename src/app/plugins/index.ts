@@ -33,6 +33,7 @@ import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { State } from './state'
 import { defaultLayout } from '../common/utils-nav'
+import { CodeEditorView } from '../common/code-editor.view'
 export * from './state'
 
 export async function navigation(
@@ -118,14 +119,11 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
             child$({
                 source$: pluginsState.jsContent$(),
                 vdomMap: (jsContent) => {
-                    const editor = new MdWidgets.CodeSnippetView({
+                    this.content$ = new BehaviorSubject<string>(jsContent)
+                    const editor = new CodeEditorView({
                         language: 'javascript',
-                        content: jsContent,
-                        cmConfig: {
-                            readOnly: false,
-                        },
+                        content: this.content$,
                     })
-                    this.content$ = editor.content$
                     return editor
                 },
             }),

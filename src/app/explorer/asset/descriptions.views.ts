@@ -2,8 +2,9 @@ import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Assets, AssetsGateway } from '@w3nest/http-clients'
 import { ExplorerState } from '../explorer.state'
 import { BehaviorSubject, skip } from 'rxjs'
-import { MdWidgets, parseMd } from 'mkdocs-ts'
+import { parseMd } from 'mkdocs-ts'
 import { filter, switchMap } from 'rxjs/operators'
+import { CodeEditorView } from '../../common/code-editor.view'
 
 export class DescriptionView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -21,13 +22,9 @@ export class DescriptionView implements VirtualDOM<'div'> {
         explorerState: ExplorerState
     }) {
         const edit$ = new BehaviorSubject<boolean>(false)
-        const snippet = new MdWidgets.CodeSnippetView({
+        const snippet = new CodeEditorView({
             language: 'markdown',
             content: asset.description,
-            cmConfig: {
-                readOnly: false,
-                lineNumbers: false,
-            },
         })
         edit$
             .pipe(

@@ -1,11 +1,4 @@
-import {
-    BehaviorSubject,
-    distinctUntilChanged,
-    firstValueFrom,
-    forkJoin,
-    from,
-    Observable,
-} from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, from, Observable } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { filter, map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import * as Home from './home'
@@ -20,12 +13,11 @@ import * as Doc from './doc'
 import * as Plugins from './plugins'
 import { Local, Accounts, raiseHTTPErrors } from '@w3nest/http-clients'
 import {
-    MdWidgets,
     Navigation,
-    Router,
     DefaultLayout,
     segment,
     UrlTarget,
+    Router,
 } from 'mkdocs-ts'
 import * as Mounted from './mounted'
 import pkgJson from '../../package.json'
@@ -192,7 +184,6 @@ export class AppState {
         )
         this.navigation = this.getNav()
         this.bookmarks$ = new BehaviorSubject([
-            '/',
             '/environment',
             '/components',
             '/projects',
@@ -283,21 +274,6 @@ export class AppState {
 
     async getRedirects(target: UrlTarget) {
         let to = target.path
-        if (target.path.startsWith('/doc')) {
-            // Documentation features examples using code snippets in python.
-            // We await installing the dependencies such that the snippets are displayed right away,
-            // and navigation to a given part of the page actually land at the right place.
-            // If not done, the code snippet views update after the navigation is done, translating the location of the
-            // elements and result in discrepancy with the expected location.
-            await firstValueFrom(
-                forkJoin(
-                    ['python', 'html', 'javascript'].map(
-                        (l: MdWidgets.CodeLanguage) =>
-                            MdWidgets.CodeSnippetView.fetchCmDependencies$(l),
-                    ),
-                ),
-            )
-        }
         if (target.path.startsWith('/api/youwol')) {
             to = target.path.replace('/api/youwol', '/doc/api/youwol')
         }

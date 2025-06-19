@@ -1,15 +1,14 @@
 import { child$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { State, Method } from './state'
 import { Local } from '@w3nest/http-clients'
-import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs'
+import { BehaviorSubject, of, Subject } from 'rxjs'
 import { AttributeView, DashboardTitle } from '../common'
 import { catchError, map, mergeMap, take, withLatestFrom } from 'rxjs/operators'
 import { ObjectJs } from '@w3nest/rx-tree-views'
-import { install } from '@w3nest/webpm-client'
 import { ExpandableGroupView } from '../common/expandable-group.view'
 import { LogsExplorerView } from '../common'
-import { getCodeEditor } from '../common/utlis-misc'
 import { Json } from '@w3nest/http-clients'
+import { CodeEditorView } from '../common/code-editor.view'
 
 /**
  * @category View
@@ -49,19 +48,6 @@ export class CommandsListView implements VirtualDOM<'div'> {
             },
         })
     }
-}
-
-function fetchCodeMirror$(): Observable<WindowOrWorkerGlobalScope> {
-    return from(
-        install({
-            modules: ['codemirror'],
-            scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
-            css: [
-                'codemirror#5.52.0~codemirror.min.css',
-                'codemirror#5.52.0~theme/blackboard.min.css',
-            ],
-        }),
-    )
 }
 
 /**
@@ -269,7 +255,6 @@ export class ExecuteBodyView extends ExecuteView {
             })
 
         this.children = [
-            //new DashboardTitle({ title: 'Execute command' }),
             bodyView,
             playView,
             child$({
@@ -342,20 +327,10 @@ export class BodyView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     /**
-     * @group Configurations
-     */
-    public readonly codeMirrorConfiguration = {
-        lineNumbers: true,
-        theme: 'blackboard',
-        lineWrapping: false,
-        indentUnit: 4,
-        mode: 'javascript',
-    }
-    /**
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        fontSize: 'small',
+        fontSize: 'smaller',
     }
     /**
      * @group Observables
@@ -370,32 +345,7 @@ export class BodyView implements VirtualDOM<'div'> {
                 tag: 'div',
                 innerText: "Command's body (json format):",
             },
-            child$({
-                source$: fetchCodeMirror$(),
-                vdomMap: () => {
-                    return {
-                        tag: 'div',
-                        class: 'flex-grow-1',
-                        connectedCallback: (htmlElement: HTMLDivElement) => {
-                            const config = {
-                                ...this.codeMirrorConfiguration,
-                                value: '{}',
-                            }
-                            const editor = getCodeEditor(htmlElement, config)
-
-                            editor.on('changes', (_, changeObj) => {
-                                if (
-                                    changeObj.length === 1 &&
-                                    changeObj[0].origin === 'setValue'
-                                ) {
-                                    return
-                                }
-                                this.body$.next(editor.getValue())
-                            })
-                        },
-                    }
-                },
-            }),
+            new CodeEditorView({ language: 'json', content: this.body$ }),
         ]
     }
 }

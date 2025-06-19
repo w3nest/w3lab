@@ -1,41 +1,28 @@
 import { ChildrenLike, VirtualDOM, AnyVirtualDOM, child$, attr$ } from 'rx-vdom'
-
-import { DefaultLayout, MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'
 import { internalDocLink } from '../common/buttons'
+import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
 
-export const editHomeAction = (state: State) =>
-    new DefaultLayout.NavActionView({
-        content: {
-            tag: 'i' as const,
-            class: 'flex-grow-1',
-            style: {
-                padding: '0px',
-            },
-            children: [
-                child$({
-                    source$: state.mode$,
-                    vdomMap: (mode) =>
-                        mode === 'view'
-                            ? {
-                                  tag: 'i',
-                                  class: 'fas fa-pen' as string,
-                                  onclick: () => state.toggleMode(),
-                              }
-                            : {
-                                  tag: 'i',
-                                  class: 'fas fa-eye' as string,
-                                  onclick: () => state.toggleMode(),
-                              },
-                }),
-            ],
+export const editHomeAction = (state: State): AnyVirtualDOM => {
+    const icon = {
+        tag: 'i' as const,
+        class: {
+            source$: state.mode$,
+            vdomMap: (mode) => (mode === 'view' ? 'fas fa-pen' : 'fas fa-eye'),
         },
-        action: () => {
+    }
+    return {
+        tag: 'button',
+        class: 'btn btn-sm btn-light',
+        children: [icon],
+        onclick: () => {
+            state.toggleMode()
             state.appState.router.fireNavigateTo({ path: '/' })
         },
-    })
+    }
+}
 
 export class HomeView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -58,6 +45,11 @@ export class HomeView implements VirtualDOM<'div'> {
             }),
         )
         this.children = [
+            {
+                tag: 'div',
+                class: 'w-100 mkdocs-bg-5 rounded p-1 mb-1',
+                children: [editHomeAction(this.state)],
+            },
             child$({
                 source$,
                 vdomMap: (vdom) => vdom,
@@ -91,21 +83,17 @@ class EditorView implements VirtualDOM<'div'> {
             child$({
                 source$: this.selectedMode$,
                 vdomMap: (mode) => {
-                    const languages: Record<Language, MdWidgets.CodeLanguage> =
-                        {
-                            md: 'markdown',
-                            js: 'javascript',
-                            css: 'css',
-                        }
-                    const editor = new MdWidgets.CodeSnippetView({
+                    const languages: Record<Language, CodeLanguage> = {
+                        md: 'markdown',
+                        js: 'javascript',
+                        css: 'css',
+                    }
+                    const editor = new CodeEditorView({
                         language: languages[mode],
                         content: content[mode],
-                        cmConfig: {
-                            readOnly: false,
-                            extraKeys: {
-                                'Ctrl-Enter': () => state.toggleMode(),
-                            },
-                        },
+                        //extraKeys: {
+                        //    'Ctrl-Enter': () => state.toggleMode(),
+                        //},
                     })
                     return {
                         tag: 'div',

@@ -1,51 +1,15 @@
-import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { State as ProjectsState } from './state'
 import { HTTPError, dispatchHTTPErrors, Local } from '@w3nest/http-clients'
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs'
-import { install } from '@w3nest/webpm-client'
-import { delay, map, shareReplay, tap } from 'rxjs/operators'
+import { BehaviorSubject, Subject } from 'rxjs'
+import { tap } from 'rxjs/operators'
 import { classesButton } from '../common'
-import pkgJson from '../../../package.json'
-import { CodeMirrorEditor } from '../common/patches'
-
-declare type CodeEditorModule = typeof import('@w3nest/rx-code-mirror-editors')
-
-/**
- * Lazy loading of the module `@youwol/fv-code-mirror-editors`
- *
- * @category HTTP
- */
-export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
-    () =>
-        from(
-            install({
-                modules: [
-                    `@w3nest/rx-code-mirror-editors#${pkgJson.webpm.dependencies['@w3nest/rx-code-mirror-editors']} as codeMirrorEditors`,
-                ],
-                scripts: ['codemirror#5.52.0~mode/javascript.min.js'],
-                css: [
-                    'codemirror#5.52.0~codemirror.min.css',
-                    'codemirror#5.52.0~theme/blackboard.min.css',
-                ],
-            }),
-        ).pipe(
-            map(
-                (window) =>
-                    (
-                        window as unknown as {
-                            codeMirrorEditors: CodeEditorModule
-                        }
-                    ).codeMirrorEditors,
-            ),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        )
+import { CodeEditorView } from '../common/code-editor.view'
 
 /**
  * @category View
  */
 export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
-    static loadFvCodeEditors$ = loadFvCodeEditorsModule$()
-
     /**
      * @group Immutable DOM Constants
      */
@@ -95,17 +59,11 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
                 class: 'w-100 h-100 py-2 overflow-auto',
                 style: { minHeight: '0px' },
                 children: [
-                    child$({
-                        source$: NewProjectFromTemplateView.loadFvCodeEditors$,
-                        vdomMap: (CodeEditorModule) => {
-                            return new ProjectTemplateEditor({
-                                projectsState: this.projectsState,
-                                CodeEditorModule: CodeEditorModule,
-                                projectTemplate: this.projectTemplate,
-                                onError: () => {
-                                    /*viewState$.next('expanded')*/
-                                },
-                            })
+                    new ProjectTemplateEditor({
+                        projectsState: this.projectsState,
+                        projectTemplate: this.projectTemplate,
+                        onError: () => {
+                            /*viewState$.next('expanded')*/
                         },
                     }),
                 ],
@@ -144,38 +102,23 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
      */
     public readonly projectsState: ProjectsState
 
-    /**
-     * @group Module
-     */
-    public readonly CodeEditorModule: CodeEditorModule
-
     constructor(params: {
         projectsState: ProjectsState
-        CodeEditorModule: CodeEditorModule
         projectTemplate: Local.Environment.ProjectTemplate
         onError: () => void
     }) {
         Object.assign(this, params)
         const content = JSON.stringify(this.projectTemplate.parameters, null, 4)
 
-        const ideState = new this.CodeEditorModule.Common.IdeState({
-            files: [{ path: './index.js', content }],
-            defaultFileSystem: Promise.resolve(new Map<string, string>()),
-        })
-        const editor = new this.CodeEditorModule.Common.CodeEditorView({
-            ideState,
-            path: './index.js',
+        const editor = new CodeEditorView({
             language: 'javascript',
+            content,
         })
-        editor.nativeEditor$
-            .pipe(delay(100))
-            .subscribe((nativeEdtr: CodeMirrorEditor) => {
-                nativeEdtr.refresh()
-            })
+
         const generateButton = new GenerateButton({
             projectsState: this.projectsState,
             projectTemplate: this.projectTemplate,
-            file$: ideState.updates$['./index.js'],
+            file$: editor.content$,
         })
 
         generateButton.error$.subscribe(() => {
@@ -234,10 +177,7 @@ export class GenerateButton implements VirtualDOM<'div'> {
     }: {
         projectsState: ProjectsState
         projectTemplate: Local.Environment.ProjectTemplate
-        file$: BehaviorSubject<{
-            path: string
-            content: string
-        }>
+        file$: BehaviorSubject<string>
     }) {
         const creating$ = new BehaviorSubject(false)
         this.children = [
@@ -256,10 +196,7 @@ export class GenerateButton implements VirtualDOM<'div'> {
         ]
         this.onclick = () => {
             creating$.next(true)
-            const parameters = JSON.parse(file$.getValue().content) as Record<
-                string,
-                string
-            >
+            const parameters = JSON.parse(file$.value) as Record<string, string>
             projectsState
                 .createProjectFromTemplate$({
                     type: projectTemplate.type,

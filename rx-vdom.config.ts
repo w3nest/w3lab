@@ -38,3 +38,4 @@ type DevTags =
     | 'footer'
     | 'label'
     | 'canvas'
+    | 'code'

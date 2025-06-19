@@ -1,7 +1,12 @@
 import { AppState } from '../../app-state'
-import { CodeEditorView } from '../../common/code-editor.view'
-import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    DefaultLayout,
+    MdWidgets,
+    Navigation,
+    parseMd,
+    Router,
+} from 'mkdocs-ts'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { HdPathBookView } from '../../common'
 import { map, mergeMap } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
@@ -44,17 +49,28 @@ Below is displayed the current configuration of the local YouWol server:
                             type: 'file',
                         })
                     },
-                    fileView: () =>
-                        new CodeEditorView({
-                            language: 'python',
-                            content: appState.environment$.pipe(
-                                mergeMap(() =>
-                                    new Local.Client().api.environment
-                                        .getFileContent$()
-                                        .pipe(raiseHTTPErrors()),
-                                ),
-                            ),
-                        }),
+                    fileView: () => {
+                        return {
+                            tag: 'div',
+                            children: [
+                                child$({
+                                    source$: appState.environment$.pipe(
+                                        mergeMap(() =>
+                                            new Local.Client().api.environment
+                                                .getFileContent$()
+                                                .pipe(raiseHTTPErrors()),
+                                        ),
+                                    ),
+                                    vdomMap: (content) => {
+                                        return new MdWidgets.CodeSnippetView({
+                                            language: 'python',
+                                            content,
+                                        })
+                                    },
+                                }),
+                            ],
+                        }
+                    },
                 },
             }),
         ]

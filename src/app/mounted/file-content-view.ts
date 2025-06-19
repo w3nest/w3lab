@@ -1,10 +1,20 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ObjectJs } from '@w3nest/rx-tree-views'
-import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
 import { HeaderView } from './explorer.view'
-import { Router } from 'mkdocs-ts'
+import { MdWidgets, Router } from 'mkdocs-ts'
 import { headerViewWrapper } from '../explorer/explorer.views'
+
+export type CodeLanguage =
+    | 'python'
+    | 'javascript'
+    | 'typescript'
+    | 'markdown'
+    | 'html'
+    | 'css'
+    | 'yaml'
+    | 'xml'
+    | 'unknown'
 
 export class FileContentView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -31,7 +41,7 @@ export class FileContentView implements VirtualDOM<'div'> {
 
         const languages: Record<string, CodeLanguage> = {
             '.js': 'javascript',
-            '.ts': 'javascript',
+            '.ts': 'typescript',
             '.css': 'css',
             '.html': 'html',
             '.md': 'markdown',
@@ -47,17 +57,13 @@ export class FileContentView implements VirtualDOM<'div'> {
                 source$: file$,
                 vdomMap: (resp: string | { [k: string]: unknown }) => {
                     if (typeof resp == 'string') {
-                        const language: CodeLanguage = Object.entries(
+                        const language: [string, CodeLanguage] = Object.entries(
                             languages,
-                        ).reduce((acc, [ext, lang]) => {
-                            if (acc !== 'unknown') {
-                                return acc
-                            }
-                            return path.endsWith(ext) ? lang : acc
-                        }, 'unknown')
-
-                        return new CodeEditorView({
-                            language: language,
+                        ).find(([ext]) => {
+                            return full.endsWith(ext)
+                        })
+                        return new MdWidgets.CodeSnippetView({
+                            language: language[1],
                             content: resp,
                         })
                     }
