@@ -1,7 +1,7 @@
 {
     "name": "@w3nest/w3lab",
     "description": "The W3Nest's laboratory application.",
-    "version": "0.8.1-wip",
+    "version": "0.8.1",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/w3nest/w3lab#README.md",
     "main": "./dist/@w3nest/w3lab.js",
@@ -51,7 +51,7 @@
         "@floating-ui/dom": "^1.6.3",
         "@mkdocs-ts/code-api": "^0.2.0",
         "@mkdocs-ts/notebook": "^0.1.2",
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1750408599.tgz",
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1750409086.tgz",
         "@w3nest/http-clients": "^0.1.7",
         "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/ui-tk": "^0.1.6",
@@ -161,6 +161,6 @@
         }
     },
     "resolutions": {
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1750408599.tgz"
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1750409086.tgz"
     }
 }
