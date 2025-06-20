@@ -58,7 +58,7 @@ export class ProjectsHistoricView implements VirtualDOM<'div'> {
      * **Example**
      *
      * <code-snippet language='html'>
-     * <projectsHistoric count='5'></projectsHistoric>
+     * <projectsHistoric count="5"></projectsHistoric>
      * </code-snippet>
      *
      *

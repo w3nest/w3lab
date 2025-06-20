@@ -26,13 +26,13 @@ Additionally, you can enhance the page using special widgets and custom processi
 <note level="hint">
 The `Markdown` engine is powered by the **mkdocs-ts** library.
 For more information, you can refer to the official documentation 
-<mkdocsDoc nav="/tutorials/markdown">documentation</mkdocsDoc>..
+<ext-link target="mkdocs-ts">documentation</ext-link>.
 </note>
 
-### CoLab Widgets
-**CoLab** provides a collection of widgets that can be directly integrated into your `Markdown` content.
+### W3Lab Widgets
+**W3Lab** provides a collection of widgets that can be directly integrated into your `Markdown` content.
 Below are some brief examples. For more detailed information, refer to 
-<apiLink target="ColabWidgets"></apiLink>.
+<api-link target="W3Lab.Widgets"></api-link>.
 
 
 <note level="hint">
@@ -48,13 +48,13 @@ This widget creates a launch-pad from target applications:
 This is an example of `LaunchPad`:
 
 <launchPad size='50px'>
-   <app name="mkdocs-ts-doc"></app>
-   <app name="rx-vdom-doc"></app>
-   <app name="@w3nest/webpm-client-doc"></app>
+   <app name="@mkdocs-ts/doc"></app>
+   <app name="@rx-vdom/doc"></app>
+   <app name="@webpm-client/doc"></app>
 </launchPad>
 </md-cell>
 
-More information in <apiLink target="LaunchPadView"></apiLink>.
+More information in <api-link target="W3Lab.LaunchPadView"></api-link>.
 
 #### Projects Donut Chart
 
@@ -65,24 +65,24 @@ This is an example of donut chart regarding projects:
 
 <projectsDonutChart margin="70" width="75%">
     <section label="Typescript" style="fill:darkblue">
-       return (project) => project.pipeline.tags.includes('typescript')
+       return (project) => project.ci.tags.includes('typescript')
     </section>
     <section label="Python" style="fill:rebeccapurple">
-       return (project) => project.pipeline.tags.includes('python')
+       return (project) => project.ci.tags.includes('python')
     </section>
     <section  label="JavaScript" style="fill:yellow">
-       return (project) => project.pipeline.tags.includes('javascript')
+       return (project) => project.ci.tags.includes('javascript')
     </section>
 </projectsDonutChart>
 </md-cell>
 
 <note level="hint">
-See <apiLink target="Project"></apiLink> regarding the available attributes of the `project` variable 
+See <api-link target="w3nest.Project"></api-link> regarding the available attributes of the `project` variable 
 referenced above.
 <todo icon="warning">This is not exactly it, but it provides a global idea (documentation on its way).</todo>
 </note>
 
-More information in <apiLink target="ProjectsDonutChart"></apiLink>.
+More information in <api-link target="W3Lab.ProjectsDonutChart"></api-link>.
 
 #### Components Donut Chart
 
@@ -93,23 +93,26 @@ This is an example of donut chart regarding components:
 
 <componentsDonutChart margin="70" width="75%">
     <section label="JS/WASM" style="fill:darkblue">
-       return (component) => component.versions.slice(-1)[0].type === 'js/wasm'
+       return (component) => component.versions.slice(-1)[0].kind === 'esm'
     </section>
     <section label="Pyodide" style="fill:rebeccapurple">
-       return (component) => component.versions.slice(-1)[0].type === 'pyodide'
+       return (component) => component.versions.slice(-1)[0].kind === 'pyodide'
     </section>
     <section  label="Backend" style="fill:yellow">
-       return (component) => component.versions.slice(-1)[0].type === 'backend'
+       return (component) => component.versions.slice(-1)[0].kind === 'backend'
+    </section>
+    <section  label="WebApp" style="fill:darkgreen">
+       return (component) => component.versions.slice(-1)[0].kind === 'webapp'
     </section>
 </componentsDonutChart>
 </md-cell>
 
 <note level="hint">
-See <apiLink target="CdnPackageLight"></apiLink> regarding the available attributes of the `component` variable 
+See <api-link target="w3nest.CdnPackageLight"></api-link> regarding the available attributes of the `component` variable 
 referenced above.
 </note>
 
-More information in  <apiLink target="ComponentsDonutChart"></apiLink>.
+More information in  <api-link target="W3Lab.ComponentsDonutChart"></api-link>.
 
 
 #### Projects Historic
@@ -122,7 +125,7 @@ This is an example to display recently edited projects:
 <projectsHistoric count="5"></projectsHistoric>
 </md-cell>
 
-More information in  <apiLink target="ProjectsHistoricView"></apiLink>.
+More information in  <api-link target="W3Lab.ProjectsHistoricView"></api-link>.
 
 
 ### Other Widgets
@@ -135,19 +138,19 @@ Below is an example combining `note`, `expandable` and `code-snippet`:
 <md-cell>
 <note level="hint">
 I'm a note featuring an expandable content:
-<expandable icon="fas fa-question-circle" title="Details">
+<note level="question" icon="fas fa-question-circle" title="Details" expandable="true">
    Itself including a code-snippet:
    
-   <code-snippet language="javascript">
-   // An embedded code.
-   function foo(){}
-   </code-snippet>
-</expandable>
+<code-snippet language="javascript">
+// An embedded code.
+function foo(){}
+</code-snippet>
+</note>
 </note>
 </md-cell>
 
-For more details on the **`mkdocs-ts`** widgets, visit the
-<mkdocsDoc nav="/tutorials/markdown">documentation</mkdocsDoc>.
+For more details on the **`mkdocs-ts`** widgets, visit its
+<ext-link target="mkdocs-ts-MD">documentation</ext-link>.
 
 #### Custom Widgets
 
@@ -171,15 +174,16 @@ return async({mdSrc, webpm, mkdocs, router}) => {
 
 **Parameters**:
 *  **mdSrc**: The raw content of the `Markdown` source.
-*  **<webpmDoc>webpm</webpmDoc>**: The installer module from w3nest. 
+*  **<ext-link target="webpm">webpm</ext-link>**: The installer module from w3nest. 
    This module can be used to install required packages, for instance when defining custom views. 
-*  **<mkdocsDoc>mkdocs</mkdocsDoc>**: It is the **mkdocs-ts** module, which provides the `Markdown` parser, 
-   including the <mkdocsDoc nav='/api/MainModule.parseMd'>parseMd</mkdocsDoc> function.
-*  **<mkdocsDoc nav="/api/MainModule.Router">router</mkdocsDoc>**: The router for this application, 
+*  **<ext-link target="mkdocs-ts">mkdocs</ext-link>**: It is the **mkdocs-ts** module, which provides 
+   the `Markdown` parser, see <ext-link target='mkdocs-ts-parseMD'>parseMd</ext-link> function.
+*  **<ext-link target='mkdocs-ts-router'>router</ext-link>**: The router for this application, 
    often only forwarded to `parseMd`.
 
 **Returns**:
-*  The function should return a <rxvdomDoc nav='/api.VirtualDOM'>VirtualDOM</rxvdomDoc>
+*  The function should return a <ext-link target='rx-vdom.VirtualDOM'></ext-link> or an 
+   <ext-link target='HTMLElement'></ext-link>
 
 <note level="hint">
 In most cases, the `VirtualDOM` returned from this function is generated using `parseMd`. 

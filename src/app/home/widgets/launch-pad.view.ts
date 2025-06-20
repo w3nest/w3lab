@@ -41,9 +41,9 @@ export class LaunchPadView implements VirtualDOM<'div'> {
      *
      * <code-snippet language='html'>
      * <launchPad size='50px'>
-     *    <app name="mkdocs-ts-doc"></app>
-     *    <app name="rx-vdom-doc"></app>
-     *    <app name="@w3nest/webpm-client-doc"></app>
+     * <app name="@mkdocs-ts/doc"></app>
+     * <app name="@rx-vdom/doc"></app>
+     * <app name="@webpm-client/doc"></app>
      * </launchPad>
      * </code-snippet>
      *

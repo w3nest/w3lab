@@ -50,8 +50,7 @@ export type DonutChartSection<T> = {
  * @param params.width - The width of the chart, defined in CSS units (e.g., `100%`, `300px`).
  * @param params.sections - An array of {@link DonutChartSection} objects defining the chart's sections,
  *        including labels and selectors.
- * @returns A <a target="_blank" href="/applications/rx-vdom-doc/latest?nav=/">Virtual DOM</a>
- *          that represents the `div` container.
+ * @returns A `Virtual DOM` that represents the `div` container.
  */
 export function createDonutChartD3<T>({
     d3,

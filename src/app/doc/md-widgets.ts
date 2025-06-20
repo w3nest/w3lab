@@ -12,44 +12,46 @@ const inlineBlock = {
     },
 }
 
-export function apiLink(elem: HTMLElement): AnyVirtualDOM {
-    const key = elem.getAttribute('target')
-    if (!key || !(key in ApiLinksDict)) {
-        return { tag: 'div' as const }
-    }
-    const target = ApiLinksDict[key]
-    const href = `@nav/doc/api/${target.path}`
-    let text = elem.textContent
-    if (text === '') {
-        text = href.includes('.')
-            ? href.split('.').slice(-1)[0]
-            : href.split('/').slice(-1)[0]
-    }
+import LinksDict from './links.json'
+import { GlobalMarkdownViews, IconFactory, MdWidgets } from 'mkdocs-ts'
+import { Tooltip } from '@w3nest/ui-tk/Mkdocs'
 
-    return {
-        tag: 'a',
-        href,
-        class: `mkapi-semantic-flag mkapi-role-${target.role}`,
-        style: {
-            width: 'fit-content',
-            textDecoration: 'none',
-        },
-        children: [
-            {
-                tag: 'div',
-                innerText: text,
-                ...inlineBlock,
-            },
-            {
-                tag: 'i',
-                class: 'fas fa-code',
-                style: {
-                    transform: 'scale(0.6)',
-                },
-            },
-        ],
+import * as W3NestHowTo from '@w3nest/doc/how-to'
+
+MdWidgets.ApiLink.Mapper = (target: string) => {
+    if (W3NestHowTo.ApiLinkMapper(target)) {
+        return W3NestHowTo.ApiLinkMapper(target)
     }
+    return LinksDict.apiLinks[
+        target
+    ] as unknown as ReturnType<MdWidgets.LinkMapper>
 }
+MdWidgets.ExtLink.Mapper = (target: string) => {
+    if (W3NestHowTo.ExtLinkMapper(target)) {
+        return W3NestHowTo.ExtLinkMapper(target)
+    }
+    return LinksDict.extLinks[
+        target
+    ] as unknown as ReturnType<MdWidgets.LinkMapper>
+}
+MdWidgets.CrossLink.Mapper = (target: string) => {
+    if (W3NestHowTo.CrossLinkMapper(target)) {
+        return W3NestHowTo.CrossLinkMapper(target)
+    }
+    return LinksDict.crossLinks[
+        target
+    ] as unknown as ReturnType<MdWidgets.LinkMapper>
+}
+GlobalMarkdownViews.factory = {
+    ...GlobalMarkdownViews.factory,
+    tooltip: (elem: HTMLElement, options) =>
+        Tooltip.fromHtmlElement(elem, options),
+}
+
+IconFactory.register({
+    publish: { tag: 'i', class: 'fas fa-cloud-upload-alt' },
+    ci: { tag: 'i', class: 'fas fa-sync-alt' },
+})
 
 export function navNode(elem: HTMLElement): AnyVirtualDOM {
     const key = elem.getAttribute('target')
@@ -291,69 +293,6 @@ export function rxvdomDoc(elem: HTMLElement): AnyVirtualDOM {
 
 export function todo(elem: HTMLElement): AnyVirtualDOM {
     return { tag: 'div', innerText: `⚠️ ${elem.textContent}` }
-}
-
-interface ApiLink {
-    path: string
-    role: string
-}
-const ApiLinksDict: Record<string, ApiLink> = {
-    ProjectsFinder: {
-        path: 'youwol/app/environment/models.models_project.ProjectsFinder',
-        role: 'class',
-    },
-    Projects: {
-        path: 'youwol/app/environment/models.models_project.Projects',
-        role: 'class',
-    },
-    ProjectsTemplate: {
-        path: 'youwol/app/environment/models.models_project.ProjectsTemplate',
-        role: 'class',
-    },
-    pipeline_raw_app: {
-        path: 'youwol/pipelines/pipeline_raw_app',
-        role: 'module',
-    },
-    'pipeline_raw_app.template': {
-        path: 'youwol/pipelines/pipeline_raw_app.template.template',
-        role: 'function',
-    },
-    Backends: {
-        path: 'youwol/app/routers/backends',
-        role: 'module',
-    },
-    CdnPackageLight: {
-        path: 'youwol/app/routers/local_cdn.models.CdnPackageLight',
-        role: 'class',
-    },
-    Project: {
-        path: 'youwol/app/routers/projects.models_project.Project',
-        role: 'class',
-    },
-    LaunchPadView: {
-        path: 'co-lab/Home/Widgets.LaunchPadView',
-        role: 'class',
-    },
-    ComponentsDonutChart: {
-        path: 'co-lab/Home/Widgets.ComponentsDonutChart',
-        role: 'class',
-    },
-    ProjectsDonutChart: {
-        path: 'co-lab/Home/Widgets.ProjectsDonutChart',
-        role: 'class',
-    },
-    ProjectsHistoricView: {
-        path: 'co-lab/Home/Widgets.ProjectsHistoricView',
-        role: 'class',
-    },
-    ColabWidgets: {
-        path: 'co-lab/Home/Widgets',
-        role: 'module',
-    },
-    ColabPlugins: {
-        path: 'co-lab/Plugins',
-        role: 'module',
-    },
 }
 
 interface NodeLink {

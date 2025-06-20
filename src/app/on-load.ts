@@ -5,7 +5,6 @@ import { AppState } from './app-state'
 import { InfoSectionView } from './common'
 import { AppView } from './app-view'
 import {
-    apiLink,
     copyClipboard,
     defaultUserDrive,
     label,
@@ -31,7 +30,6 @@ GlobalMarkdownViews.factory = {
             router,
         })
     },
-    apiLink,
     label,
     navNode,
     copyClipboard,

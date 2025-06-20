@@ -4,6 +4,7 @@ import { install, LoadingScreen } from '@w3nest/webpm-client'
 import pkgJson from '../../package.json'
 
 const mkdocsVersion = pkgJson.webpm.dependencies['mkdocs-ts']
+const uiTkVersion = pkgJson.webpm.dependencies['@w3nest/ui-tk']
 
 const loadingScreen = new LoadingScreen({
     logo: '../assets/favicon.svg',
@@ -19,6 +20,7 @@ await install({
         'highlight.js#11.2.0~styles/default.css',
         'fontawesome#5.12.1~css/all.min.css',
         `mkdocs-ts#${mkdocsVersion}~assets/mkdocs-light.css`,
+        `@w3nest/ui-tk#${uiTkVersion}~assets/style.css`,
     ],
     onEvent: (ev) => loadingScreen.next(ev),
 })

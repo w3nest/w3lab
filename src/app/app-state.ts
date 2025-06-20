@@ -9,8 +9,8 @@ import * as EsmServers from './environment/esm-servers'
 import * as Environment from './environment'
 import * as Notification from './environment/notifications'
 import * as Explorer from './explorer'
-import * as Doc from './doc'
 import * as Plugins from './plugins'
+import * as Doc from './doc'
 import { Local, Accounts, raiseHTTPErrors } from '@w3nest/http-clients'
 import {
     Navigation,
@@ -25,6 +25,7 @@ import { encodeHdPath } from './mounted'
 import { Patches } from './common'
 import { editHomeAction, HomeView } from './home/views'
 import { createRootContext } from './config.context'
+import { AliasKeys as W3NestDocAliases } from '@w3nest/doc/how-to'
 
 Local.Client.ws = new Local.WsRouter({
     autoReconnect: true,
@@ -52,7 +53,8 @@ export class AppState {
      */
     public readonly router: Router<
         DefaultLayout.NavLayout,
-        DefaultLayout.NavHeader
+        DefaultLayout.NavHeader,
+        W3NestDocAliases
     >
 
     public readonly bookmarks$: BehaviorSubject<string[]>
@@ -200,7 +202,14 @@ export class AppState {
         this.router = new Router(
             {
                 navigation: this.navigation,
-                basePath: `/apps/${pkgJson.name}/${pkgJson.version}`,
+                pathAliases: {
+                    'w3nest-api': '@nav/doc/server-api/w3nest',
+                    'w3nest-client-api': '@nav/doc/server-api/w3nest-client',
+                    'w3nest-install': '@nav/doc/how-to/install',
+                    'w3nest-start': '@nav/doc/how-to/start',
+                    'w3nest-publish': '@nav/doc/how-to/publish',
+                    'w3nest-ci': '@nav/doc/how-to/ci',
+                },
                 redirects: [(target) => this.getRedirects(target)],
                 userStore: this,
             },
@@ -272,7 +281,7 @@ export class AppState {
         }
     }
 
-    async getRedirects(target: UrlTarget) {
+    getRedirects(target: UrlTarget) {
         let to = target.path
         if (target.path.startsWith('/api/youwol')) {
             to = target.path.replace('/api/youwol', '/doc/api/youwol')
@@ -280,6 +289,6 @@ export class AppState {
         if (target.path.startsWith('/api/yw_utils')) {
             to = target.path.replace('/api/yw_utils', '/doc/api/yw_utils')
         }
-        return { ...target, path: to }
+        return Promise.resolve({ ...target, path: to })
     }
 }

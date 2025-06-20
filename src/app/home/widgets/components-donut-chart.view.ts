@@ -7,8 +7,7 @@ import { Router } from 'mkdocs-ts'
 /**
  * A widget that displays a donut chart representing components.
  *
- * The chart's sections are determined by a selector function that takes a
- * [CdnPackageLight](@nav/doc/api/youwol/app/routers/local_cdn.models.CdnPackageLight) as argument.
+ * The chart's sections are determined by a selector function that takes a {@link w3nest.CdnPackageLight} as argument.
  *
  * This component is designed to be embedded in a `Markdown` page,
  * refer to {@link ComponentsDonutChart.fromHTMLElement}.
@@ -29,7 +28,7 @@ export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackage
     }
 
     /**
-     * Constructs a `ComponentsDonutChart` from an `componentsDonutChart` HTML element, typically sourced from
+     * Constructs a `ComponentsDonutChart` from an HTML element, typically sourced from
      * `Markdown`.
      *
      * The HTML element must include specific attributes:
@@ -43,19 +42,25 @@ export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackage
      * **Example**
      *
      * <code-snippet language="html">
-     * <componentsDonutChart margin='50'>
-     *     <section label="Foo" class='donut-foo'>
-     *         return (component) => component.name.includes("foo")
+     * <componentsDonutChart margin="70" width="75%">
+     *     <section label="JS/WASM" style="fill:darkblue">
+     *        return (c) => c.versions.slice(-1)[0].kind === 'esm'
      *     </section>
-     *     <section label="Bar" class='donut-bar'>
-     *         return (component) => component.name.includes("bar")
+     *     <section label="Pyodide" style="fill:rebeccapurple">
+     *        return (c) => c.versions.slice(-1)[0].kind === 'pyodide'
+     *     </section>
+     *     <section  label="Backend" style="fill:yellow">
+     *        return (c) => c.versions.slice(-1)[0].kind === 'backend'
+     *     </section>
+     *     <section  label="WebApp" style="fill:darkgreen">
+     *        return (c) => c.versions.slice(-1)[0].kind === 'webapp'
      *     </section>
      * </componentsDonutChart>
      * </code-snippet>
      *
      * <note level="hint">
-     * Attributes of the `component` variable, as defined in the example, are available
-     * [here](@nav/doc/api/youwol/app/routers/local_cdn.models.CdnPackageLight).
+     * Attributes of the `c` variable, as defined in the example, are available in
+     * {@link w3nest.CdnPackageLight}.
      * </note>
      *
      * @param elem The HTML element containing the chart configuration.

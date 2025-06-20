@@ -2,7 +2,7 @@
 
 ## Introduction
 
-CoLab serves as a dashboard for interacting with the local W3Nest server, making it an essential tool for users looking 
+W3Lab serves as a dashboard for interacting with the local W3Nest server, making it an essential tool for users looking 
 to contribute to the ecosystem through applications, libraries, or backends.
 
 ## Organization

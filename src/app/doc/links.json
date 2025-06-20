@@ -1,0 +1,64 @@
+{
+    "apiLinks": {
+        "w3nest.Configuration": {
+            "href": "@nav[w3nest-api]/app/config.configuration.Configuration",
+            "withClass": "mkapi-role-class"
+        },
+        "w3nest.Project": {
+            "href": "@nav[w3nest-api]/app/projects.models_project.Project",
+            "withClass": "mkapi-role-class"
+        },
+        "w3nest.CdnPackageLight": {
+            "href": "@nav[w3nest-api]/app/components.models.CdnPackageLight",
+            "withClass": "mkapi-role-class"
+        },
+        "W3Lab.Widgets": {
+            "href": "@nav/doc/w3lab/Home/Widgets",
+            "withClass": "mkapi-role-module"
+        },
+        "W3Lab.LaunchPadView": {
+            "href": "@nav/doc/w3lab/Home/Widgets.LaunchPadView",
+            "withClass": "mkapi-role-class"
+        },
+        "W3Lab.ProjectsDonutChart": {
+            "href": "@nav/doc/w3lab/Home/Widgets.ProjectsDonutChart",
+            "withClass": "mkapi-role-class"
+        },
+        "W3Lab.ComponentsDonutChart": {
+            "href": "@nav/doc/w3lab/Home/Widgets.ComponentsDonutChart",
+            "withClass": "mkapi-role-class"
+        },
+        "W3Lab.ProjectsHistoricView": {
+            "href": "@nav/doc/w3lab/Home/Widgets.W3Lab.ProjectsHistoricView",
+            "withClass": "mkapi-role-class"
+        }
+    },
+    "extLinks": {
+        "webpm": {
+            "href": "/apps/@webpm-client/doc/latest"
+        },
+        "mkdocs-ts": {
+            "href": "/apps/@mkdocs-ts/doc/latest"
+        },
+        "mkdocs-ts-MD": {
+            "href": "/apps/@mkdocs-ts/doc/latest?nav=/tutorials/markdown"
+        },
+        "mkdocs-ts-parseMD": {
+            "href": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.parseMd"
+        },
+        "mkdocs-ts-router": {
+            "href": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router"
+        },
+        "rx-vdom.VirtualDOM": {
+            "href": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+        },
+        "HTMLElement": {
+            "href": "https://developer.mozilla.org/fr/docs/Web/API/HTMLElement"
+        }
+    },
+    "crossLinks": {
+        "install": {
+            "href": "@nav[w3nest-install]"
+        }
+    }
+}

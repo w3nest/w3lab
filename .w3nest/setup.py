@@ -19,7 +19,7 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
-    "mkdocs-ts": "^0.5.1",
+    "mkdocs-ts": "^0.5.2",
     "rx-vdom": "^0.1.3",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.11",
@@ -29,11 +29,16 @@ externals_deps = {
     "rxjs": "^7.8.1",
     "d3": "^7.7.0",
     "@w3nest/ui-tk": "^0.1.6",
+    "@w3nest/doc": "^0.1.13",
 }
 
 in_bundle_deps = {
     "d3-dag": "0.8.2",
     "prism-code-editor": "^4.0.0",
+    # only for type definitions
+    "@mkdocs-ts/code-api": "^0.2.0",
+    # only for type definitions
+    "@mkdocs-ts/notebook": "^0.1.2",
 }
 dev_deps = {
     "lz-string": "^1.4.4",
@@ -66,13 +71,14 @@ config = ProjectConfig(
                 "d3",
                 "@w3nest/ui-tk/Badges",
                 "@w3nest/ui-tk/Mkdocs",
+                "@w3nest/doc/api",
             ],
         ),
     ),
     userGuide=True,
     devServer=DevServer(port=3023),
     inPackageJson={
-        "scripts": {"doc": "typedoc && python doc.py"},
+        "scripts": {"doc": "(cd .w3nest && npx tsx doc.ts)"},
     },
 )
 

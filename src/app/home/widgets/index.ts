@@ -7,42 +7,43 @@
  * A container for applications' link, *e.g.*:
  *
  * <launchPad size='50px'>
- *    <app name="mkdocs-ts-doc"></app>
- *    <app name="rx-vdom-doc"></app>
- *    <app name="@w3nest/webpm-client-doc"></app>
+ * <app name="@mkdocs-ts/doc"></app>
+ * <app name="@rx-vdom/doc"></app>
+ * <app name="@webpm-client/doc"></app>
  * </launchPad>
  *
  * ## {@link ProjectsDonutChart}
  *
- * A donut chart that displays a histogram of
- * [projects](@nav/doc/api/youwol/app/routers/projects.models_project.Project), *e.g.*:
+ * A donut chart that displays a histogram of {@link w3nest.Project}, *e.g.*:
  *
  * <projectsDonutChart margin="70" width="75%">
  *     <section label="Typescript" style="fill:darkblue">
- *        return (p) => p.pipeline.tags.includes('typescript')
+ *        return (p) => p.ci.tags.includes('typescript')
  *     </section>
  *     <section label="Python" class="pie-chart-py" style="fill:rebeccapurple">
- *        return (p) => p.pipeline.tags.includes('python')
+ *        return (p) => p.ci.tags.includes('python')
  *     </section>
  *     <section  label="JavaScript" style="fill:yellow">
- *        return (p) => p.pipeline.tags.includes('javascript')
+ *        return (p) => p.ci.tags.includes('javascript')
  *     </section>
  * </projectsDonutChart>
  *
  * ## {@link ComponentsDonutChart}
  *
- * A donut chart that visualizes a histogram of
- * [components](@nav/doc/api/youwol/app/routers/local_cdn.models.CdnPackageLight), *e.g.*:
+ * A donut chart that visualizes a histogram of {@link w3nest.CdnPackageLight}, *e.g.*:
  *
  * <componentsDonutChart margin="70" width="75%">
  *     <section label="JS/WASM" style="fill:darkblue">
- *        return (c) => c.versions.slice(-1)[0].type === 'js/wasm'
+ *        return (c) => c.versions.slice(-1)[0].kind === 'esm'
  *     </section>
  *     <section label="Pyodide" style="fill:rebeccapurple">
- *        return (c) => c.versions.slice(-1)[0].type === 'pyodide'
+ *        return (c) => c.versions.slice(-1)[0].kind === 'pyodide'
  *     </section>
  *     <section  label="Backend" style="fill:yellow">
- *        return (c) => c.versions.slice(-1)[0].type === 'backend'
+ *        return (c) => c.versions.slice(-1)[0].kind === 'backend'
+ *     </section>
+ *     <section  label="WebApp" style="fill:darkgreen">
+ *        return (c) => c.versions.slice(-1)[0].kind === 'webapp'
  *     </section>
  * </componentsDonutChart>
  *

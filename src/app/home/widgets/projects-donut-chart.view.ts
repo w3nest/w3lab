@@ -6,8 +6,7 @@ import { Router } from 'mkdocs-ts'
 /**
  * A widget that displays a donut chart representing components.
  *
- * The chart's sections are determined by a selector function that takes a
- * [Project](@nav/doc/api/youwol/app/routers/projects.models_project.Project) as argument.
+ * The chart's sections are determined by a selector function that takes a {@link w3nest.Project} as argument.
  *
  * This component is designed to be embedded in a `Markdown` page,
  * refer to {@link ProjectsDonutChart.fromHTMLElement}.
@@ -36,24 +35,22 @@ export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {
      * for more details.
      *
      * **Example**
-     *
      * <code-snippet language="html">
      * <projectsDonutChart margin="70" width="75%">
-     *     <section label="Typescript" class="pie-chart-ts">
-     *        return (project) => project.pipeline.tags.includes('typescript')
+     *     <section label="Typescript" style="fill:darkblue">
+     *        return (p) => p.ci.tags.includes('typescript')
      *     </section>
-     *     <section label="Python" class="pie-chart-py">
-     *        return (project) => project.pipeline.tags.includes('python')
+     *     <section label="Python" class="pie-chart-py" style="fill:rebeccapurple">
+     *        return (p) => p.ci.tags.includes('python')
      *     </section>
-     *     <section  label="JavaScript" class="pie-chart-js">
-     *        return (project) => project.pipeline.tags.includes('javascript')
+     *     <section  label="JavaScript" style="fill:yellow">
+     *        return (p) => p.ci.tags.includes('javascript')
      *     </section>
      * </projectsDonutChart>
      * </code-snippet>
      *
      * <note level="hint">
-     * Attributes of the `project` variable, as defined in the example, are available
-     * [here](@nav/doc/api/youwol/app/routers/projects.models_project.Project).
+     * Attributes of the `p` variable, as defined in the example, are available in {@link w3nest.Project}.
      * </note>
      *
      * @param elem The HTML element containing the chart configuration.
