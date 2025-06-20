@@ -845,6 +845,33 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
+"@mkdocs-ts/code-api@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.0.tgz#c84077e2a6d81006fc61a31624a75639c930a76c"
+  integrity sha512-N682o7Ehz6Pm8aBlPVXW6uaR9g+qUwuicAdlkdiTRc3MYgOhV4ajT6qPdJTKPO8/AXu1/b9+ObgxeG57WMuyJw==
+  dependencies:
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@w3nest/http-clients" "^0.1.5"
+    "@w3nest/webpm-client" "^0.1.5"
+    mkdocs-ts "^0.5.0"
+    rx-vdom "^0.1.3"
+    rxjs "^7.5.6"
+
+"@mkdocs-ts/notebook@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.2.tgz#78d0591b398adb9e3c81760e49199d25bd74b8d6"
+  integrity sha512-f0LPrm8CjzFZBQ93L9i0rAq2TR5uZXjx9rWAymaC2fHV6WtxlgH9O3aQlE1lKTKUT5FbpYtZ0P80yrhDMn7zlw==
+  dependencies:
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@mkdocs-ts/code-api" "^0.2.0"
+    "@w3nest/rx-tree-views" "^0.2.0"
+    "@w3nest/webpm-client" "^0.1.8"
+    esprima "^4.0.1"
+    mkdocs-ts "^0.5.1"
+    prism-code-editor "^4.0.0"
+    rx-vdom "^0.1.3"
+    rxjs "^7.5.6"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -1403,6 +1430,18 @@
   resolved "https://registry.yarnpkg.com/@ungap/custom-elements/-/custom-elements-1.3.0.tgz#c1b7623887f774f274f308a1468098894826c2be"
   integrity sha512-f4q/s76+8nOy+fhrNHyetuoPDR01lmlZB5czfCG+OOnBw/Wf+x48DcCDPmMQY7oL8xYFL8qfenMoiS8DUkKBUw==
 
+"@w3nest/doc@file:.local-dependencies/w3nest-doc-0.1.13-wip-1750408599.tgz":
+  version "0.1.13-wip"
+  resolved "file:.local-dependencies/w3nest-doc-0.1.13-wip-1750408599.tgz#105f895cffe5ded6127bd539a706dd5b4dd6ada6"
+  dependencies:
+    "@mkdocs-ts/code-api" "^0.2.0"
+    "@w3nest/http-clients" "^0.1.5"
+    "@w3nest/ui-tk" "^0.1.6"
+    "@w3nest/webpm-client" "^0.1.10"
+    mkdocs-ts "file:../../../../.cache/yarn/v6/.tmp/9c0bdadd264ab902aec75ad608aa5f05/.local-dependencies/mkdocs-ts-0.5.2-1750408522.tgz"
+    rx-vdom "^0.1.4"
+    rxjs "^7.5.6"
+
 "@w3nest/http-clients@^0.1.5", "@w3nest/http-clients@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@w3nest/http-clients/-/http-clients-0.1.7.tgz#97170a04af85e3fca9a98155f37be7e0120b2dc5"
@@ -1430,9 +1469,10 @@
     rx-vdom "^0.1.3"
     rxjs "^7.8.1"
 
-"@w3nest/webpm-client@^0.1.11", "@w3nest/webpm-client@^0.1.9":
+"@w3nest/webpm-client@^0.1.10", "@w3nest/webpm-client@^0.1.11", "@w3nest/webpm-client@^0.1.5", "@w3nest/webpm-client@^0.1.8", "@w3nest/webpm-client@^0.1.9":
   version "0.1.11"
-  resolved "file:.local-dependencies/w3nest-webpm-client-0.1.11-1750260696.tgz#b893844b020f46d63ae69bf176712d0c8b945f68"
+  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.11.tgz#33972be1063d3078e1f8404eff6547bbad40a21b"
+  integrity sha512-Wuyrvcas4KEIXO1QuUT62Rn7N7l8kUvk78/OcAk/7qjLSN5xaWcn/tbC2iN7Holka3YzHlrkN6QePrkGjV/0Sg==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     rx-vdom "^0.1.3"
@@ -1983,9 +2023,9 @@ camelcase@^6.2.0, camelcase@^6.3.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001718:
-  version "1.0.30001723"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001723.tgz#c4f3174f02089720736e1887eab345e09bb10944"
-  integrity sha512-1R/elMjtehrFejxwmexeXAtae5UO9iSyFn6G/I806CYC/BLyyBk1EPhrKBkWhy6wM6Xnm47dSJQec+tLJ39WHw==
+  version "1.0.30001724"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001724.tgz#312e163553dd70d2c0fb603d74810c85d8ed94a0"
+  integrity sha512-WqJo7p0TbHDOythNTqYujmaJTvtYRZrjpP8TCvH6Vb9CYJerJNKamKzIWOM4BkQatWj9H2lYulpdAQNBe7QhNA==
 
 chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.0:
   version "4.1.2"
@@ -2778,9 +2818,9 @@ ejs@^3.1.10:
     jake "^10.8.5"
 
 electron-to-chromium@^1.5.160:
-  version "1.5.170"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.170.tgz#9f6697de4339e24da8b234e4492a9ecb91f5989c"
-  integrity sha512-GP+M7aeluQo9uAyiTCxgIj/j+PrWhMlY7LFVj8prlsPljd0Fdg9AprlfUi+OCSFWy9Y5/2D/Jrj9HS8Z4rpKWA==
+  version "1.5.171"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.171.tgz#e552b4fd73d4dd941ee4c70ae288a8a39f818726"
+  integrity sha512-scWpzXEJEMrGJa4Y6m/tVotb0WuvNmasv3wWVzUAeCgKU0ToFOhUW6Z+xWnRQANMYGxN4ngJXIThgBJOqzVPCQ==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -4722,10 +4762,9 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.1.tgz#95324a93aae477900131b3cf72becb8bb087924b"
-  integrity sha512-DzivYZnDr0nE6EkNdS/dH7RDfW9DxKJbxE0qQzz3ZwTlbNKe00vNKZaR/vrXq1/x0sMV4V29oCN8r0sFzc9rvw==
+mkdocs-ts@^0.5.0, mkdocs-ts@^0.5.1, mkdocs-ts@^0.5.2, "mkdocs-ts@file:../../../../.cache/yarn/v6/.tmp/9c0bdadd264ab902aec75ad608aa5f05/.local-dependencies/mkdocs-ts-0.5.2-1750408522.tgz":
+  version "0.5.2"
+  resolved "file:../../../../.cache/yarn/v6/.tmp/9c0bdadd264ab902aec75ad608aa5f05/.local-dependencies/mkdocs-ts-0.5.2-1750408522.tgz#be0346b697009ec04dc2d345c57275dcfc8cd587"
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^6.7.2"
     "@fortawesome/free-regular-svg-icons" "^6.7.2"
@@ -5418,7 +5457,7 @@ rw@1:
   resolved "https://registry.yarnpkg.com/rw/-/rw-1.3.3.tgz#3f862dfa91ab766b14885ef4d01124bfda074fb4"
   integrity sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==
 
-rx-vdom@^0.1.0, rx-vdom@^0.1.3:
+rx-vdom@^0.1.0, rx-vdom@^0.1.3, rx-vdom@^0.1.4:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/rx-vdom/-/rx-vdom-0.1.7.tgz#30fa475d6e261123c174a8eeb70db851f0357c17"
   integrity sha512-1mZ4U5mznHC4Dppd0vgvJPg6UOZ5Lrhbe4nQvVu2Wo7rPoAQih/6dfE4nx3wxrzRMTewjBdQrBoMsHpMwp9o4Q==
@@ -5871,9 +5910,9 @@ terser-webpack-plugin@^5.3.11:
     terser "^5.31.1"
 
 terser@^5.10.0, terser@^5.31.1:
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.43.0.tgz#f9cac3cc347020d6ffafdbaa3698a5257b7cb690"
-  integrity sha512-CqNNxKSGKSZCunSvwKLTs8u8sGGlp27sxNZ4quGh0QeNuyHM0JSEM/clM9Mf4zUp6J+tO2gUXhgXT2YMMkwfKQ==
+  version "5.43.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.43.1.tgz#88387f4f9794ff1a29e7ad61fb2932e25b4fdb6d"
+  integrity sha512-+6erLbBm0+LROX2sPXlUYx/ux5PyE9K/a92Wrt6oA+WDAoFTdpHE5tCYCI5PNzq2y8df4rA+QgHLJuR4jNymsg==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.14.0"
