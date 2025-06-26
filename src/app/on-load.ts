@@ -2,7 +2,7 @@ import { render } from 'rx-vdom'
 import { GlobalMarkdownViews } from 'mkdocs-ts'
 
 import { AppState } from './app-state'
-import { InfoSectionView } from './common'
+import { docAction, InfoSectionView } from './common'
 import { AppView } from './app-view'
 import {
     copyClipboard,
@@ -43,6 +43,9 @@ GlobalMarkdownViews.factory = {
     mkdocsDoc,
     rxvdomDoc,
     todo,
+    docLink: (elem) => {
+        return docAction(elem.getAttribute('nav'))
+    },
 }
 
 const appState = new AppState()

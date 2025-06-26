@@ -2,8 +2,9 @@ import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
 import * as d3 from 'd3'
 import { AppState } from '../../app-state'
-import { withLatestFrom } from 'rxjs/operators'
+import { combineLatest } from 'rxjs'
 import { Observable } from 'rxjs'
+
 type D3 = typeof d3
 /* eslint-disable */
 /**
@@ -181,7 +182,7 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
         }>
         this.children = [
             child$({
-                source$: d3$.pipe(withLatestFrom(this.entities$)),
+                source$: combineLatest([d3$, this.entities$]),
                 vdomMap: ([{ d3 }, entities]) => {
                     return createDonutChartD3<T>({
                         d3,

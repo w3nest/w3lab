@@ -2,8 +2,8 @@ import { ChildrenLike, VirtualDOM, AnyVirtualDOM, child$, attr$ } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, debounceTime, from, of } from 'rxjs'
 import { Content, Language, State } from './state'
 import { switchMap } from 'rxjs/operators'
-import { internalDocLink } from '../common/buttons'
 import { CodeEditorView, CodeLanguage } from '../common/code-editor.view'
+import { PageTitleView } from '../common'
 
 export const editHomeAction = (state: State): AnyVirtualDOM => {
     const icon = {
@@ -44,12 +44,14 @@ export class HomeView implements VirtualDOM<'div'> {
                     : of(new EditorView({ state: this.state, content }))
             }),
         )
+
         this.children = [
-            {
-                tag: 'div',
-                class: 'w-100 mkdocs-bg-5 rounded p-1 mb-1',
-                children: [editHomeAction(this.state)],
-            },
+            new PageTitleView({
+                title: 'Home',
+                icon: 'fa-home',
+                actions: [editHomeAction(this.state)],
+                helpNav: `@nav/doc/how-to/custom-home`,
+            }),
             child$({
                 source$,
                 vdomMap: (vdom) => vdom,
@@ -66,7 +68,7 @@ class EditorView implements VirtualDOM<'div'> {
     constructor({ state, content }: { state: State; content: Content }) {
         const sepV: AnyVirtualDOM = {
             tag: 'div',
-            class: 'my-2 border w-100',
+            class: 'my-2 w-100',
         }
         const sepH: AnyVirtualDOM = {
             tag: 'i',
@@ -75,10 +77,6 @@ class EditorView implements VirtualDOM<'div'> {
         this.children = [
             this.banner(),
             sepH,
-            internalDocLink({
-                nav: '/doc/how-to/custom-home',
-                router: state.appState.router,
-            }),
             sepV,
             child$({
                 source$: this.selectedMode$,

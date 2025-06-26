@@ -70,7 +70,7 @@ export class State {
         this.tmpContent$
             .pipe(
                 filter((d) => d !== undefined),
-                debounceTime(1000),
+                debounceTime(500),
                 switchMap((content) => {
                     return this.storageClient.postData$({
                         packageName: pkgJson.name,
