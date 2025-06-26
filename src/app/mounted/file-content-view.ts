@@ -63,7 +63,7 @@ export class FileContentView implements VirtualDOM<'div'> {
                             return full.endsWith(ext)
                         })
                         return new MdWidgets.CodeSnippetView({
-                            language: language[1],
+                            language: language ? language[1] : 'unknown',
                             content: resp,
                         })
                     }
