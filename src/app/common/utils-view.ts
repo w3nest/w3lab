@@ -32,7 +32,7 @@ export const styleShellStdOut = {
 }
 
 export const classesButton =
-    'd-flex border p-2 rounded  fv-bg-secondary fv-hover-xx-lighter fv-pointer mx-2 align-items-center'
+    'd-flex border p-2 rounded  fv-bg-secondary fv-hover-xx-lighter w3lab-pointer mx-2 align-items-center'
 
 export class NavIconSvg implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -74,7 +74,7 @@ export class InfoSectionView implements VirtualDOM<'div'> {
                                     ? 'fv-hover-text-focus fv-text-success'
                                     : 'fv-text-focus',
                             wrapper: (d) =>
-                                `${d} fas fa-info-circle fv-pointer`,
+                                `${d} fas fa-info-circle w3lab-pointer`,
                         }),
                     },
                 ],
@@ -100,29 +100,15 @@ export class InfoSectionView implements VirtualDOM<'div'> {
     }
 }
 
-/**
- * @category View
- */
-export class CopyClipboardView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable Constants
-     */
-    public readonly tag = 'div'
+export class CopyClipboardView implements VirtualDOM<'button'> {
+    public readonly tag = 'button'
 
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'fas fa-clipboard p-1 rounded border fv-pointer fv-hover-text-focus mx-2'
+    public readonly class = 'btn btn-sm btn-light'
 
-    /**
-     * @group Immutable Constants
-     */
+    public readonly children: ChildrenLike
+
     public readonly text: string
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly onclick = () =>
         navigator.clipboard.writeText(this.text).then(() => {
             /*NOOP*/
@@ -130,6 +116,31 @@ export class CopyClipboardView implements VirtualDOM<'div'> {
 
     constructor(params: { text: string }) {
         Object.assign(this, params)
+        this.children = [{ tag: 'i', class: 'fas fa-clipboard' }]
+    }
+}
+
+export class OpenFileFolderView implements VirtualDOM<'button'> {
+    public readonly tag = 'button'
+
+    public readonly class = 'btn btn-sm btn-light'
+
+    public readonly children: ChildrenLike
+
+    public readonly appState: AppState
+    public readonly path: string
+    public readonly type: 'folder' | 'file'
+
+    public readonly onclick = () =>
+        this.appState.mountHdPath(this.path, this.type)
+
+    constructor(params: {
+        appState: AppState
+        path: string
+        type: 'folder' | 'file'
+    }) {
+        Object.assign(this, params)
+        this.children = [{ tag: 'i', class: 'fas fa-folder-open' }]
     }
 }
 
@@ -249,31 +260,6 @@ export class AttributeView implements VirtualDOM<'div'> {
     }
 }
 
-/**
- * @category View
- */
-export class DashboardTitle implements VirtualDOM<'h5'> {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly tag = 'h5'
-
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly innerText: string
-
-    /**
-     * @group Immutable Constants
-     */
-    public readonly title: string
-
-    constructor(params: { title: string }) {
-        Object.assign(this, params)
-        this.innerText = this.title
-    }
-}
-
 export class HdPathBookView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
@@ -289,26 +275,43 @@ export class HdPathBookView implements VirtualDOM<'div'> {
         type: 'folder' | 'file'
     }) {
         const path$ = typeof path === 'string' ? of(path) : path
+        const sep = {
+            tag: 'i' as const,
+            class: 'mx-1',
+        }
         this.children = [
             {
                 tag: 'div',
-                class: 'flex-grow-1',
-                style: {
-                    fontFamily: 'monospace',
-                    fontSize: 'smaller',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '100%',
-                    direction: 'rtl',
-                    textAlign: 'left',
-                },
-                innerText: attr$({
-                    source$: path$,
-                    vdomMap: (path) => {
-                        return path
+                class: 'd-flex align-items-center w-50 mkdocs-bg-1 rounded me-3 px-2',
+                children: [
+                    {
+                        tag: 'i',
+                        class:
+                            type === 'file' ? 'fas fa-file' : 'fas fa-folder',
                     },
-                }),
+                    sep,
+                    {
+                        tag: 'div',
+                        style: {
+                            fontFamily: 'monospace',
+                            fontSize: 'smaller',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            direction: 'rtl',
+                            textAlign: 'left',
+                        },
+                        innerText: attr$({
+                            source$: path$,
+                            vdomMap: (path) => {
+                                if (type === 'file') {
+                                    path = path.replace(/[\\/]+$/, '')
+                                }
+                                return path
+                            },
+                        }),
+                    },
+                ],
             },
             child$({
                 source$: path$,
@@ -318,14 +321,11 @@ export class HdPathBookView implements VirtualDOM<'div'> {
                     })
                 },
             }),
+            sep,
             child$({
                 source$: path$,
                 vdomMap: (path) => {
-                    return {
-                        tag: 'i',
-                        class: 'fas fa-folder-open p-1 rounded border fv-pointer fv-hover-text-focus mx-2',
-                        onclick: () => appState.mountHdPath(path, type),
-                    }
+                    return new OpenFileFolderView({ appState, path, type })
                 },
             }),
         ]
@@ -533,5 +533,55 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
             tag: 'i',
             class: `fas ${icon} text-muted`,
         }
+    }
+}
+
+export class PageTitleView implements VirtualDOM<'h1'> {
+    public readonly tag = 'h1'
+    public readonly class = 'd-flex border-bottom align-items-center pb-1 mb-3'
+    public readonly children: ChildrenLike
+
+    constructor(params: {
+        title: string
+        icon: string
+        actions?: AnyVirtualDOM[]
+        helpNav?: string
+    }) {
+        const hSep = { tag: 'div' as const, class: 'mx-1' }
+        this.children = [
+            { tag: 'i', class: `fas ${params.icon}` },
+            hSep,
+            hSep,
+            { tag: 'div', innerText: params.title },
+            hSep,
+            params.actions
+                ? {
+                      tag: 'div',
+                      class: 'd-flex align-items-center',
+                      children: params.actions,
+                  }
+                : undefined,
+            { tag: 'div' as const, class: 'flex-grow-1' },
+            params.helpNav ? docAction(params.helpNav) : undefined,
+        ]
+    }
+}
+
+export const docAction = (nav: string): AnyVirtualDOM => {
+    const icon = {
+        tag: 'i' as const,
+        class: 'fas fa-book',
+    }
+    return {
+        tag: 'a',
+        href: nav,
+        children: [
+            {
+                tag: 'button',
+                class: 'btn btn-sm btn-light',
+                children: [icon],
+                onclick: () => {},
+            },
+        ],
     }
 }

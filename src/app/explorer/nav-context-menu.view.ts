@@ -18,7 +18,7 @@ import { ExplorerState } from './explorer.state'
 export class ContextMenuHandler implements VirtualDOM<'i'> {
     public readonly tag = 'i'
     public readonly class =
-        'mx-2 fas fa-ellipsis-h fv-hover-text-focus fv-pointer ctx-menu-handler'
+        'mx-2 fas fa-ellipsis-h fv-hover-text-focus w3lab-pointer ctx-menu-handler'
     public readonly onclick: (ev: MouseEvent) => void
 
     constructor({

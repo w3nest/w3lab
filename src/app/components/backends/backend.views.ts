@@ -205,7 +205,7 @@ class InstallManifestView implements VirtualDOM<'div'> {
 class UninstallButton implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'd-flex align-items-center justify-content-center border rounded p-1 fv-pointer my-1 text-danger'
+        'd-flex align-items-center justify-content-center border rounded p-1 w3lab-pointer my-1 text-danger'
 
     public readonly style = {
         width: 'fit-content',

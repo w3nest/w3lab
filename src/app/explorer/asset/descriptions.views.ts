@@ -47,8 +47,8 @@ export class DescriptionView implements VirtualDOM<'div'> {
                 source$: edit$,
                 vdomMap: (edit) =>
                     edit
-                        ? 'fas fa-save fv-pointer p-1'
-                        : 'fas fa-pen fv-pointer p-1',
+                        ? 'fas fa-save w3lab-pointer p-1'
+                        : 'fas fa-pen w3lab-pointer p-1',
             }),
             style: {
                 position: 'absolute',

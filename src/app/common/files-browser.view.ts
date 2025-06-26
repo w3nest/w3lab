@@ -133,7 +133,7 @@ function pathElementView(
 
     return {
         tag: 'div',
-        class: 'px-2 fv-pointer fv-hover-bg-background-alt border rounded',
+        class: 'px-2 w3lab-pointer fv-hover-bg-background-alt border rounded',
         innerText: element,
         onclick: () =>
             folderSelected$.next(
@@ -164,7 +164,7 @@ function folderView(
 ): VirtualDOM<'div'> {
     return {
         tag: 'div',
-        class: 'fv-pointer d-flex align-items-center fv-hover-bg-background-alt',
+        class: 'w3lab-pointer d-flex align-items-center fv-hover-bg-background-alt',
         style: {
             userSelect: 'none',
         },

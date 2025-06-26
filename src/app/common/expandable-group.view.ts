@@ -77,7 +77,7 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                                     ? 'fa-chevron-down'
                                     : 'fa-chevron-right',
                             wrapper: (d) =>
-                                `${d} fas fv-pointer fv-hover-text-focus`,
+                                `${d} fas w3lab-pointer fv-hover-text-focus`,
                         }),
                         onclick: () => expanded$.next(!expanded$.value),
                     },

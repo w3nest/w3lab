@@ -43,7 +43,7 @@ export class ExplorerState {
 export class FolderView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     static ClassSelector = 'folder-view'
-    public readonly class = `${FolderView.ClassSelector} d-flex align-items-center fv-pointer fv-hover-text-focus`
+    public readonly class = `${FolderView.ClassSelector} d-flex align-items-center w3lab-pointer fv-hover-text-focus`
     public readonly children: ChildrenLike
     public readonly folder: Webpm.FolderResponse
     public readonly state: ExplorerState
@@ -80,7 +80,7 @@ export class FolderView implements VirtualDOM<'div'> {
 export class FileView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     static ClassSelector = 'file-view'
-    public readonly class = `${FileView.ClassSelector} d-flex align-items-center fv-pointer fv-hover-text-focus`
+    public readonly class = `${FileView.ClassSelector} d-flex align-items-center w3lab-pointer fv-hover-text-focus`
     public readonly children: ChildrenLike
     public readonly file: Webpm.FileResponse
     public readonly state: ExplorerState
@@ -206,7 +206,7 @@ export class PathElementView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'border rounded p-1 mx-1 fv-pointer fv-hover-text-focus',
+                class: 'border rounded p-1 mx-1 w3lab-pointer fv-hover-text-focus',
                 innerText: this.name,
             },
             { tag: 'div', innerText: '/' },

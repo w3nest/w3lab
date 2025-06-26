@@ -11,7 +11,7 @@ import { ContextMenuHandler } from './nav-context-menu.view'
 import { FolderNode, TrashNode } from './nodes'
 
 export const classFolderFileBase =
-    'colab-ExplorerItem mkdocs-text-0 text-decoration-none d-flex align-items-center my-1 px-1 rounded mkdocs-hover-bg-4 mkdocs-hover-text-5 fv-pointer'
+    'colab-ExplorerItem mkdocs-text-0 text-decoration-none d-flex align-items-center my-1 px-1 rounded mkdocs-hover-bg-4 mkdocs-hover-text-5 w3lab-pointer'
 
 interface Origin {
     local: boolean

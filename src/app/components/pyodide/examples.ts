@@ -147,7 +147,7 @@ export const example3 = `
         const workerCount$ = pool.workers$.pipe(map( workers => Object.keys(workers).length))
         
         const button = {
-            tag: 'div', class:'btn btn-primary fv-pointer', innerText: 'start 1000 runs', 
+            tag: 'div', class:'btn btn-primary w3lab-pointer', innerText: 'start 1000 runs', 
             onclick: scheduleThousandTasks
         }
         const div = rxVDOM.render({

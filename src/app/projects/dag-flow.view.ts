@@ -84,7 +84,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         group: {
             attributes: {
                 id: (d) => d.data.id,
-                class: 'fv-pointer',
+                class: 'w3lab-pointer',
                 transform: ({ x, y }) => `translate(${y}, ${x})`,
             },
             style: {},
@@ -105,7 +105,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
                         .y((d) => d.x)
                     return line(points)
                 },
-                class: 'fv-pointer dag-flow-link',
+                class: 'w3lab-pointer dag-flow-link',
             },
         },
         thumbnail: {
@@ -116,7 +116,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         circle: {
             attributes: {
                 r: DagFlowView.nodeRadius,
-                class: 'fv-pointer',
+                class: 'w3lab-pointer',
                 fill: 'white',
                 stroke: 'white',
             },
@@ -124,7 +124,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         },
         title: {
             attributes: {
-                class: 'fv-pointer dag-flow-node-title',
+                class: 'w3lab-pointer dag-flow-node-title',
                 transform: `translate(0, -${DagFlowView.nodeRadius + 10})`,
             },
             style: {
@@ -140,7 +140,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         },
         status: {
             attributes: {
-                class: 'fv-pointer fas  dag-flow-node-status',
+                class: 'w3lab-pointer fas  dag-flow-node-status',
             },
         },
         menuActions: {
@@ -152,7 +152,7 @@ export class DagFlowView implements VirtualDOM<'div'> {
         },
         run: {
             attributes: {
-                class: 'fas fv-pointer dag-flow-node-run fv-hover-xx-lighter',
+                class: 'fas w3lab-pointer dag-flow-node-run fv-hover-xx-lighter',
                 transform: `translate(0, 0)`,
             },
             style: {
