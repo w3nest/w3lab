@@ -1,9 +1,15 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
 import { DefaultLayout } from 'mkdocs-ts'
 import { DisconnectedView } from './disconnected.view'
 import { AuthBadge } from '@w3nest/ui-tk/Badges'
 import { Footer } from '@w3nest/ui-tk/Mkdocs'
+import {
+    BackendServingView,
+    EsmServingView,
+    NotificationsView,
+} from './environment/nav-badges.view'
+import { Local } from '@w3nest/http-clients'
 
 export const footer = new Footer({
     license: 'MIT',
@@ -13,6 +19,81 @@ export const footer = new Footer({
     ],
     github: 'https://github.com/w3nest/w3lab',
 })
+
+class TopBannerContent implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class =
+        'd-flex align-items-center w-100 justify-content-center'
+    public readonly children: ChildrenLike
+
+    constructor({ appState }: { appState: AppState }) {
+        this.children = [
+            new NotificationsView({
+                appState: appState,
+            }),
+            new BackendServingView({ appState }),
+            new EsmServingView({ appState }),
+            { tag: 'div', class: 'mx-2' },
+            child$({
+                source$: appState.projectsState.historic$,
+                vdomMap: (projects) => {
+                    return projects.length > 0
+                        ? new RecentProjectsView({ projects })
+                        : EmptyDiv
+                },
+            }),
+        ]
+    }
+}
+
+class RecentProjectsView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class = 'dropdown'
+    public readonly children: ChildrenLike
+
+    constructor({ projects }: { projects: Local.Projects.Project[] }) {
+        const id = 'RecentProjectsViewDropDownButton'
+        this.children = [
+            {
+                tag: 'button',
+                id,
+                class: 'btn btn-light btn-sm dropdown-toggle d-flex align-items-center',
+                customAttributes: {
+                    'data-bs-toggle': 'dropdown',
+                    'aria-expanded': 'false',
+                },
+                children: [
+                    {
+                        tag: 'i',
+                        class: 'fas fa-tools mx-1',
+                    },
+                    {
+                        tag: 'div',
+                        innerText: 'Recent Projects',
+                    },
+                ],
+            },
+            {
+                tag: 'ul',
+                class: 'dropdown-menu',
+                customAttributes: { 'aria-labelledby': id },
+                children: projects.map((project) => {
+                    return {
+                        tag: 'li',
+                        children: [
+                            {
+                                tag: 'a',
+                                href: '/foo/bar',
+                                class: 'dropdown-item',
+                                innerText: project.name,
+                            },
+                        ],
+                    }
+                }),
+            },
+        ]
+    }
+}
 
 export class AppView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -30,9 +111,8 @@ export class AppView implements VirtualDOM<'div'> {
             bookmarks$: this.appState.bookmarks$,
             topBanner: {
                 logo: { icon: '../assets/favicon.svg', title: 'W3Lab' },
-                expandedContent: new DefaultLayout.BookmarksView({
-                    bookmarks$: this.appState.bookmarks$,
-                    router: this.appState.router,
+                expandedContent: new TopBannerContent({
+                    appState: this.appState,
                 }),
                 badge: new AuthBadge(),
                 zIndex: 1001,
