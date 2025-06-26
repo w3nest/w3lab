@@ -16,84 +16,29 @@ body {
     line-height: var(--line-height-base);
 }
 
-.CodeMirror {
-    height: 100% !important;
-    z-index: 0;
+.mkdocs-NavigationView {
+    max-width: 500px;
+}
+.w3lab-pointer {
+    cursor: pointer;
 }
 
-.yw-hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+.w3lab-no-p-margin p {
+    margin: 0;
 }
-.yw-hover-shadow-lg:hover {
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+.uitk-faIcon:hover {
+    background-color: darkgrey;
 }
-
-/* Initially hide the scrollbar for the element */
-.scrollbar-on-hover {
-    overflow: hidden;
+.w3lab-blink {
+    animation: blinker 1s linear infinite;
 }
-
-/* Display the scrollbar when the element is being hovered */
-.scrollbar-on-hover:hover {
-    overflow: auto;
-}
-
-.mkdocs-ts-side-nav {
-    width: 20rem;
-    line-height: 1.5rem;
-    font-size: 0.9rem;
-    position: sticky;
-    top: 0;
-}
-
-.mkdocs-ts-side-nav .fv-tree-expand {
-    display: none !important;
-}
-.mkdocs-ts-top-banner {
-    max-height: 50px;
-}
-
-.mkdocs-ts-page {
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-.mkdocs-ts-expand-nav-node {
-    transition: transform 0.5s ease 0s;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
+@keyframes blinker {
+    50% {
+        opacity: 0;
     }
 }
 
-.fv-hover-fill-focus:hover {
-    fill: #ffbb00;
-}
-
-.fv-tree-arianeLine {
-    display: none;
-}
-.nav-ctx-menu-handler {
-    display: none !important;
-}
-.fv-tree-selected .nav-ctx-menu-handler {
-    display: block !important;
-}
-.fv-tree-selected {
-    color: red !important;
-}
-.fv-tree-selected-only {
-    display: none !important;
-}
-.fv-tree-selected .fv-tree-selected-only {
-    display: block !important;
-}
-
+/* DAG */
 .dag-flow-node-title {
     font-size: 8px;
     font-weight: bold;
@@ -141,7 +86,6 @@ circle.pending {
     stroke-width: 2px;
     animation: dash 1.5s ease-in-out infinite;
 }
-
 @keyframes rotate {
     100% {
         transform: rotate(360deg);
@@ -153,100 +97,15 @@ circle.pending {
         stroke-dasharray: 1, 150;
         stroke-dashoffset: 0;
     }
+
     50% {
         stroke-dasharray: 90, 150;
         stroke-dashoffset: -35;
     }
+
     100% {
         stroke-dasharray: 90, 150;
         stroke-dashoffset: -124;
     }
 }
 
-.mkdocs-nav-item {
-    display: none;
-    opacity: 0.5;
-}
-.fv-tree-selected .mkdocs-nav-item {
-    display: flex;
-}
-
-.page-explorer-item-view .ctx-menu-handler {
-    opacity: 0;
-}
-
-.page-explorer-item-view:hover .ctx-menu-handler {
-    opacity: 1;
-}
-
-.colab-ComponentCrossLinksView a {
-    text-decoration: none;
-}
-
-.mknb-MdCellView .mknb-OutputsView {
-    padding-left: 1em;
-    border-left: solid 5px;
-    border-color: #cdffc3;
-}
-.mknb-MdCellView .CodeSnippetView .CodeMirror {
-    background-color: aliceblue;
-}
-
-.mkdocs-TopBannerClassicView .mkdocs-NavItem .mkdocs-NavItem-title {
-    display: none;
-}
-.mkdocs-TopBannerClassicView .mkdocs-NavItem:hover .mkdocs-NavItem-title {
-    display: block !important;
-}
-.mkdocs-TopBannerClassicView .mkdocs-NavItem .selected .mkdocs-NavItem-title {
-    display: block;
-}
-
-.mkdocs-TopBannerClassicView .mkdocs-NavItem .selected {
-    display: block;
-    border-bottom: solid 2px;
-}
-
-/*
-Below should be removed
-*/
-
-.fv-pointer {
-    cursor: pointer;
-}
-.fv-hover-text-focus:hover {
-    color: #ffbb00;
-}
-.fv-hover-bg-background:hover {
-    background-color: #212529;
-}
-.fv-hover-bg-background-alt:hover {
-    background-color: #444;
-}
-.fv-text-disabled {
-    color: #bdbdbd;
-}
-.fv-text-focus {
-    color: #ffbb00;
-}
-.fv-text-error {
-    color: #b00020;
-}
-.fv-bg-secondary {
-    background-color: #be7200;
-}
-.fv-hover-xx-lighter:hover {
-    filter: brightness(1.3);
-}
-.fv-text-success {
-    color: green;
-}
-.fv-blink {
-    animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
-}
