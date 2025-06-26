@@ -1,5 +1,4 @@
 import { delay } from 'rxjs/operators'
-import { AnyVirtualDOM } from 'rx-vdom'
 
 /**
  * This patch is used when mounting a local HD folder (during the redirect to the mounted folder).
@@ -14,37 +13,3 @@ import { AnyVirtualDOM } from 'rx-vdom'
 export function patchRequestObjectAlreadyUsed() {
     return delay(100)
 }
-
-/**
- * This datastructure should be moved somewhere else.
- */
-export interface ApplicationInfo {
-    cdnPackage: string
-    displayName: string
-    graphics?: {
-        background?: AnyVirtualDOM
-        fileIcon?: AnyVirtualDOM
-        appIcon?: AnyVirtualDOM
-    }
-}
-
-interface CodeMirrorChange {
-    origin: string
-}
-export interface CodeMirrorEditor {
-    getValue: () => string
-    on: (
-        event: string,
-        cb: (
-            args: { getValue: () => string },
-            changes: CodeMirrorChange[],
-        ) => void,
-    ) => void
-    refresh: () => void
-    addLineClass: (line: number, kind: string, classes: string) => void
-}
-
-export type CodeMirror = (
-    element: HTMLElement,
-    config: Record<string, unknown>,
-) => CodeMirrorEditor

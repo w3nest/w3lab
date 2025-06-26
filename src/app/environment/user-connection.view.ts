@@ -1,90 +1,47 @@
 import {
     AnyVirtualDOM,
-    child$,
     ChildrenLike,
     CustomAttribute,
     VirtualDOM,
 } from 'rx-vdom'
-import { AppState } from '../app-state'
-import { map, mergeMap } from 'rxjs/operators'
-import { Accounts, Local, raiseHTTPErrors } from '@w3nest/http-clients'
+import { mergeMap } from 'rxjs/operators'
+import { Accounts, Local } from '@w3nest/http-clients'
+import { MdWidgets, parseMd } from 'mkdocs-ts'
 
-/**
- * @category View
- */
-export class UserBadgeDropdownView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
+export class CloudsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'dropdown'
-    /**
-     * @group Immutable DOM Constants
-     */
+
+    public readonly class = ''
+
     public readonly children: ChildrenLike
 
-    constructor({ appState }: { appState: AppState }) {
+    constructor({ env }: { env: Local.Environment.EnvironmentStatusResponse }) {
         this.children = [
-            child$({
-                source$: appState.environment$.pipe(
-                    mergeMap((env) => {
-                        return new Accounts.AccountsClient()
-                            .getSessionDetails$()
-                            .pipe(
-                                raiseHTTPErrors(),
-                                map((session) => [session, env] as const),
-                            )
-                    }),
-                ),
-                vdomMap: ([sessionInfo, env]) => {
+            {
+                tag: 'div',
+                children: env.remotes.map((remote) => {
                     return {
-                        tag: 'div',
-                        class: 'dropdown',
+                        tag: 'p',
                         children: [
-                            this.headerButton(sessionInfo),
-                            {
-                                tag: 'div',
-                                class: 'dropdown-menu bg-dark',
-                                customAttributes: {
-                                    ariaLabelledby: 'dropdownMenuButton',
-                                },
-                                children: [this.currentConnection(env)],
-                            },
+                            new MdWidgets.NoteView({
+                                level:
+                                    remote.envId === env.currentConnection.envId
+                                        ? 'hint'
+                                        : 'info',
+                                icon: 'fas fa-cloud',
+                                label: remote.host,
+                                content: new CloudEnvironmentView({
+                                    remote,
+                                    connection: env.currentConnection,
+                                }),
+                                expandable: true,
+                                parsingArgs: {},
+                            }),
                         ],
                     }
-                },
-            }),
+                }),
+            },
         ]
-    }
-
-    private headerButton(sessionInfo: Accounts.SessionDetails): AnyVirtualDOM {
-        return {
-            tag: 'button',
-            class: 'btn btn-sm  dropdown-toggle d-flex align-items-center text-light',
-            style: {
-                backgroundColor: '#58a4b0',
-            },
-            customAttributes: {
-                dataBsToggle: 'dropdown',
-            },
-            children: [new RegisteredBadgeView(sessionInfo)],
-        }
-    }
-
-    private currentConnection(
-        env: Local.Environment.EnvironmentStatusResponse,
-    ): AnyVirtualDOM {
-        return {
-            tag: 'div',
-            class: 'px-4',
-            children: env.remotes.map((remote) => {
-                const connection = env.currentConnection
-                return new CloudEnvironmentView({ remote, connection })
-            }),
-        }
     }
 }
 
@@ -122,20 +79,16 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'i',
-                        class: `fas fa-cloud ${
-                            remote.envId === connection.envId
-                                ? 'text-success'
-                                : 'text-secondary'
-                        }`,
+                        class: `fas fa-shield-alt`,
                     },
                     {
                         tag: 'i',
-                        class: 'mx-2',
+                        class: 'mx-1',
                     },
                     {
                         tag: 'div',
-                        class: 'text-light',
-                        innerText: remote.host,
+                        class: '',
+                        innerText: 'Authentications:',
                     },
                 ],
             },
@@ -157,6 +110,10 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                     ),
                 ],
             },
+            { tag: 'div', class: 'my-2' },
+            parseMd({
+                src: `**Open ID base URL**: ${remote.authProvider.openidBaseUrl}`,
+            }),
         ]
     }
 
@@ -172,14 +129,19 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                 {
                     tag: 'div',
                     children: auths.map(({ authId }) => {
+                        const text =
+                            authId === connection.authId &&
+                            envId === connection.envId
+                                ? `${authId} (connected)`
+                                : authId
                         const classes =
-                            'btn w-100 my-1 btn-sm d-flex align-items-center ' +
+                            'w-100 my-1 d-flex align-items-center ' +
                             (authId === connection.authId &&
                             envId === connection.envId
-                                ? 'btn-info'
-                                : 'btn-outline-info')
+                                ? 'text-success'
+                                : 'text-secondary')
                         return {
-                            tag: 'button',
+                            tag: 'div',
                             class: classes,
                             children: [
                                 {
@@ -195,7 +157,7 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
                                 },
                                 {
                                     tag: 'div',
-                                    innerText: authId,
+                                    innerText: text,
                                 },
                             ],
                             onclick: () => {
@@ -221,7 +183,7 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
 /**
  * @category View
  */
-export class RegisteredBadgeView implements VirtualDOM<'div'> {
+export class UserInfo implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
@@ -229,7 +191,7 @@ export class RegisteredBadgeView implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex align-items-center'
+    public readonly class = 'w-100'
     /**
      * @group Immutable DOM Constants
      */
@@ -239,24 +201,56 @@ export class RegisteredBadgeView implements VirtualDOM<'div'> {
      */
     public readonly customAttributes: CustomAttribute
 
-    constructor(userDetails: Accounts.SessionDetails) {
-        this.customAttributes = {
-            dataBSToggle: 'tooltip',
-            title: userDetails.userInfo.name,
+    constructor(session: Accounts.SessionDetails) {
+        const hSep = { tag: 'i' as const, class: 'mx-1' }
+        const groupView: AnyVirtualDOM = {
+            tag: 'ul',
+            children: session.userInfo.groups.map((g) => ({
+                tag: 'li' as const,
+                class: 'd-flex align-items-center',
+                children: [
+                    {
+                        tag: 'i',
+                        class: g.id.startsWith('private')
+                            ? 'fas fa-user'
+                            : 'fas fa-users',
+                    },
+                    hSep,
+                    {
+                        tag: 'div',
+                        innerText: g.path,
+                    },
+                    hSep,
+                    hSep,
+                    {
+                        tag: 'a',
+                        href: `@nav/explorer/${g.id}`,
+                        children: [
+                            {
+                                tag: 'button',
+                                class: 'btn btn-sm btn-light fas fa-folder-open',
+                            },
+                        ],
+                    },
+                ],
+            })),
         }
         this.children = [
-            {
-                tag: 'div',
-                class: 'text-light rounded text-center',
-                style: {
-                    fontWeight: 'bold',
-                    fontSize: 'small',
+            new MdWidgets.NoteView({
+                level: 'info',
+                icon: 'fas fa-user',
+                label: 'User Info',
+                expandable: true,
+                content:
+                    `*  **E-mail**: ${session.userInfo.email}\n` +
+                    `*  **Account Manager**: ${session.accountManagerUrl}\n\n` +
+                    `**Groups**:\n<groups></groups>`,
+                parsingArgs: {
+                    views: {
+                        groups: () => groupView,
+                    },
                 },
-                innerText: userDetails.userInfo.name
-                    .split(' ')
-                    .map((name) => name.charAt(0))
-                    .join(''),
-            },
+            }),
         ]
     }
 }

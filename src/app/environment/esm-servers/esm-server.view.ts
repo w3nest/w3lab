@@ -1,14 +1,10 @@
-import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Local } from '@w3nest/http-clients'
 import { parseMd, Router } from 'mkdocs-ts'
-import {
-    ComponentCrossLinksView,
-    LogsExplorerView,
-    styleShellStdOut,
-} from '../../common'
+import { ComponentCrossLinksView } from '../../common'
 import { AppState } from '../../app-state'
-import { Observable, scan } from 'rxjs'
-import { map } from 'rxjs/operators'
+
+import { ServerProxyView } from '../../common/server-proxy.view'
 
 export class EsmServerView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -23,11 +19,8 @@ export class EsmServerView implements VirtualDOM<'div'> {
         appState: AppState
         router: Router
     }) {
-        const logs$ = appState.esmServersState.getStdOut$(esmServer.uid)
-
-        const srcConsoleOutputs = esmServer.pid
-            ? `<consoleOutputs></consoleOutputs>`
-            : 'The server is not owned by py-youwol, console outputs not available.'
+        const stdOuts$ = appState.esmServersState.getStdOut$(esmServer.uid)
+        const logs$ = appState.esmServersState.getDispatchLogs$(esmServer.uid)
 
         this.children = [
             parseMd({
@@ -43,15 +36,10 @@ export class EsmServerView implements VirtualDOM<'div'> {
 **Serving Port**: ${esmServer.port}
 
 ---
-## Console Outputs 
 
-${srcConsoleOutputs}
+## Logs
 
----
-
-## Dispatch Logs 
-
-<dispatchLogs></dispatchLogs>
+<logs></logs>
 `,
                 router,
                 views: {
@@ -61,60 +49,14 @@ ${srcConsoleOutputs}
                             component: esmServer.package,
                         })
                     },
-                    consoleOutputs: () => {
-                        return new ConsoleOutputsView({
+                    logs: () => {
+                        return new ServerProxyView({
                             logs$,
-                            maxCount: appState.esmServersState.maxStdOutCount,
-                        })
-                    },
-                    dispatchLogs: () => {
-                        return new LogsExplorerView({
-                            rootLogs$: appState.esmServersState
-                                .getDispatchLogs$(esmServer.uid)
-                                .pipe(
-                                    scan(
-                                        (acc, e) => [...acc, e],
-                                        [] as Local.System.LogResponse[],
-                                    ),
-                                    map((logs) => ({ logs })),
-                                ),
-                            title: 'Dispatch Logs',
+                            stdOuts$,
                         })
                     },
                 },
             }),
         ]
-    }
-}
-
-class ConsoleOutputsView implements VirtualDOM<'pre'> {
-    public readonly tag = styleShellStdOut.tag
-    public readonly class = styleShellStdOut.class
-    public readonly style = styleShellStdOut.style
-    public readonly children: ChildrenLike
-
-    constructor({
-        logs$,
-        maxCount,
-    }: {
-        logs$: Observable<{ text: string }>
-        maxCount: number
-    }) {
-        const displayed$ = logs$.pipe(
-            scan(
-                (acc: { text: string }[], e) => [...acc, e].slice(0, maxCount),
-                [],
-            ),
-        )
-        this.children = replace$({
-            policy: 'replace',
-            source$: displayed$,
-            vdomMap: (elems) => {
-                return [...elems.reverse()].map(({ text }) => ({
-                    tag: 'div' as const,
-                    innerText: text,
-                }))
-            },
-        })
     }
 }

@@ -1,54 +1,23 @@
-import { child$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { State, Method } from './state'
-import { Local } from '@w3nest/http-clients'
-import { BehaviorSubject, of, Subject } from 'rxjs'
-import { AttributeView, DashboardTitle } from '../common'
-import { catchError, map, mergeMap, take, withLatestFrom } from 'rxjs/operators'
-import { ObjectJs } from '@w3nest/rx-tree-views'
-import { ExpandableGroupView } from '../common/expandable-group.view'
-import { LogsExplorerView } from '../common'
+import { Local, raiseHTTPErrors } from '@w3nest/http-clients'
+import {
+    BehaviorSubject,
+    of,
+    Subject,
+    catchError,
+    distinctUntilChanged,
+    filter,
+    map,
+    mergeMap,
+    switchMap,
+    take,
+    withLatestFrom,
+} from 'rxjs'
+import { ObjectJs } from '@w3nest/ui-tk/Trees'
 import { Json } from '@w3nest/http-clients'
 import { CodeEditorView } from '../common/code-editor.view'
-
-/**
- * @category View
- */
-export class CommandsListView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly tag = 'div'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'ps-4 flex-grow-1 overflow-auto'
-
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: ChildrenLike
-
-    constructor({ environmentState }: { environmentState: State }) {
-        this.children = replace$({
-            policy: 'replace',
-            source$: environmentState.environment$,
-            vdomMap: (env) => {
-                return Object.entries(env.commands).map(
-                    ([, command]) =>
-                        new ExpandableGroupView({
-                            title: command.name,
-                            icon: 'fas fa-play-circle',
-                            content: () =>
-                                new CommandView({
-                                    command,
-                                    environmentState,
-                                }),
-                        }),
-                )
-            },
-        })
-    }
-}
+import { LogsExplorerTree } from '../common/logs.view'
 
 /**
  * @category View
@@ -101,11 +70,6 @@ export class CommandView implements VirtualDOM<'div'> {
         }
 
         this.children = [
-            new AttributeView({ text: 'Method', value: method }),
-            new AttributeView({
-                text: 'Name',
-                value: this.command.name,
-            }),
             ['GET', 'DELETE'].includes(method)
                 ? new ExecuteNoBodyView({
                       environmentState: this.environmentState,
@@ -117,10 +81,10 @@ export class CommandView implements VirtualDOM<'div'> {
                       command: this.command,
                       method,
                   }),
-            { tag: 'div', class: 'flex-grow-1', style: { minHeight: '0px' } },
-            new LogsTabView({
+            new LogsView({
                 environmentState: this.environmentState,
                 command: this.command,
+                method,
             }),
         ]
     }
@@ -131,38 +95,18 @@ type ExecuteViewArgs = {
     command: Local.Environment.Command
     method: Method
 }
-/**
- * @category View
- */
+
 export class ExecuteView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'div'
 
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'my-3 d-flex flex-column overflow-auto'
+    public readonly class = 'd-flex flex-column'
 
-    /**
-     * @group States
-     */
     public readonly environmentState: State
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly method: Method
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly command: Local.Environment.Command
 
-    /**
-     * @group Observables
-     */
     public readonly output$ = new Subject()
 
     constructor(params: ExecuteViewArgs) {
@@ -209,13 +153,7 @@ export class ErrorCommandExec {
     constructor(public readonly details: unknown) {}
 }
 
-/**
- * @category View
- */
 export class ExecuteBodyView extends ExecuteView {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: ChildrenLike
 
     constructor(params: ExecuteViewArgs) {
@@ -265,76 +203,35 @@ export class ExecuteBodyView extends ExecuteView {
     }
 }
 
-/**
- * @category View
- */
-export class PlayButtonView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly tag = 'div'
+export class PlayButtonView implements VirtualDOM<'button'> {
+    public readonly tag = 'button'
 
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'fv-pointer p-1 fv-bg-secondary fv-hover-xx-lighter rounded border d-flex align-items-center'
-    /**
-     * @group Immutable DOM Constants
-     */
+    public readonly class = 'btn btn-sm btn-light fas fa-play'
+
     public readonly style = {
         width: 'fit-content',
     }
-    /**
-     * @group Immutable DOM Constants
-     */
+
     public readonly children: ChildrenLike
 
-    /**
-     * @group Observables
-     */
     public readonly click$ = new Subject()
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly onclick = (ev) => {
         this.click$.next(ev)
     }
 
     constructor(params) {
         Object.assign(this, params)
-        this.children = [{ tag: 'div', class: 'fas fa-play px-2' }]
     }
 }
 
-/**
- * @category View
- */
 export class BodyView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'div'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly class = 'my-1 d-flex flex-column'
-    /**
-     * @group Immutable DOM Constants
-     */
+
     public readonly children: ChildrenLike
 
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'smaller',
-    }
-    /**
-     * @group Observables
-     */
     public readonly body$ = new BehaviorSubject<string>('{}')
 
     constructor(params) {
@@ -350,94 +247,85 @@ export class BodyView implements VirtualDOM<'div'> {
     }
 }
 
-/**
- * @category View
- */
 export class OutputView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'div'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly class = 'my-3'
-    /**
-     * @group Immutable DOM Constants
-     */
+    public readonly style = {
+        fontSize: 'smaller',
+    }
     public readonly children: ChildrenLike
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly output: unknown
 
     constructor(params: { output: unknown }) {
         Object.assign(this, params)
         this.children = [
-            this.output instanceof ErrorCommandExec
-                ? new DashboardTitle({ title: 'Error' })
-                : new DashboardTitle({ title: 'Output' }),
+            {
+                tag: 'h3',
+                innerText:
+                    this.output instanceof ErrorCommandExec
+                        ? 'Error'
+                        : 'Response',
+            },
             new ObjectJs.View({
                 state: new ObjectJs.State({
                     title: 'response',
                     data: this.output,
+                    expandedNodes: ['response_0'],
                 }),
             }),
         ]
     }
 }
 
-/**
- * @category View
- */
-export class LogsTabView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
+class LogsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
 
-    /**
-     * @group States
-     */
     public readonly environmentState: State
-    /**
-     * @group Immutable Constants
-     */
+
     public readonly command: Local.Environment.Command
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'p-2 d-flex flex-column h-100 overflow-auto'
-    /**
-     * @group Immutable DOM Constants
-     */
+
+    public readonly method: Method
+
+    public readonly class = 'd-flex flex-column h-100 overflow-auto'
     public readonly style = {}
-    /**
-     * @group Immutable DOM Constants
-     */
+
     public readonly children: ChildrenLike
 
     constructor(params: {
         environmentState: State
         command: Local.Environment.Command
+        method: Method
     }) {
         Object.assign(this, params)
         this.environmentState.openCommand(this.command)
-        const events = this.environmentState.commandsEvent[this.command.name]
+        const log$ = this.environmentState.commandsEvent[
+            this.command.name
+        ].log$.pipe(filter((l) => l.attributes['method'] === this.method))
+
         this.children = [
             child$({
-                source$: events.log$.pipe(
-                    take(1),
+                source$: log$.pipe(take(1)),
+                vdomMap: () => ({
+                    tag: 'h3',
+                    innerText: 'Logs',
+                }),
+            }),
+            new LogsExplorerTree({
+                firstLevelChildren$: log$.pipe(
                     map((d) => d.parentContextId),
+                    distinctUntilChanged(),
+                    switchMap((id) =>
+                        new Local.Client().api.system.queryLogs$({
+                            parentId: id,
+                        }),
+                    ),
+                    raiseHTTPErrors(),
+                    map((resp) => resp.logs),
                 ),
-                vdomMap: (id: string) => {
-                    return new LogsExplorerView({
-                        rootLogs$: id,
-                        title: this.command.name,
-                    })
-                },
+                stream: true,
+                pending$: new BehaviorSubject(false),
             }),
         ]
     }

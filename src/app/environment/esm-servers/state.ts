@@ -8,7 +8,7 @@ export class State {
         {}
 
     public readonly dispatchLogs$: {
-        [k: string]: ReplaySubject<Local.System.LogResponse>
+        [k: string]: ReplaySubject<Local.System.LogsResponse>
     } = {}
 
     public readonly appState: AppState
@@ -46,7 +46,7 @@ export class State {
                 )
                 const uid = started.attributes.proxyUid
                 if (uid) {
-                    this.getDispatchLogs$(uid).next(started)
+                    this.getDispatchLogs$(uid).next(d)
                 }
             })
 

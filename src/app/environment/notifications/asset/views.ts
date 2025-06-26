@@ -1,12 +1,12 @@
 import { ExpandableGroupView } from '../../../common/expandable-group.view'
 import { AssetDownloadEvent, State } from '../state'
-import { filter } from 'rxjs/operators'
+import { filter, map } from 'rxjs/operators'
 import { AnyVirtualDOM, attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { downloadIcon } from '../views'
 import { Observable } from 'rxjs'
-import { LogsExplorerView } from '../../../common/logs-explorer.view'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { Router } from 'mkdocs-ts'
+import { LogsExplorerTree } from '../../../common/logs.view'
 
 export class AssetDownloadNotificationView extends ExpandableGroupView {
     constructor({
@@ -80,14 +80,16 @@ export class ContentAssetInstallView implements VirtualDOM<'div'> {
             child$({
                 source$: notification$,
                 vdomMap: (notif) => {
-                    return new LogsExplorerView({
-                        rootLogs$: new Local.Client().api.system
+                    return new LogsExplorerTree({
+                        firstLevelChildren$: new Local.Client().api.system
                             .queryLogs$({
                                 parentId: notif.contextId,
                             })
-                            .pipe(raiseHTTPErrors()),
-                        title: 'Asset download',
-                        showHeaderMenu: false,
+                            .pipe(
+                                raiseHTTPErrors(),
+                                map((resp) => resp.logs),
+                            ),
+                        stream: false,
                     })
                 },
             }),

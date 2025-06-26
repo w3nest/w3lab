@@ -1,17 +1,11 @@
-import {
-    AnyVirtualDOM,
-    child$,
-    ChildrenLike,
-    replace$,
-    VirtualDOM,
-} from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState } from '../../app-state'
 import { parseMd, Router, MdWidgets } from 'mkdocs-ts'
-import { debounceTime, merge, Observable, of } from 'rxjs'
+import { debounceTime, merge, of } from 'rxjs'
 import { filter, map, mergeMap, shareReplay } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
-import { ComponentCrossLinksView, LogsExplorerView } from '../../common'
-import { ExpandableGroupView } from '../../common/expandable-group.view'
+import { ComponentCrossLinksView } from '../../common'
+import { ServerProxyView } from '../../common/server-proxy.view'
 
 export class BackendView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -45,6 +39,21 @@ export class BackendView implements VirtualDOM<'div'> {
             raiseHTTPErrors(),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
+        const stdOuts$ = merge(
+            of({
+                name: backend.name,
+                version: backend.version,
+                text: '👂 Start Recording Std Outs',
+            }),
+            appState.backendsState.stdOut$,
+        ).pipe(
+            filter(
+                (resp) =>
+                    resp.name === backend.name &&
+                    resp.version === backend.version,
+            ),
+        )
+
         this.children = [
             parseMd({
                 src: `
@@ -61,19 +70,12 @@ export class BackendView implements VirtualDOM<'div'> {
 
 <config></config>
 
-You can find the associated component in your database [here](@nav/components/backends/${window.btoa(backend.name)}).
-
 ---
 
+## Logs
 
+<logs></logs>
 
-## Server outputs 
-
-<backendOut></backendOut>
-
-## Logs 
-
-<backendLogs></backendLogs>
 `,
                 router,
                 views: {
@@ -89,16 +91,10 @@ You can find the associated component in your database [here](@nav/components/ba
                     status: () => {
                         return new StatusView({ ...backend, router, appState })
                     },
-                    backendLogs: () => {
-                        return new LogsExplorerView({
-                            rootLogs$: logs$,
-                            title: 'Backend logs',
-                            showHeaderMenu: false,
-                        })
-                    },
-                    backendOut: () => {
-                        return new OutputsView({
+                    logs: () => {
+                        return new ServerProxyView({
                             logs$,
+                            stdOuts$,
                         })
                     },
                 },
@@ -107,43 +103,10 @@ You can find the associated component in your database [here](@nav/components/ba
     }
 }
 
-class OutputsView implements VirtualDOM<'pre'> {
-    public readonly tag = 'pre'
-    public readonly children: ChildrenLike
-    public readonly style = {
-        backgroundColor: 'black',
-        color: 'white',
-        fontSize: 'smaller',
-        minHeight: '25vh',
-        maxHeight: '50vh',
-    }
-    constructor({
-        logs$,
-        reverse,
-    }: {
-        logs$: Observable<Local.System.BackendLogsResponse>
-        reverse?: boolean
-    }) {
-        this.children = replace$({
-            policy: 'replace',
-            source$: logs$,
-            vdomMap: (resp) => {
-                const outputs = reverse
-                    ? resp.server_outputs.reverse()
-                    : resp.server_outputs
-                return outputs.map((text) => ({
-                    tag: 'div',
-                    innerText: text,
-                }))
-            },
-        })
-    }
-}
-
 export class TerminateButton implements VirtualDOM<'button'> {
     public readonly tag = 'button'
     public readonly class =
-        'btn btn-small btn-light d-flex align-items-center justify-content-center border rounded p-1 fv-pointer my-1 text-danger'
+        'btn btn-small btn-light d-flex align-items-center justify-content-center border rounded p-1 w3lab-pointer my-1 text-danger'
 
     public readonly style = {
         width: 'fit-content',
@@ -217,12 +180,13 @@ export class ConfigView implements VirtualDOM<'div'> {
     constructor(params: { backend: Local.Environment.ProxiedBackend }) {
         Object.assign(this, params)
         this.children = [
-            new ExpandableGroupView({
+            new MdWidgets.NoteView({
+                level: 'info',
+                expandable: true,
                 icon: 'fas fa-wrench',
-                title: 'Configuration',
-                content: () => {
-                    return this.content()
-                },
+                label: 'Configuration',
+                content: this.content(),
+                parsingArgs: {},
             }),
         ]
     }

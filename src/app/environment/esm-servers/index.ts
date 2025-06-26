@@ -1,6 +1,7 @@
 import {
     DefaultLayout,
     LazyRoutesReturn,
+    MdWidgets,
     Navigation,
     parseMd,
     Router,
@@ -11,12 +12,13 @@ import { map } from 'rxjs/operators'
 import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
 import { EsmServerView } from './esm-server.view'
 import { defaultLayout } from '../../common/utils-nav'
+import { PageTitleView } from '../../common'
 export { State } from './state'
 
 export const navigation = (
     appState: AppState,
 ): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
-    name: 'ESM',
+    name: 'Frontend Proxies',
     header: { icon: { tag: 'i', class: 'fas fa-server' } },
     layout: defaultLayout(({ router }) => new PageView({ router, appState })),
     routes: appState.environment$.pipe(
@@ -67,16 +69,14 @@ export class PageView implements VirtualDOM<'div'> {
 
     constructor({ router, appState }: { appState: AppState; router: Router }) {
         this.children = [
+            new PageTitleView({
+                title: 'Frontend Proxies',
+                icon: 'fa-server',
+                helpNav:
+                    '@nav[w3nest-api]/app/middlewares.esm_servers_middleware.EsmServersMiddleware',
+            }),
             parseMd({
                 src: `
-# ESM servers
-<info>
-ESM servers deliver frontend packages by intercepting resource requests to provide them in an alternative manner. 
-They are typically used for live development servers.
-</info>
-
-Running servers:
-
 <esmServers></esmServers>
 `,
                 router,
@@ -102,7 +102,14 @@ class EsmServersListView implements VirtualDOM<'div'> {
             ),
             vdomMap: ({ store }) => {
                 if (store.length === 0) {
-                    return [{ tag: 'div', innerText: 'No servers running.' }]
+                    return [
+                        new MdWidgets.NoteView({
+                            level: 'info',
+                            content:
+                                'No frontend proxies are currently running.',
+                            parsingArgs: {},
+                        }),
+                    ]
                 }
                 return store.map(({ package: packageName, version, uid }) => {
                     return {

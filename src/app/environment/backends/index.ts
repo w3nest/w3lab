@@ -14,6 +14,7 @@ import { BackendView, TerminateButton } from './backend.view'
 import { InstancesListView, PartitionView } from './partition.view'
 import { ExpandableGroupView } from '../../common/expandable-group.view'
 import { defaultLayout } from '../../common/utils-nav'
+import { PageTitleView } from '../../common'
 
 export * from './state'
 
@@ -81,10 +82,10 @@ function lazyResolver(
                     name,
                     id,
                     leaf: true,
-                    decoration: {
+                    header: {
                         icon: {
                             tag: 'i' as const,
-                            class: 'fas fa-terminal',
+                            class: 'fas fa-hdd',
                         },
                     },
                     layout: defaultLayout(() => {
@@ -106,15 +107,13 @@ export class PageView implements VirtualDOM<'div'> {
 
     constructor({ router, appState }: { appState: AppState; router: Router }) {
         this.children = [
+            new PageTitleView({
+                title: 'Backends',
+                icon: 'fa-server',
+                helpNav: '@nav[w3nest-api]/app/api/backends',
+            }),
             parseMd({
                 src: `
-# Backends
-
-<info>
-This page gathers information related to the running backends.
-</info>
-
-
 **Partitions**
 
 <instances></instances>

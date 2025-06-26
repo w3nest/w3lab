@@ -46,7 +46,7 @@ This section compiles the elements stored in the cache, which you can clear as n
                 router,
                 views: {
                     fileView: () => {
-                        return new FileView({ appState })
+                        return new BrowserCacheFileView({ appState })
                     },
                     menuView: () => {
                         return new MenuView({ appState })
@@ -60,7 +60,7 @@ This section compiles the elements stored in the cache, which you can clear as n
                                         appState.environmentState.browserState
                                             .status$,
                                     vdomMap: (status) => {
-                                        return new ItemsView({
+                                        return new BrowserCacheItemsView({
                                             status,
                                             appState,
                                         })
@@ -75,7 +75,7 @@ This section compiles the elements stored in the cache, which you can clear as n
     }
 }
 
-class FileView implements VirtualDOM<'div'> {
+export class BrowserCacheFileView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     constructor({ appState }: { appState: AppState }) {
@@ -90,7 +90,7 @@ class FileView implements VirtualDOM<'div'> {
                                 {
                                     tag: 'div',
                                     innerText:
-                                        'The cache is persisted on file:',
+                                        'The emulated browser cache is persisted on file:',
                                 },
                                 new HdPathBookView({
                                     appState,
@@ -114,7 +114,7 @@ class FileView implements VirtualDOM<'div'> {
     }
 }
 
-class ItemsView implements VirtualDOM<'div'> {
+export class BrowserCacheItemsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
@@ -150,8 +150,15 @@ class ItemsView implements VirtualDOM<'div'> {
         })
         this.children = [
             {
-                tag: 'div' as const,
-                innerText: `The cache includes ${status.items.length} entries.`,
+                tag: 'div',
+                class: 'd-flex align-items-center justify-content-around',
+                children: [
+                    {
+                        tag: 'div' as const,
+                        innerText: `The cache includes ${status.items.length} entries.`,
+                    },
+                    new MenuView({ appState }),
+                ],
             },
             {
                 tag: 'div',
@@ -238,7 +245,7 @@ class FlatItemView implements VirtualDOM<'div'> {
                                     : 'fa-chevron-right'
                             },
                             wrapper: (d) =>
-                                `fas ${d} fv-pointer fv-hover-text-focus`,
+                                `fas ${d} w3lab-pointer fv-hover-text-focus`,
                         }),
                         onclick: () => expanded$.next(!expanded$.value),
                     },

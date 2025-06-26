@@ -27,11 +27,6 @@ export class PageView implements VirtualDOM<'div'> {
                 src: `
 # Notifications
 
-<info>
-This page gathers notifications about ongoing installations.
-
-</info>
-
 <notifications></notifications>
                 `,
                 router,

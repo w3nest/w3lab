@@ -1,4 +1,3 @@
-import { Router } from 'mkdocs-ts'
 import { ChildrenLike, VirtualDOM, RxAttribute, attr$, child$ } from 'rx-vdom'
 import { AppState } from '../app-state'
 import { internalAnchor } from '../common/links.view'
@@ -24,7 +23,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ appState, router }: { appState: AppState; router: Router }) {
+    constructor({ appState }: { appState: AppState }) {
         const notifState = appState.notificationsState
         this.class = attr$({
             source$: combineLatest([
@@ -37,12 +36,14 @@ export class NotificationsView implements VirtualDOM<'div'> {
                     : 'd-flex align-items-center'
             },
         })
+        const router = appState.router
         this.children = [
             {
                 ...internalAnchor({
                     path: '/environment/notifications',
                     router,
                 }),
+                class: 'd-flex align-items-center',
                 children: [
                     {
                         tag: 'i',
@@ -51,7 +52,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
                             source$: notifState.backendEvents.installing$,
                             vdomMap: (installing) => {
                                 return installing.length > 0
-                                    ? 'fas fa-plug text-success fv-blink me-1'
+                                    ? 'fas fa-plug text-success w3lab-blink me-1'
                                     : 'd-none'
                             },
                         }),
@@ -64,7 +65,7 @@ export class NotificationsView implements VirtualDOM<'div'> {
                             source$: notifState.assetEvents.downloading$,
                             vdomMap: (installing) => {
                                 return installing.length > 0
-                                    ? 'fas fa-download text-success fv-blink'
+                                    ? 'fas fa-download text-success w3lab-blink'
                                     : 'd-none'
                             },
                         }),
@@ -99,7 +100,8 @@ export class BackendServingView implements VirtualDOM<'a'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ appState, router }: { appState: AppState; router: Router }) {
+    constructor({ appState }: { appState: AppState }) {
+        const router = appState.router
         Object.assign(
             this,
             internalAnchor({
@@ -150,7 +152,8 @@ export class EsmServingView implements VirtualDOM<'a'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({ appState, router }: { appState: AppState; router: Router }) {
+    constructor({ appState }: { appState: AppState }) {
+        const router = appState.router
         Object.assign(
             this,
             internalAnchor({ path: '/environment/esm-servers', router }),

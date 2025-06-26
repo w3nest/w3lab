@@ -13,56 +13,27 @@ import * as Browser from './browser'
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
-/**
- * @category Event
- */
 export class CommandEvents {
-    /**
-     * @group Observables
-     */
     log$: WebSocketResponse$<unknown>
 
     constructor(public readonly command: Local.Environment.Command) {
-        this.log$ = new Local.Client().api.customCommands.webSocket.log$({})
-    }
-
-    static fullId(flowId: string, stepId: string) {
-        return `${flowId}#${stepId}`
+        this.log$ = new Local.Client().api.customCommands.webSocket.log$({
+            commandName: command.name,
+        })
     }
 }
 
-/**
- * @category State
- */
 export class State {
-    /**
-     * @group Immutable Constants
-     */
     public readonly client = new Local.Client().api.environment
 
-    /**
-     * @group Observables
-     */
     public readonly environment$: Observable<Local.Environment.EnvironmentStatusResponse>
 
-    /**
-     * @group State
-     */
     public readonly appState: AppState
 
-    /**
-     * @group State
-     */
     public readonly browserState: Browser.State
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly commandsEvent: { [k: string]: CommandEvents } = {}
 
-    /**
-     * @group Observables
-     */
     public readonly customDispatches$: Observable<{
         [k: string]: Local.Environment.CustomDispatch[]
     }>
