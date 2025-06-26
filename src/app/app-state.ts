@@ -225,6 +225,8 @@ export class AppState {
                 : `/mounted/file_${encodeHdPath(path)}`
         if (!values.map((p) => p.path).includes(path)) {
             this.mountedHdPaths$.next([...values, { path, type }])
+            const nodeMounted = this.router.explorerState.getNode('/mounted')
+            this.router.explorerState.selectNodeAndExpand(nodeMounted)
             this.router.explorerState.root$
                 .pipe(
                     filter(
