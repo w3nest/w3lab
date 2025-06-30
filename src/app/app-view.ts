@@ -1,4 +1,4 @@
-import { child$, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
+import { attr$, child$, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
 import { AppState } from './app-state'
 import { DefaultLayout } from 'mkdocs-ts'
 import { DisconnectedView } from './disconnected.view'
@@ -10,6 +10,7 @@ import {
     NotificationsView,
 } from './environment/nav-badges.view'
 import { Local } from '@w3nest/http-clients'
+import { getProjectNav$ } from './common/utils-nav'
 
 export const footer = new Footer({
     license: 'MIT',
@@ -38,7 +39,7 @@ class TopBannerContent implements VirtualDOM<'div'> {
                 source$: appState.projectsState.historic$,
                 vdomMap: (projects) => {
                     return projects.length > 0
-                        ? new RecentProjectsView({ projects })
+                        ? new RecentProjectsView({ projects, appState })
                         : EmptyDiv
                 },
             }),
@@ -51,7 +52,13 @@ class RecentProjectsView implements VirtualDOM<'div'> {
     public readonly class = 'dropdown'
     public readonly children: ChildrenLike
 
-    constructor({ projects }: { projects: Local.Projects.Project[] }) {
+    constructor({
+        projects,
+        appState,
+    }: {
+        projects: Local.Projects.Project[]
+        appState: AppState
+    }) {
         const id = 'RecentProjectsViewDropDownButton'
         this.children = [
             {
@@ -83,9 +90,38 @@ class RecentProjectsView implements VirtualDOM<'div'> {
                         children: [
                             {
                                 tag: 'a',
-                                href: '/foo/bar',
-                                class: 'dropdown-item',
-                                innerText: project.name,
+                                href: attr$({
+                                    source$: getProjectNav$({
+                                        projectName: project.name,
+                                        version: project.version,
+                                        appState,
+                                    }),
+                                    vdomMap: (nav) => `@nav/${nav}`,
+                                }),
+                                class: 'd-flex align-items-center dropdown-item',
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        innerText: project.name,
+                                    },
+                                    { tag: 'div', class: 'mx-2' },
+                                    {
+                                        tag: 'div',
+                                        class: 'd-flex align-items-center text-secondary',
+                                        style: { fontSize: '0.8rem' },
+                                        children: [
+                                            {
+                                                tag: 'i',
+                                                class: 'fas fa-bookmark',
+                                            },
+                                            { tag: 'div', class: 'mx-1' },
+                                            {
+                                                tag: 'div',
+                                                innerText: project.version,
+                                            },
+                                        ],
+                                    },
+                                ],
                             },
                         ],
                     }

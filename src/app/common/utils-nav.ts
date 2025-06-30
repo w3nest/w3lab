@@ -6,10 +6,12 @@ import { AnyVirtualDOM, attr$ } from 'rx-vdom'
 
 export function getProjectNav$({
     projectName,
+    version,
     appState,
     timeout,
 }: {
     projectName: string
+    version?: string
     appState: AppState
     timeout?: number
 }): Observable<string | undefined> {
@@ -17,23 +19,16 @@ export function getProjectNav$({
         appState.projectsState.projects$,
         appState.environment$,
     ]).pipe(
-        map(([projects, env]) => {
-            const project = projects.find(
-                (p) => p.name.split('~')[0] === projectName,
-            )
+        map(([projects]) => {
+            const versions = projects
+                .filter((p) => p.name === projectName)
+                .sort((p0, p1) => p0.version.localeCompare(p1.version))
+            let project = versions[0]
+            if (version) {
+                project = versions.find((p) => p.version === version)
+            }
             if (project) {
-                const finder = env.projects.finders.find((f) =>
-                    project.path.startsWith(f.fromPath),
-                )
-                const maybeParent = projects.find(
-                    (maybeParent) =>
-                        project.path !== maybeParent.path &&
-                        project.path.startsWith(maybeParent.path),
-                )
-                if (maybeParent) {
-                    return `/projects/${window.btoa(finder.fromPath)}/${maybeParent.id}/${project.id}`
-                }
-                return `/projects/${window.btoa(finder.fromPath)}/${project.id}`
+                return appState.projectsState.getNav(project.id)
             }
             return undefined
         }),

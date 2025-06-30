@@ -3,7 +3,6 @@ import { State as ProjectsState } from './state'
 import { HTTPError, dispatchHTTPErrors, Local } from '@w3nest/http-clients'
 import { BehaviorSubject, Subject } from 'rxjs'
 import { tap } from 'rxjs/operators'
-import { classesButton } from '../common'
 import { CodeEditorView } from '../common/code-editor.view'
 
 /**
@@ -62,13 +61,10 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
                     new ProjectTemplateEditor({
                         projectsState: this.projectsState,
                         projectTemplate: this.projectTemplate,
-                        onError: () => {
-                            /*viewState$.next('expanded')*/
-                        },
+                        onError: () => {},
                     }),
                 ],
             },
-            //bottomNav,
         ]
     }
 }
@@ -138,15 +134,15 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
 /**
  * @category View
  */
-export class GenerateButton implements VirtualDOM<'div'> {
+export class GenerateButton implements VirtualDOM<'button'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly tag = 'div'
+    public readonly tag = 'button'
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `${classesButton} mx-auto px-4`
+    public readonly class = `btn btn-sm btn-light mx-auto px-2`
 
     /**
      * @group Immutable DOM Constants
@@ -183,7 +179,7 @@ export class GenerateButton implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                innerText: 'Generate',
+                class: 'fas fa-play',
             },
             {
                 tag: 'div',

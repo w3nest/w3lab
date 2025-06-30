@@ -449,7 +449,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                 }).pipe(take(1)),
                 vdomMap: (nav: string | undefined) => {
                     return this.linkView({
-                        icon: 'fa-boxes',
+                        icon: 'fa-tools',
                         nav: nav || '',
                         enabled: nav !== undefined,
                     })

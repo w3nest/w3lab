@@ -1,9 +1,15 @@
-import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    CSSAttribute,
+    EmptyDiv,
+    VirtualDOM,
+} from 'rx-vdom'
 
 import * as d3 from 'd3'
 import { AppState } from '../../app-state'
-import { combineLatest } from 'rxjs'
-import { Observable } from 'rxjs'
+import { combineLatest, Observable } from 'rxjs'
 
 type D3 = typeof d3
 /* eslint-disable */
@@ -34,6 +40,11 @@ export type DonutChartSection<T> = {
      * An optional inline style applied to the associated SVG element for custom styling.
      */
     style?: string
+
+    /**
+     * Fill color.
+     */
+    fill?: string
 }
 
 /**
@@ -57,10 +68,10 @@ export function createDonutChartD3<T>({
     d3,
     entities,
     margin,
-    width,
+    style,
     sections,
 }: {
-    width: string
+    style: CSSAttribute
     d3: D3
     entities: T[]
     margin: number
@@ -70,7 +81,7 @@ export function createDonutChartD3<T>({
         tag: 'div',
         class: 'mx-auto',
         style: {
-            width,
+            ...style,
             aspectRatio: '1/1',
         },
         connectedCallback: (elem) => {
@@ -118,37 +129,78 @@ export function createDonutChartD3<T>({
                         .innerRadius(radius / 3)
                         .outerRadius(radius),
                 )
-                .attr('fill', 'grey')
+                .attr('fill', (d) => d.data[1].fill ?? 'grey')
                 .attr('stroke', 'black')
                 .style('stroke-width', '2px')
                 .style('opacity', 0.7)
 
             const text = svg.selectAll('text').data(data_ready)
 
-            text.enter()
+            const legendRectSize = 18
+            const legendSpacing = 8
+            const legendHeight = legendRectSize + legendSpacing
+            const legendPadding = 10
+            // Container for the whole legend block
+            const legendGroup = d3
+                .select(elem.querySelector('svg'))
+                .append('g')
+                .attr('class', 'legend-group')
+                .attr(
+                    'transform',
+                    `translate(${margin}, ${height - sections.length * legendHeight - margin})`,
+                )
+
+            // Inner group that holds only items (excluding background)
+            const legendItemsGroup = legendGroup
+                .append('g')
+                .attr('class', 'legend-items')
+
+            // Add legend items to inner group
+            const legendItems = legendItemsGroup
+                .selectAll('.legend-item')
+                .data(data_ready)
+                .enter()
+                .append('g')
+                .attr('class', 'legend-item')
+                .attr(
+                    'transform',
+                    (_, i) =>
+                        `translate(${legendPadding}, ${i * legendHeight + legendPadding})`,
+                )
+
+            legendItems
+                .append('rect')
+                .attr('width', legendRectSize)
+                .attr('height', legendRectSize)
+                .attr('fill', (d) => d.data[1].fill ?? 'grey')
+                .attr('class', (d) => d.data[1].class)
+                .attr('stroke', 'black')
+
+            legendItems
                 .append('text')
-                .attr('dy', '.35em')
-                .attr('class', (d) => {
-                    return d?.data[1]?.class || ''
-                })
-                .attr('text-anchor', (d) => {
-                    const midAngle = 0.5 * (d.startAngle + d.endAngle)
-                    return midAngle < Math.PI ? 'start' : 'end'
-                })
-                .text((d) => {
-                    const label = d.data[1].label || d.data[1].tag
-                    return `${label} (${d.data[1].count})`
-                })
-                .attr('y', (d) => {
-                    const midAngle = 0.5 * (d.startAngle + d.endAngle)
-                    const r = 1.05 * radius
-                    return -r * Math.cos(midAngle)
-                })
-                .attr('x', (d) => {
-                    const midAngle = 0.5 * (d.startAngle + d.endAngle)
-                    const r = 1.05 * radius
-                    return r * Math.sin(midAngle)
-                })
+                .attr('x', legendRectSize + 6)
+                .attr('y', legendRectSize / 2)
+                .attr('dy', '0.35em')
+                .text((d) => `${d.data[1].label} (${d.data[1].count})`)
+
+            // Now add background *after* so we can measure the bbox of the content only
+            setTimeout(() => {
+                const bbox = legendItemsGroup.node()?.getBBox()
+                if (bbox) {
+                    // Insert rect *before* the items group so it goes underneath
+                    legendGroup
+                        .insert('rect', '.legend-items')
+                        .attr('x', bbox.x - legendPadding)
+                        .attr('y', bbox.y - legendPadding)
+                        .attr('width', bbox.width + 2 * legendPadding)
+                        .attr('height', bbox.height + 2 * legendPadding)
+                        .attr('fill', '#f0f0f0')
+                        .attr('opacity', 0.6)
+                        .attr('stroke', '#ccc')
+                        .attr('rx', 6)
+                        .attr('ry', 6)
+                }
+            }, 0)
         },
     }
 }
@@ -170,7 +222,7 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
 
     constructor(params: {
         appState: AppState
-        width: string
+        innerStyle?: CSSAttribute
         margin: number
         sections: DonutChartSection<T>[]
         entities$: Observable<T[]>
@@ -184,9 +236,17 @@ export class DonutChart<T> implements VirtualDOM<'div'> {
             child$({
                 source$: combineLatest([d3$, this.entities$]),
                 vdomMap: ([{ d3 }, entities]) => {
+                    if (this.sections.length === 0) {
+                        console.warn(
+                            '[w3lab] DonutChart plotted with no sections',
+                        )
+                    }
+                    if (entities.length === 0 || params.sections.length === 0) {
+                        return EmptyDiv
+                    }
                     return createDonutChartD3<T>({
                         d3,
-                        width: this.width,
+                        style: params.innerStyle,
                         entities: entities,
                         margin: this.margin,
                         sections: this.sections,

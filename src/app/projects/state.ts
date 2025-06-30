@@ -202,6 +202,8 @@ export class State {
     >([])
 
     public readonly historic$: Observable<Local.Projects.Project[]>
+
+    private navIdMap: Record<string, string> = {}
     private readonly rawHistoric$ = new BehaviorSubject<string[]>([])
 
     private readonly storageClient = new WebpmSessionsStorage.Client()
@@ -334,5 +336,16 @@ export class State {
 
     refreshProjects() {
         this.projectsClient.status$().subscribe()
+    }
+
+    registerNavIdMap({ origin, ids }: { origin: string; ids: string[] }) {
+        const entries = ids.reduce(
+            (acc, e) => ({ ...acc, [e]: `/projects/${origin}/${e}` }),
+            {},
+        )
+        this.navIdMap = { ...this.navIdMap, ...entries }
+    }
+    getNav(id: string) {
+        return this.navIdMap[id]
     }
 }

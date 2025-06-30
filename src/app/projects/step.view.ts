@@ -14,7 +14,7 @@ import { filter, map, take } from 'rxjs/operators'
 import { BehaviorSubject, from, mergeMap, Observable } from 'rxjs'
 import { ExpandableGroupView } from '../common/expandable-group.view'
 import * as webpmClient from '@w3nest/webpm-client'
-import { DataView } from '../common'
+import { ObjectJs } from '@w3nest/ui-tk/Trees'
 
 type Mode = 'run' | 'config' | 'manifest'
 
@@ -236,16 +236,13 @@ export class ManifestView implements VirtualDOM<'div'> {
                 title: 'Data',
                 icon: 'fas fa-cog',
                 content: () => {
-                    return {
-                        tag: 'div',
-                        class: 'p-1 bg-dark text-light overflow-auto',
-                        style: {
-                            maxHeight: '33vh',
-                            fontSize: 'medium',
-                            fontFamily: 'monospace',
-                        },
-                        children: [new DataView(manifest.data, true)],
-                    }
+                    return new ObjectJs.View({
+                        state: new ObjectJs.State({
+                            title: 'Data',
+                            data: manifest.data,
+                            expandedNodes: ['Data_0'],
+                        }),
+                    })
                 },
             })
         }
@@ -417,7 +414,15 @@ export class RunStdOutView implements VirtualDOM<'div'> {
                             return {
                                 tag: 'div',
                                 class: 'w-50 h-100 overflow-auto',
-                                children: [new DataView(data, true)],
+                                children: [
+                                    new ObjectJs.View({
+                                        state: new ObjectJs.State({
+                                            title: 'Data',
+                                            data,
+                                            expandedNodes: ['Data_0'],
+                                        }),
+                                    }),
+                                ],
                             }
                         },
                     }),

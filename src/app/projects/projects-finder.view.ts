@@ -1,6 +1,6 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
-import { HdPathBookView } from '../common'
+import { HdPathBookView, PageTitleView } from '../common'
 import { AppState } from '../app-state'
 import { FailuresView } from './failures.view'
 import { Local } from '@w3nest/http-clients'
@@ -26,37 +26,30 @@ export class ProjectsFinderView implements VirtualDOM<'div'> {
                 "\n    *  **Any folder's name starting with '.'**",
             )
         this.children = [
+            new PageTitleView({
+                title: `Projects finder '${finder.name}'`,
+                icon: 'fa-search',
+                helpNav: '@nav[w3nest-api]/app/config.projects.ProjectsFinder',
+            }),
             parseMd({
                 src: `
-# Projects finder **${finder.name}**
-
-
-
-<info>
-A project finder scans a specified directory on your computer, searching recursively for projects. 
-It operates up to a defined maximum depth in the directory structure. Optionally, it can continuously monitor the
- directory for any newly added or removed projects.
- 
- More inforation can be found 
- <a target="_blank" href="/doc?nav=/references/youwol/app/environment/models.models_project.Projects">here</a>.
- 
-</info>
-
-
-*  Root folder: <folder></folder>
-
-*  Lookup depth: ${finder.lookUpDepth}
-
-*  Continuously watched: ${finder.watch}
-
-*  Ignored folders (and associated children) in look-up: ${ignored}
-
-
-## Failures
-
-The following projects have failed to load:            
 
 <failedListView></failedListView>
+
+### **📁 Root Folder**  
+
+<folder></folder>
+
+---
+
+### ⚙️ Settings
+- **Lookup Depth**: \`${finder.lookUpDepth}\`
+- **Watch Continuously**: \`${finder.watch ? '✅ Yes' : '❌ No'}\`
+
+---
+
+### 🚫 Ignored Folders
+${ignored}
 
 `,
                 router,

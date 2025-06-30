@@ -1,10 +1,16 @@
-import { AnyVirtualDOM, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
-import { State } from './state'
+import {
+    AnyVirtualDOM,
+    attr$,
+    ChildrenLike,
+    replace$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { map } from 'rxjs/operators'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { Local } from '@w3nest/http-clients'
-import { Router } from 'mkdocs-ts'
 import { icon } from './icons'
+import { getProjectNav$ } from '../common/utils-nav'
+import { AppState } from '../app-state'
 
 export class SearchView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -13,14 +19,8 @@ export class SearchView implements VirtualDOM<'div'> {
 
     public readonly searchTerm$ = new BehaviorSubject('')
     public readonly tags$ = new BehaviorSubject<string[]>([])
-    constructor({
-        router,
-        projectsState,
-    }: {
-        projectsState: State
-        router: Router
-    }) {
-        const allTags$ = projectsState.projects$.pipe(
+    constructor({ appState }: { appState: AppState }) {
+        const allTags$ = appState.projectsState.projects$.pipe(
             map(
                 (projects) =>
                     new Set(
@@ -33,7 +33,7 @@ export class SearchView implements VirtualDOM<'div'> {
             ),
         )
         const selected$ = combineLatest([
-            projectsState.projects$,
+            appState.projectsState.projects$,
             this.tags$,
             this.searchTerm$,
         ]).pipe(
@@ -111,24 +111,50 @@ export class SearchView implements VirtualDOM<'div'> {
                     policy: 'replace',
                     source$: selected$,
                     vdomMap: (projects: Local.Projects.Project[]) => {
-                        return projects.map((p) => ({
-                            tag: 'a',
-                            class: 'd-flex align-items-center m-2',
-                            href: `@nav/projects/${p.id}`,
-                            children: [
-                                icon(p),
-                                {
-                                    tag: 'div',
-                                    innerText: p.name,
-                                },
-                            ],
-                            onclick: (ev) => {
-                                ev.preventDefault()
-                                router.fireNavigateTo({
-                                    path: `/projects/${p.id}`,
-                                })
-                            },
-                        }))
+                        return projects
+                            .sort((p0, p1) => p0.name.localeCompare(p1.name))
+                            .map((p) => ({
+                                tag: 'div',
+                                class: 'd-flex align-items-center',
+                                children: [
+                                    icon(p),
+                                    { tag: 'i', class: 'mx-1' },
+                                    {
+                                        tag: 'a',
+                                        class: 'd-flex align-items-center m-2',
+                                        href: attr$({
+                                            source$: getProjectNav$({
+                                                projectName: p.name,
+                                                appState,
+                                            }),
+                                            vdomMap: (nav) => `@nav${nav}`,
+                                        }),
+                                        children: [
+                                            {
+                                                tag: 'div',
+                                                innerText: p.name,
+                                            },
+                                        ],
+                                    },
+                                    { tag: 'i', class: 'mx-2' },
+                                    {
+                                        tag: 'div',
+                                        class: 'd-flex align-items-center',
+                                        style: { fontSize: '0.8rem' },
+                                        children: [
+                                            {
+                                                tag: 'i',
+                                                class: 'fas fa-bookmark',
+                                            },
+                                            { tag: 'i', class: 'mx-1' },
+                                            {
+                                                tag: 'div',
+                                                innerText: p.version,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            }))
                     },
                 },
             },

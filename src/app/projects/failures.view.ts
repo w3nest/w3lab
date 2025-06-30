@@ -1,8 +1,7 @@
 import { Local } from '@w3nest/http-clients'
-import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
 import { AppState } from '../app-state'
-import { Router } from 'mkdocs-ts'
-import { ExpandableGroupView } from '../common/expandable-group.view'
+import { MdWidgets, Router } from 'mkdocs-ts'
 import { HdPathBookView } from '../common'
 
 export class FailuresView implements VirtualDOM<'div'> {
@@ -17,23 +16,41 @@ export class FailuresView implements VirtualDOM<'div'> {
         router: Router
         prefix?: string
     }) {
-        this.children = replace$({
-            policy: 'replace',
-            source$: appState.projectsState.projectsFailures$,
-            vdomMap: (failures) => {
-                return failures
-                    .filter((failure) =>
-                        prefix ? failure.path.startsWith(prefix) : true,
-                    )
-                    .map((failure) => {
-                        return new FailureView({ failure, appState })
+        this.children = [
+            child$({
+                source$: appState.projectsState.projectsFailures$,
+                vdomMap: (failures) => {
+                    if (failures.length === 0) {
+                        return EmptyDiv
+                    }
+                    return new MdWidgets.NoteView({
+                        level: 'warning',
+                        label: 'Some projects have failed to load',
+                        expandable: true,
+                        parsingArgs: {},
+                        content: {
+                            tag: 'div',
+                            children: failures
+                                .filter((failure) =>
+                                    prefix
+                                        ? failure.path.startsWith(prefix)
+                                        : true,
+                                )
+                                .map((failure) => {
+                                    return new FailureView({
+                                        failure,
+                                        appState,
+                                    })
+                                }),
+                        },
                     })
-            },
-        })
+                },
+            }),
+        ]
     }
 }
 
-class FailureView extends ExpandableGroupView {
+class FailureView extends MdWidgets.NoteView {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
@@ -45,7 +62,10 @@ class FailureView extends ExpandableGroupView {
         failure: Local.Projects.Failure
     }) {
         super({
-            title: {
+            level: 'failure',
+            expandable: true,
+            parsingArgs: {},
+            label: {
                 tag: 'div',
                 style: {
                     maxWidth: '75%',
@@ -58,23 +78,19 @@ class FailureView extends ExpandableGroupView {
                     }),
                 ],
             },
-            icon: 'fas fa-times fv-text-error',
-            content: () => {
-                return {
-                    tag: 'pre',
-                    children: [
-                        {
-                            tag: 'div',
-                            class: 'pt-2 px-2 text-start overflow-auto fv-text-error ',
-                            style: {
-                                whiteSpace: 'pre-wrap',
-                            },
-                            innerText:
-                                (failure['traceback'] as string) ??
-                                failure.message,
+            content: {
+                tag: 'pre',
+                children: [
+                    {
+                        tag: 'div',
+                        class: 'pt-2 px-2 text-start overflow-auto fv-text-error ',
+                        style: {
+                            whiteSpace: 'pre-wrap',
                         },
-                    ],
-                }
+                        innerText:
+                            (failure['traceback'] as string) ?? failure.message,
+                    },
+                ],
             },
         })
     }

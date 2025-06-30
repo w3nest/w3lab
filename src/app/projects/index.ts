@@ -1,9 +1,8 @@
 import { NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
 import { Navigation, parseMd, Router, DefaultLayout } from 'mkdocs-ts'
-import { attr$, ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { SearchView } from './search.view'
-import { pyYwDocLink } from '../common/py-yw-references.view'
 import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { delay, distinctUntilChanged, map } from 'rxjs/operators'
@@ -12,6 +11,9 @@ import { ProjectsFinderView } from './projects-finder.view'
 import { defaultLayout } from '../common/utils-nav'
 import { NavNodeData } from 'mkdocs-ts'
 import { FailuresView } from './failures.view'
+import { PageTitleView } from '../common'
+import { ProjectsDonutChart } from '../home/widgets'
+import { NamespaceView } from './namespace.view'
 
 export * from './state'
 
@@ -24,7 +26,7 @@ export const navigation = (
 ): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Projects',
     header: {
-        icon: { tag: 'i', class: 'fas  fa-boxes' },
+        icon: { tag: 'i', class: 'fas fa-tools' },
         actions: [refreshAction(appState)],
     },
     layout: defaultLayout(
@@ -82,80 +84,68 @@ export class PageView implements VirtualDOM<'div'> {
     constructor({ router, appState }: { router: Router; appState: AppState }) {
         const { projectsState } = appState
         this.children = [
+            new PageTitleView({
+                title: 'Projects',
+                icon: 'fa-tools',
+                helpNav: '@nav/doc/how-to/publish',
+            }),
             parseMd({
                 src: `
-# Projects
 
-<info>
-This page gathers the projects you are working on, they correspond to folder including a \`.yw_pipeline.py\` file.
-
-</info>
-
-## New project
-
-<info>
-To create a new project from a template, you need to reference the associated python module in your configuration 
-file. Below is an example using the youwol's \`pipeline_typescript_weback_npm\`:
-
-\`\`\`python
-from w3nest.app.environment import (
-    Configuration,
-    Projects,
-)
-from w3nest.pipelines.pipeline_typescript_weback_npm \
-    import app_ts_webpack_template
-
-projects_folder = Path.home() / 'auto-generated'
-
-Configuration(
-    projects=Projects(
-        templates=[app_ts_webpack_template(folder=projects_folder)],
-    )
-)          
-\`\`\`                    
-
-Find out more on 
-${pyYwDocLink('ProjectTemplate', '/references/youwol/app/environment/models.ProjectTemplate')}.
-
-</info>
-
-
-<newProject></newProject>
-
-## Browse projects
-
-<searchView></searchView>
-
-
-## Failures
-
-The following projects have failed to load:            
+<projectTypes></projectTypes>
 
 <failedListView></failedListView>
 
+---
+
+## <i class="fas fa-folder-plus"></i> Project Starters  <docLink nav='@nav[w3nest-api]/app/config.projects.ProjectTemplate'></docLink>
+
+<newProject></newProject>
+
+---
+
+## <i class="fas fa-search"></i> Browse Projects
+
+<searchView></searchView>
 `,
                 router,
                 views: {
+                    projectTypes: () => {
+                        return new ProjectsDonutChart({
+                            appState,
+                            innerStyle: { width: '95%', maxWidth: '500px' },
+                            margin: 10,
+                            sections: [
+                                {
+                                    selector: (p) =>
+                                        p.webpmSpec.specification.kind ===
+                                        'webapp',
+                                    label: 'Apps.',
+                                    fill: '#3B82F6',
+                                },
+                                {
+                                    selector: (p) =>
+                                        p.webpmSpec.specification.kind ===
+                                        'esm',
+                                    label: 'ESM',
+                                    fill: '#10B981',
+                                },
+                                {
+                                    selector: (p) =>
+                                        p.webpmSpec.specification.kind ===
+                                        'backend',
+                                    label: 'Backends',
+                                    fill: '#64748B',
+                                },
+                            ],
+                        })
+                    },
                     newProject: () => {
                         return new NewProjectsCard({
                             projectsState,
                         })
                     },
-                    searchView: () => new SearchView({ projectsState, router }),
-                    projectsListView: () => ({
-                        tag: 'ul',
-                        children: replace$({
-                            policy: 'replace',
-                            source$: projectsState.projects$,
-                            vdomMap: (projects) =>
-                                projects.map((p) =>
-                                    parseMd({
-                                        src: `*  [${p.name}](@nav/projects/${p.id})`,
-                                        router,
-                                    }),
-                                ),
-                        }),
-                    }),
+                    searchView: () => new SearchView({ appState }),
                     failedListView: () =>
                         new FailuresView({ appState, router }),
                 },
@@ -179,7 +169,7 @@ function lazyResolver(
                 header: {
                     icon: {
                         tag: 'i' as const,
-                        class: 'fas fa-object-group',
+                        class: 'fas fa-search',
                     },
                 },
                 layout: defaultLayout(({ router }: { router: Router }) => {
@@ -197,16 +187,62 @@ function lazyResolver(
         return children.reduce((acc, c) => ({ ...acc, [`/${c.id}`]: c }), {})
     }
     if (parts.length === 1) {
+        // ProjectsFinder selected
         const prefix = window.atob(parts[0])
         const directChildren = getDirectChildren(prefix, projects)
-        const children = formatChildren(directChildren, projects, appState)
-        return children.reduce((acc, e) => ({ ...acc, [`/${e.id}`]: e }), {})
+        const namespaces = new Set(
+            directChildren
+                .map((p) => {
+                    if (p.name.includes('/')) {
+                        return p.name.split('/')[0]
+                    }
+                    return undefined
+                })
+                .filter((n) => n !== undefined),
+        )
+        const childrenNamespace = formatNamespaces(prefix, namespaces, appState)
+        const childrenNoNamespace = directChildren.filter(
+            (p) => !p.name.includes('/'),
+        )
+        const childrenProject = formatChildren(
+            path,
+            childrenNoNamespace,
+            projects,
+            appState,
+        )
+        return [...childrenNamespace, ...childrenProject].reduce(
+            (acc, e) => ({ ...acc, [`/${e.id}`]: e }),
+            {},
+        )
     }
-    if (parts.length === 2) {
-        const projectId = parts[1]
+    if (parts.length >= 2) {
+        const projectId = parts[parts.length - 1]
+        if (projectId.startsWith('ns_')) {
+            const finderPrefix = window.atob(parts[0])
+            const ns = projectId.split('ns_')[1]
+            const directChildren = getDirectChildren(
+                finderPrefix,
+                projects,
+            ).filter((p) => p.name.startsWith(`${ns}/`))
+            const children = formatChildren(
+                path,
+                directChildren,
+                projects,
+                appState,
+            )
+            return children.reduce(
+                (acc, e) => ({ ...acc, [`/${e.id}`]: e }),
+                {},
+            )
+        }
         const project = projects.find((p) => p.id === projectId)
         const directChildren = getDirectChildren(project.path, projects)
-        const children = formatChildren(directChildren, projects, appState)
+        const children = formatChildren(
+            path,
+            directChildren,
+            projects,
+            appState,
+        )
         return children.reduce((acc, e) => ({ ...acc, [`/${e.id}`]: e }), {})
     }
 }
@@ -229,20 +265,52 @@ function getDirectChildren(
 }
 
 function formatChildren(
+    path: string,
     children: Local.Projects.Project[],
     allProjects: Local.Projects.Project[],
     appState: AppState,
 ): (NavNodeData<DefaultLayout.NavLayout, DefaultLayout.NavHeader> & {
     id: string
 })[] {
-    return children
+    const directChildren = children
         .map((p) => {
             const project = allProjects.find((project) => project.id === p.id)
+            const nameView: AnyVirtualDOM = {
+                tag: 'div',
+                class: 'd-flex align-items-center',
+                children: [
+                    {
+                        tag: 'div',
+                        innerText: skipNamespace(p.name),
+                    },
+                    {
+                        tag: 'div',
+                        class: 'd-flex align-items-center mx-2 mkdocs-text-3',
+                        style: {
+                            fontSize: '0.8rem',
+                        },
+                        children: [
+                            {
+                                tag: 'i',
+                                class: 'fas fa-bookmark mx-1',
+                                style: {
+                                    fontSize: '0.6rem',
+                                },
+                            },
+                            {
+                                tag: 'i' as const,
+                                innerText: p.version,
+                            },
+                        ],
+                    },
+                ],
+            }
             return {
                 name: skipNamespace(p.name),
                 id: p.id,
                 header: {
                     icon: icon(p),
+                    name: nameView,
                 },
                 layout: defaultLayout(
                     ({ router }: { router: Router }) =>
@@ -256,4 +324,36 @@ function formatChildren(
             }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
+    appState.projectsState.registerNavIdMap({
+        origin: path,
+        ids: directChildren.map((p) => p.id),
+    })
+    return directChildren
+}
+
+function formatNamespaces(
+    finderPrefix: string,
+    children: Set<string>,
+    appState: AppState,
+): (NavNodeData<DefaultLayout.NavLayout, DefaultLayout.NavHeader> & {
+    id: string
+})[] {
+    return [...children].map((namespace) => {
+        return {
+            name: namespace,
+            id: `ns_${namespace}`,
+            header: {
+                icon: { tag: 'i', class: 'fas fa-object-group' },
+            },
+            layout: defaultLayout(
+                ({ router }: { router: Router }) =>
+                    new NamespaceView({
+                        router,
+                        appState,
+                        namespace,
+                        finderPrefix,
+                    }),
+            ),
+        }
+    })
 }

@@ -2,6 +2,7 @@ import { AppState } from '../../app-state'
 import { Local } from '@w3nest/http-clients'
 import { DonutChart, DonutChartSection } from './donut-chart.utils'
 import { Router } from 'mkdocs-ts'
+import { CSSAttribute } from 'rx-vdom'
 
 /**
  * A widget that displays a donut chart representing components.
@@ -14,7 +15,7 @@ import { Router } from 'mkdocs-ts'
 export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {
     constructor(params: {
         appState: AppState
-        width: string
+        innerStyle: CSSAttribute
         margin: number
         sections: DonutChartSection<Local.Projects.Project>[]
     }) {
@@ -64,7 +65,7 @@ export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {
         return new ProjectsDonutChart({
             appState: router.userStore as AppState,
             margin: parseFloat(elem.getAttribute('margin')) || 75,
-            width: elem.getAttribute('width') || '100%',
+            innerStyle: { width: elem.getAttribute('width') || '100%' },
             sections: DonutChart.sections(elem),
         })
     }
