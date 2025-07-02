@@ -3,7 +3,7 @@ import { install } from '@w3nest/webpm-client'
 import { filter, map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import * as Home from './home'
 import * as Projects from './projects'
-import * as Components from './components'
+import * as WebPM from './components'
 import * as Backends from './environment/backends'
 import * as EsmServers from './environment/esm-servers'
 import * as Environment from './environment'
@@ -90,7 +90,7 @@ export class AppState {
     /**
      * @group State
      */
-    public readonly cdnState: Components.State
+    public readonly cdnState: WebPM.State
 
     /**
      * @group State
@@ -157,7 +157,7 @@ export class AppState {
 
         this.homeState = new Home.State({ appState: this })
         this.projectsState = new Projects.State({ appState: this })
-        this.cdnState = new Components.State({ appState: this })
+        this.cdnState = new WebPM.State({ appState: this })
         this.esmServersState = new EsmServers.State({ appState: this })
         this.environmentState = new Environment.State({ appState: this })
 
@@ -187,7 +187,7 @@ export class AppState {
         this.navigation = this.getNav()
         this.bookmarks$ = new BehaviorSubject([
             '/environment',
-            '/components',
+            '/webpm',
             '/projects',
             '/explorer',
             '/mounted',
@@ -271,7 +271,7 @@ export class AppState {
             },
             routes: {
                 [segment('/environment')]: Environment.navigation(this),
-                [segment('/components')]: Components.navigation(this),
+                [segment('/webpm')]: WebPM.navigation(this),
                 [segment('/projects')]: Projects.navigation(this),
                 [segment('/explorer')]: Explorer.navigation({
                     session$: this.session$,

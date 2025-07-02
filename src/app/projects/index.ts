@@ -2,16 +2,15 @@ import { NewProjectsCard, ProjectView } from './project.view'
 import { AppState } from '../app-state'
 import { Navigation, parseMd, Router, DefaultLayout } from 'mkdocs-ts'
 import { AnyVirtualDOM, attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { SearchView } from './search.view'
 import { Local } from '@w3nest/http-clients'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { delay, distinctUntilChanged, map } from 'rxjs/operators'
 import { icon } from './icons'
 import { ProjectsFinderView } from './projects-finder.view'
-import { defaultLayout } from '../common/utils-nav'
+import { defaultLayout, getProjectNav$ } from '../common/utils-nav'
 import { NavNodeData } from 'mkdocs-ts'
 import { FailuresView } from './failures.view'
-import { PageTitleView } from '../common'
+import { PageTitleView, QuickSearchSection } from '../common'
 import { ProjectsDonutChart } from '../home/widgets'
 import { NamespaceView } from './namespace.view'
 
@@ -83,10 +82,55 @@ export class PageView implements VirtualDOM<'div'> {
 
     constructor({ router, appState }: { router: Router; appState: AppState }) {
         const { projectsState } = appState
+
+        const searchItemView = (p: Local.Projects.Project): AnyVirtualDOM => {
+            return {
+                tag: 'div',
+                class: 'd-flex align-items-center',
+                children: [
+                    icon(p),
+                    { tag: 'i', class: 'mx-1' },
+                    {
+                        tag: 'a',
+                        class: 'd-flex align-items-center m-2',
+                        href: attr$({
+                            source$: getProjectNav$({
+                                projectName: p.name,
+                                appState,
+                            }),
+                            vdomMap: (nav) => `@nav${nav}`,
+                        }),
+                        children: [
+                            {
+                                tag: 'div',
+                                innerText: p.name,
+                            },
+                        ],
+                    },
+                    { tag: 'i', class: 'mx-2' },
+                    {
+                        tag: 'div',
+                        class: 'd-flex align-items-center',
+                        style: { fontSize: '0.8rem' },
+                        children: [
+                            {
+                                tag: 'i',
+                                class: 'fas fa-bookmark',
+                            },
+                            { tag: 'i', class: 'mx-1' },
+                            {
+                                tag: 'div',
+                                innerText: p.version,
+                            },
+                        ],
+                    },
+                ],
+            }
+        }
         this.children = [
             new PageTitleView({
                 title: 'Projects',
-                icon: 'fa-tools',
+                icon: 'fas fa-tools',
                 helpNav: '@nav/doc/how-to/publish',
             }),
             parseMd({
@@ -104,9 +148,8 @@ export class PageView implements VirtualDOM<'div'> {
 
 ---
 
-## <i class="fas fa-search"></i> Browse Projects
+<quickSearchSection></quickSearchSection>
 
-<searchView></searchView>
 `,
                 router,
                 views: {
@@ -145,7 +188,12 @@ export class PageView implements VirtualDOM<'div'> {
                             projectsState,
                         })
                     },
-                    searchView: () => new SearchView({ appState }),
+                    quickSearchSection: () => {
+                        return new QuickSearchSection({
+                            input$: appState.projectsState.projects$,
+                            vdomMap: searchItemView,
+                        })
+                    },
                     failedListView: () =>
                         new FailuresView({ appState, router }),
                 },

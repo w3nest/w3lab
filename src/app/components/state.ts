@@ -63,6 +63,12 @@ export class State {
      * @group Observables
      */
     public readonly status$: Observable<Local.Components.CdnStatusResponse>
+    /**
+     * @group Observables
+     */
+    public readonly rootPackages$: Observable<
+        Local.Components.CdnPackageLight[]
+    >
 
     /**
      * @group Observables
@@ -75,6 +81,11 @@ export class State {
         this.status$ = this.cdnClient.webSocket.status$().pipe(
             map((message) => message.data),
             shareReplay(1),
+        )
+        this.rootPackages$ = this.status$.pipe(
+            map(({ packages }) =>
+                packages.filter((p) => p.versions.slice(-1)[0].parent === null),
+            ),
         )
     }
 
@@ -95,5 +106,9 @@ export class State {
 
     refreshPackages() {
         this.cdnClient.getStatus$().subscribe()
+    }
+
+    getNav(item: Local.Components.CdnPackageLight) {
+        return `/webpm/${item.versions.slice(-1)[0].kind}/${window.btoa(item.name)}`
     }
 }

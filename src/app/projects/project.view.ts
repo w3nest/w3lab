@@ -107,6 +107,7 @@ export class ProjectView implements VirtualDOM<'div'> {
                             appState,
                             component: project.name,
                             withLinks: extraProjectLinks(appState, project),
+                            exclude: 'project',
                         })
                     },
                     readme: () => {

@@ -18,8 +18,6 @@ import {
 
 import { AnyVirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
-import { tryLibScript } from '../components/esm/esm.view'
-
 export type Section =
     | 'Modify'
     | 'Move'
@@ -492,13 +490,6 @@ export const launchPackage$ = (
                     resp.specification.execution?.standalone
                 ) {
                     const href = `/apps/${packageName}/latest`
-                    return { kind, href }
-                }
-                if (kind === 'esm') {
-                    const uri = encodeURIComponent(
-                        tryLibScript(packageName, 'latest'),
-                    )
-                    const href = `/apps/@w3nest/js-playground/latest?content=${uri}`
                     return { kind, href }
                 }
                 return undefined

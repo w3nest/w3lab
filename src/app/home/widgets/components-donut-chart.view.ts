@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators'
 import { DonutChart, DonutChartSection } from './donut-chart.utils'
 import { Local } from '@w3nest/http-clients'
 import { Router } from 'mkdocs-ts'
+import { CSSAttribute } from 'rx-vdom'
 
 /**
  * A widget that displays a donut chart representing components.
@@ -15,7 +16,7 @@ import { Router } from 'mkdocs-ts'
 export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackageLight> {
     constructor(params: {
         appState: AppState
-        width: string
+        innerStyle: CSSAttribute
         margin: number
         sections: DonutChartSection<Local.Components.CdnPackage>[]
     }) {
@@ -74,7 +75,7 @@ export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackage
         return new ComponentsDonutChart({
             appState: router.userStore as AppState,
             margin: parseFloat(elem.getAttribute('margin')) || 75,
-            width: elem.getAttribute('width') || '100%',
+            innerStyle: { width: elem.getAttribute('width') || '100%' },
             sections: DonutChart.sections(elem),
         })
     }

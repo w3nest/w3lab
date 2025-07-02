@@ -71,7 +71,7 @@ export class PageView implements VirtualDOM<'div'> {
         this.children = [
             new PageTitleView({
                 title: 'Frontend Proxies',
-                icon: 'fa-server',
+                icon: 'fas fa-server',
                 helpNav:
                     '@nav[w3nest-api]/app/middlewares.esm_servers_middleware.EsmServersMiddleware',
             }),

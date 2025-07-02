@@ -1,10 +1,12 @@
 import { AppState } from '../../app-state'
-import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
+import { DefaultLayout, Navigation } from 'mkdocs-ts'
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { debounceTime } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { lazyResolver } from '../index'
 import { defaultLayout } from '../../common/utils-nav'
+import { PageTitleView } from '../../common'
+import { componentPage } from '../common'
 
 export const navigation = (
     appState: AppState,
@@ -16,23 +18,22 @@ export const navigation = (
             class: 'fas fa-code',
         },
     },
-    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
-    routes: appState.cdnState.status$
+    layout: defaultLayout(() => new PageView({ appState })),
+    routes: appState.cdnState.rootPackages$
         .pipe(debounceTime(500))
-        .pipe(map((status) => lazyResolver(status, appState, 'webapp'))),
+        .pipe(map((packages) => lazyResolver(packages, appState, 'webapp'))),
 })
 
 class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    constructor({ router }: { router: Router; appState: AppState }) {
+    constructor({ appState }: { appState: AppState }) {
         this.children = [
-            parseMd({
-                src: `
-# Web Application
-`,
-                router: router,
+            new PageTitleView({
+                title: 'Web Applications',
+                icon: 'fas fa-code',
             }),
+            componentPage({ appState, kind: 'webapp' }),
         ]
     }
 }

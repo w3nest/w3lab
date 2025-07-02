@@ -5,9 +5,10 @@ import {
     AnyVirtualDOM,
     attr$,
     child$,
+    replace$,
 } from 'rx-vdom'
 import { parseMd, Router } from 'mkdocs-ts'
-import { BehaviorSubject, mergeMap, Observable, of } from 'rxjs'
+import { BehaviorSubject, combineLatest, mergeMap, Observable, of } from 'rxjs'
 import pkgJson from '../../../package.json'
 import { AppState } from '../app-state'
 import { map, take } from 'rxjs/operators'
@@ -357,6 +358,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
         component: string
         appState: AppState
         withLinks?: Observable<LinkInput>[]
+        exclude?: 'webpm' | 'project'
     }) {
         Object.assign(this, params)
         const { component, appState } = params
@@ -384,33 +386,31 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                     },
                 ],
             },
-            sep,
-            child$({
-                source$: appState.cdnState.status$,
-                vdomMap: (status) => {
-                    const target = status.packages.find(
-                        (p) => p.name === component,
-                    )
-                    if (!target) {
-                        return this.linkView({
-                            icon: 'fa-microchip',
-                            nav: '',
-                            enabled: false,
-                        })
-                    }
-                    const latest = target.versions.slice(-1)[0]
-                    const type = {
-                        'js/wasm': 'js-wasm',
-                        pyodide: 'pyodide',
-                        backend: 'backends',
-                    }[latest.type]
-                    return this.linkView({
-                        icon: 'fa-microchip',
-                        nav: `components/${type}/${window.btoa(component)}`,
-                        enabled: true,
-                    })
-                },
-            }),
+            ...(params.exclude !== 'webpm'
+                ? [
+                      sep,
+                      child$({
+                          source$: appState.cdnState.status$,
+                          vdomMap: (status) => {
+                              const target = status.packages.find(
+                                  (p) => p.name === component,
+                              )
+                              if (!target) {
+                                  return this.linkView({
+                                      icon: 'fa-boxes',
+                                      nav: '',
+                                      enabled: false,
+                                  })
+                              }
+                              return this.linkView({
+                                  icon: 'fa-boxes',
+                                  nav: appState.cdnState.getNav(target),
+                                  enabled: true,
+                              })
+                          },
+                      }),
+                  ]
+                : []),
             sep,
             child$({
                 source$: appState.cdnState.status$.pipe(
@@ -441,20 +441,29 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                 },
                 untilFirst,
             }),
-            sep,
-            child$({
-                source$: getProjectNav$({
-                    projectName: component,
-                    appState,
-                }).pipe(take(1)),
-                vdomMap: (nav: string | undefined) => {
-                    return this.linkView({
-                        icon: 'fa-tools',
-                        nav: nav || '',
-                        enabled: nav !== undefined,
-                    })
-                },
-            }),
+            ...(params.exclude !== 'project'
+                ? [
+                      sep,
+                      child$({
+                          source$: getProjectNav$({
+                              projectName: component,
+                              appState,
+                          }).pipe(take(1)),
+                          vdomMap: (nav: string | undefined) => {
+                              return this.linkView({
+                                  icon: 'fa-tools',
+                                  nav: nav || '',
+                                  enabled: nav !== undefined,
+                              })
+                          },
+                          untilFirst: this.linkView({
+                              icon: 'fa-tools',
+                              nav: '',
+                              enabled: false,
+                          }),
+                      }),
+                  ]
+                : []),
             sep,
             child$({
                 source$: appState.projectsState.projects$,
@@ -549,7 +558,7 @@ export class PageTitleView implements VirtualDOM<'h1'> {
     }) {
         const hSep = { tag: 'div' as const, class: 'mx-1' }
         this.children = [
-            { tag: 'i', class: `fas ${params.icon}` },
+            { tag: 'i', class: `${params.icon}` },
             hSep,
             hSep,
             { tag: 'div', innerText: params.title },
@@ -583,5 +592,78 @@ export const docAction = (nav: string): AnyVirtualDOM => {
                 onclick: () => {},
             },
         ],
+    }
+}
+
+export class QuickSearchSection<T extends { name: string }>
+    implements VirtualDOM<'div'>
+{
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    public readonly searchTerm$ = new BehaviorSubject('')
+
+    constructor({
+        input$,
+        vdomMap,
+    }: {
+        input$: Observable<T[]>
+        vdomMap: (t: T) => AnyVirtualDOM
+    }) {
+        const search: AnyVirtualDOM = {
+            tag: 'div',
+            class: 'd-flex align-items-center',
+            children: [
+                {
+                    tag: 'input',
+                    type: 'text',
+                    class: 'form-control px-3',
+                    placeholder: 'Search...',
+                    oninput: (ev: MouseEvent) => {
+                        const target = ev.target as HTMLInputElement
+                        this.searchTerm$.next(target.value)
+                    },
+                    style: {
+                        borderRadius: '3rem',
+                        border: 'none',
+                        boxShadow: '0 0 1rem rgba(0, 0, 0, 0.1)',
+                    },
+                },
+            ],
+        }
+        const title: AnyVirtualDOM = {
+            tag: 'h2',
+            class: 'd-flex align-items-center',
+            children: [
+                { tag: 'i', class: 'fas fa-search' },
+                { tag: 'div', innerText: 'Quick Search' },
+                { tag: 'i', class: 'mx-2' },
+                {
+                    tag: 'div',
+                    class: 'flex-grow-1',
+                    children: [search],
+                },
+            ],
+        }
+
+        const selected$ = combineLatest([input$, this.searchTerm$]).pipe(
+            map(([inputs, term]) => {
+                return inputs.filter((input) => {
+                    return term === '' ? true : input.name.includes(term)
+                })
+            }),
+        )
+        const result: AnyVirtualDOM = {
+            tag: 'div',
+            children: replace$({
+                policy: 'replace',
+                source$: selected$,
+                vdomMap: (inputs) => {
+                    return inputs
+                        .sort((p0, p1) => p0.name.localeCompare(p1.name))
+                        .map((p) => vdomMap(p))
+                },
+            }),
+        }
+        this.children = [title, result]
     }
 }

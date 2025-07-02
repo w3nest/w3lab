@@ -8,7 +8,13 @@ import {
 
 import { mergeMap, share } from 'rxjs/operators'
 
-import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    child$,
+    ChildrenLike,
+    CSSAttribute,
+    replace$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { getUrlBase } from '@w3nest/webpm-client'
 
 export class ExplorerState {
@@ -40,14 +46,21 @@ export class ExplorerState {
     }
 }
 
-export class FolderView implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
+const commonClass = 'mkdocs-hover-bg-1 p-1'
+
+const withEllipsis: CSSAttribute = {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+}
+export class FolderView implements VirtualDOM<'tr'> {
+    public readonly tag = 'tr'
     static ClassSelector = 'folder-view'
-    public readonly class = `${FolderView.ClassSelector} d-flex align-items-center w3lab-pointer fv-hover-text-focus`
+    public readonly class = `${FolderView.ClassSelector} ${commonClass} w3lab-pointer `
     public readonly children: ChildrenLike
     public readonly folder: Webpm.FolderResponse
     public readonly state: ExplorerState
-    public readonly ondblclick: () => void
+    public readonly onclick: () => void
 
     constructor(params: {
         state: ExplorerState
@@ -56,31 +69,39 @@ export class FolderView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         this.children = [
             {
-                tag: 'div',
-                class: 'w-25 d-flex align-items-center',
+                tag: 'td',
+                class: '',
                 children: [
-                    { tag: 'div', class: 'fas fa-folder px-2' },
-                    { tag: 'div', innerText: this.folder.name },
+                    {
+                        tag: 'div',
+                        class: 'd-flex align-items-center',
+                        children: [
+                            { tag: 'div', class: 'fas fa-folder' },
+                            { tag: 'div', class: 'mx-1' },
+                            { tag: 'div', innerText: this.folder.name },
+                        ],
+                    },
                 ],
             },
             {
-                tag: 'div',
-                class: 'w-25 text-center',
+                tag: 'td',
+                class: 'text-center',
                 innerText: `${this.folder.size / 1000}`,
+                style: withEllipsis,
             },
-            { tag: 'div', class: 'w-25 text-center', innerText: '-' },
+            { tag: 'td', class: 'text-center', innerText: '-' },
         ]
 
-        this.ondblclick = () => {
+        this.onclick = () => {
             this.state.openFolder(this.folder.path)
         }
     }
 }
 
-export class FileView implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
+export class FileView implements VirtualDOM<'tr'> {
+    public readonly tag = 'tr'
     static ClassSelector = 'file-view'
-    public readonly class = `${FileView.ClassSelector} d-flex align-items-center w3lab-pointer fv-hover-text-focus`
+    public readonly class = `${FileView.ClassSelector} ${commonClass}`
     public readonly children: ChildrenLike
     public readonly file: Webpm.FileResponse
     public readonly state: ExplorerState
@@ -93,27 +114,40 @@ export class FileView implements VirtualDOM<'div'> {
         )}/${this.state.selectedFolder$.getValue()}/${this.file.name}`
         this.children = [
             {
-                tag: 'div',
-                class: 'w-25 d-flex align-items-center',
+                tag: 'td',
+                class: '',
                 children: [
-                    { tag: 'div', class: 'fas fa-file px-2' },
-                    { tag: 'div', innerText: this.file.name },
+                    {
+                        tag: 'div',
+                        class: 'd-flex align-items-center',
+                        children: [
+                            { tag: 'div', class: 'fas fa-file' },
+                            { tag: 'div', class: 'mx-1' },
+                            {
+                                tag: 'a',
+                                innerText: this.file.name,
+                                href: url,
+                                style: withEllipsis,
+                                customAttributes: {
+                                    dataBsToggle: 'tooltip',
+                                    dataBsPlacement: 'top',
+                                    title: this.file.name,
+                                },
+                            },
+                            { tag: 'div', class: 'flex-grow-1' },
+                        ],
+                    },
                 ],
             },
             {
-                tag: 'div',
-                class: 'w-25 text-center',
+                tag: 'td',
+                class: 'text-center',
                 innerText: `${this.file.size / 1000}`,
             },
             {
-                tag: 'div',
-                class: 'w-25 text-center',
+                tag: 'td',
+                class: 'text-center',
                 innerText: this.file.encoding,
-            },
-            {
-                tag: 'div',
-                class: 'w-25 text-center fas fa-link',
-                onclick: () => window.open(url, '_blank'),
             },
         ]
     }
@@ -122,7 +156,7 @@ export class FileView implements VirtualDOM<'div'> {
 export class ExplorerView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     static ClassSelector = 'explorer-view'
-    public readonly class = `${ExplorerView.ClassSelector} border rounded p-3 h-100 overflow-auto`
+    public readonly class = `${ExplorerView.ClassSelector} h-100 overflow-auto`
     public readonly state: ExplorerState
     public readonly children: ChildrenLike
     public readonly asset: Assets.GetAssetResponse
@@ -138,51 +172,78 @@ export class ExplorerView implements VirtualDOM<'div'> {
                     new PathView({ state: this.state, folderPath: path }),
             }),
             {
-                tag: 'div',
-                class: 'd-flex align-items-center',
-                style: {
-                    fontWeight: 'bolder',
-                },
+                tag: 'table',
+                style: { tableLayout: 'fixed', width: '100%' },
                 children: [
                     {
-                        tag: 'div',
-                        class: 'w-25 text-center',
-                        innerText: 'Name',
+                        tag: 'colgroup',
+                        children: [
+                            {
+                                tag: 'col',
+                                style: { width: '100%' },
+                            },
+                            {
+                                tag: 'col',
+                                style: { width: '7rem' },
+                            },
+                            {
+                                tag: 'col',
+                                style: { width: '7rem' },
+                            },
+                        ],
                     },
                     {
-                        tag: 'div',
-                        class: 'w-25 text-center',
-                        innerText: 'Size (kB)',
+                        tag: 'thead',
+                        children: [
+                            {
+                                tag: 'tr',
+                                children: [
+                                    {
+                                        tag: 'th',
+                                        innerText: 'Name',
+                                        class: 'font-medium',
+                                    },
+                                    {
+                                        tag: 'th',
+                                        innerText: 'Size (kB)',
+                                        class: 'font-medium',
+                                    },
+                                    {
+                                        tag: 'th',
+                                        innerText: 'Encoding',
+                                        class: 'font-medium',
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
-                        tag: 'div',
-                        class: 'w-25 text-center',
-                        innerText: 'Encoding',
+                        tag: 'tbody',
+                        children: replace$({
+                            policy: 'replace',
+                            source$: this.state.items$,
+                            vdomMap: ({ files, folders }) => {
+                                return [
+                                    ...folders.map(
+                                        (folder) =>
+                                            new FolderView({
+                                                state: this.state,
+                                                folder,
+                                            }),
+                                    ),
+                                    ...files.map(
+                                        (file) =>
+                                            new FileView({
+                                                file,
+                                                state: this.state,
+                                            }),
+                                    ),
+                                ]
+                            },
+                        }),
                     },
                 ],
             },
-            child$({
-                source$: this.state.items$,
-                vdomMap: ({ files, folders }) => {
-                    return {
-                        tag: 'div',
-                        class: 'd-flex flex-column',
-                        children: [
-                            ...folders.map(
-                                (folder) =>
-                                    new FolderView({
-                                        state: this.state,
-                                        folder,
-                                    }),
-                            ),
-                            ...files.map(
-                                (file) =>
-                                    new FileView({ file, state: this.state }),
-                            ),
-                        ],
-                    }
-                },
-            }),
         ]
     }
 }
@@ -199,6 +260,7 @@ export class PathElementView implements VirtualDOM<'div'> {
     constructor(params: {
         folderPath: string
         name: string
+        classIcon?: string
         state: ExplorerState
     }) {
         Object.assign(this, params)
@@ -206,7 +268,7 @@ export class PathElementView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'border rounded p-1 mx-1 w3lab-pointer fv-hover-text-focus',
+                class: `border rounded py-1 px-2 mx-1 w3lab-pointer mkdocs-hover-bg-1 ${params.classIcon ?? ''}`,
                 innerText: this.name,
             },
             { tag: 'div', innerText: '/' },
@@ -231,7 +293,8 @@ export class PathView implements VirtualDOM<'div'> {
         const elems = [
             {
                 path: '',
-                name: `${this.state.asset.name}@${this.state.version}`,
+                name: '',
+                class: 'fas fa-home',
             },
             ...this.folderPath
                 .split('/')
@@ -239,6 +302,7 @@ export class PathView implements VirtualDOM<'div'> {
                     return {
                         path: parts.slice(0, i + 1).join('/'),
                         name,
+                        class: '',
                     }
                 })
                 .filter(({ name }) => name !== ''),
@@ -249,6 +313,7 @@ export class PathView implements VirtualDOM<'div'> {
                 state: this.state,
                 name: part.name,
                 folderPath: part.path,
+                classIcon: part.class,
             })
         })
     }

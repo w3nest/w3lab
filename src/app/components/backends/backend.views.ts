@@ -1,5 +1,3 @@
-import { parseMd, Router } from 'mkdocs-ts'
-import { PackageView } from '../package.views'
 import {
     AnyVirtualDOM,
     append$,
@@ -9,78 +7,37 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
-import {
-    BehaviorSubject,
-    combineLatest,
-    distinctUntilChanged,
-    Observable,
-    Subject,
-    switchMap,
-} from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, Subject, switchMap } from 'rxjs'
 import { filter, map, shareReplay, take, tap } from 'rxjs/operators'
 import { AppState } from '../../app-state'
 import { styleShellStdOut } from '../../common'
 import { Local, onHTTPErrors, AssetsGateway } from '@w3nest/http-clients'
 
-/**
- * @category View
- */
-export class BackendView extends PackageView {
-    constructor(params: {
-        appState: AppState
-        router: Router
-        packageId: string
-    }) {
-        super({ ...params, appState: params.appState })
-        this.children.push(
-            parseMd({
-                src: `
-## Install Manifest
-
-<installManifest></installManifest>      
-                `,
-                router: params.router,
-                views: {
-                    installManifest: () => {
-                        return new InstallManifestView({
-                            packageId: this.packageId,
-                            appState: params.appState,
-                            selectedVersion$: this.selectedVersion$,
-                        })
-                    },
-                },
-            }),
-        )
-    }
-}
-
-class InstallManifestView implements VirtualDOM<'div'> {
+export class InstallManifestView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
 
     constructor({
         packageId,
-        selectedVersion$,
+        version,
         appState,
     }: {
         packageId: string
         appState: AppState
-        selectedVersion$: Observable<string>
+        version: string
     }) {
         const name = window.atob(packageId)
         const savedManifest$ = new Subject<string | undefined>()
         const displayCurrentInstall$ = new BehaviorSubject(true)
         const getSavedManifest = () =>
-            selectedVersion$
+            new AssetsGateway.Client().webpm
+                .getResource$({
+                    libraryId: packageId,
+                    version,
+                    restOfPath: '/install.manifest.txt',
+                })
                 .pipe(
-                    switchMap((version) =>
-                        new AssetsGateway.Client().webpm.getResource$({
-                            libraryId: packageId,
-                            version,
-                            restOfPath: '/install.manifest.txt',
-                        }),
-                    ),
                     take(1),
                     onHTTPErrors(() => undefined),
                 )
@@ -88,28 +45,22 @@ class InstallManifestView implements VirtualDOM<'div'> {
                     savedManifest$.next(manifest)
                 })
         getSavedManifest()
-        const startInstall$ = selectedVersion$.pipe(
-            switchMap((version) =>
-                appState.notificationsState.backendEvents.installing$.pipe(
-                    map((backends) =>
-                        backends.find(
-                            (m) => m.name === name && m.version === version,
-                        ),
+        const startInstall$ =
+            appState.notificationsState.backendEvents.installing$.pipe(
+                map((backends) =>
+                    backends.find(
+                        (m) => m.name === name && m.version === version,
                     ),
-                    filter((backend) => backend !== undefined),
-                    distinctUntilChanged(
-                        (prev, curr) => prev.installId === curr.installId,
-                    ),
-                    tap(() => displayCurrentInstall$.next(true)),
                 ),
-            ),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        )
-        const endInstall$ = combineLatest([
-            selectedVersion$,
-            startInstall$,
-        ]).pipe(
-            switchMap(([version, { installId }]) =>
+                filter((backend) => backend !== undefined),
+                distinctUntilChanged(
+                    (prev, curr) => prev.installId === curr.installId,
+                ),
+                tap(() => displayCurrentInstall$.next(true)),
+                shareReplay({ bufferSize: 1, refCount: true }),
+            )
+        const endInstall$ = startInstall$.pipe(
+            switchMap(({ installId }) =>
                 appState.notificationsState.backendEvents.endInstall$.pipe(
                     filter(
                         (m) =>
@@ -123,11 +74,8 @@ class InstallManifestView implements VirtualDOM<'div'> {
             shareReplay({ bufferSize: 1, refCount: true }),
         )
 
-        const stdOutput$ = combineLatest([
-            selectedVersion$,
-            startInstall$,
-        ]).pipe(
-            switchMap(([version, { installId }]) => {
+        const stdOutput$ = startInstall$.pipe(
+            switchMap(({ installId }) => {
                 return appState.notificationsState.backendEvents.installStdOut$.pipe(
                     filter(
                         (m) =>
@@ -161,7 +109,7 @@ class InstallManifestView implements VirtualDOM<'div'> {
             tag: 'div',
             children: [
                 new UninstallButton({
-                    selectedVersion$,
+                    version,
                     backend: name,
                     savedManifest$,
                     displayCurrentInstall$,
@@ -213,12 +161,12 @@ class UninstallButton implements VirtualDOM<'div'> {
     }
     public readonly children: ChildrenLike
     constructor({
-        selectedVersion$,
+        version,
         backend,
         savedManifest$,
         displayCurrentInstall$,
     }: {
-        selectedVersion$: Observable<string>
+        version: string
         backend: string
         savedManifest$: Subject<string | undefined>
         displayCurrentInstall$: Subject<boolean>
@@ -232,15 +180,8 @@ class UninstallButton implements VirtualDOM<'div'> {
                 tag: 'div',
                 innerText: 'Uninstall',
                 onclick: () => {
-                    selectedVersion$
-                        .pipe(
-                            take(1),
-                            switchMap((version) =>
-                                new Local.Client().api.system.uninstallBackend$(
-                                    { name: backend, version },
-                                ),
-                            ),
-                        )
+                    new Local.Client().api.system
+                        .uninstallBackend$({ name: backend, version })
                         .subscribe(() => {
                             savedManifest$.next(undefined)
                             displayCurrentInstall$.next(false)

@@ -1,14 +1,13 @@
 import { AppState } from '../../app-state'
-import { NavIconSvg } from '../../common'
+import { NavIconSvg, PageTitleView } from '../../common'
 import { ChildrenLike, replace$, VirtualDOM } from 'rx-vdom'
-import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
+import { DefaultLayout, MdWidgets, Navigation, parseMd } from 'mkdocs-ts'
 import { debounceTime, distinctUntilChanged } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators'
 import { lazyResolver } from '../index'
-import { ExpandableGroupView } from '../../common/expandable-group.view'
-import { example1, example2, example3 } from './examples'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { defaultLayout } from '../../common/utils-nav'
+import { componentPage } from '../common'
 
 export const navigation = (
     appState: AppState,
@@ -20,68 +19,31 @@ export const navigation = (
             class: 'fab fa-python',
         },
     },
-    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
-    routes: appState.cdnState.status$
+    layout: defaultLayout(() => new PageView({ appState })),
+    routes: appState.cdnState.rootPackages$
         .pipe(debounceTime(500))
-        .pipe(map((status) => lazyResolver(status, appState, 'pyodide'))),
+        .pipe(map((packages) => lazyResolver(packages, appState, 'pyodide'))),
 })
 
 class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    constructor({ router, appState }: { router: Router; appState: AppState }) {
+    constructor({ appState }: { appState: AppState }) {
         this.children = [
-            parseMd({
-                src: `
-# Pyodide
-
-<info>
-Pyodide brings Python packages to the web, allowing them to run directly in your browser. 
-These packages, part of the <a href="https://pyodide.org/en/stable/"  target="_blank">Pyodide</a> ecosystem,
- are stored in YouWol's component database for efficiency and faster access. The database supports:
-
-- Pure Python wheels from the <a href="https://pypi.org/" target="_blank">pypi repository</a>.
-- Modules that have been adapted to run in Pyodide, which often include C/C++ code. More information can 
-be found <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html" >here</a>.
-
-**Examples:**
-
-To help you get started, here are a few examples:
-- See how you can draw a noisy sine wave using numpy 
-<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}" target="_blank">here</a>.
-- The same sine wave example, but plotted with matplotlib, is available 
-<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example2)}" target="_blank">here</a>.
-- Explore parallelizing Python computations using a thread pool 
-<a href="/apps/@youwol/js-playground/latest?content=${encodeURIComponent(example3)}" target="_blank">here</a>.
-
-For further details, check out the [Pyodide documentation](https://pyodide.org/en/stable/usage/quickstart.html).
-
-</info>
-
-## Runtimes available
-<info>
-Runtimes are downloaded lazily when installing python modules, the version is specified as follows:
-<code-snippet language="javascript" highlightedLines="3">
-await webpm.install({
-    pyodide:{
-        version:'0.25.0',
-        modules:[
-            'numpy'
-        ]
-    },
-    displayLoadingScreen: true,
-})
-
-</code-snippet>
-</info>
-<runtimes></runtimes>
-`,
-                router: router,
-                views: {
-                    runtimes: () => {
-                        return new RuntimesView({ appState })
+            new PageTitleView({
+                title: 'Pyodide',
+                icon: 'fab fa-python',
+            }),
+            componentPage({
+                appState,
+                kind: 'pyodide',
+                withSections: [
+                    {
+                        id: 'runtime',
+                        title: 'Runtimes',
+                        view: new RuntimesView({ appState }),
                     },
-                },
+                ],
             }),
         ]
     }
@@ -113,13 +75,15 @@ export class RuntimesView implements VirtualDOM<'div'> {
                     source$: pythonStatus$,
                     vdomMap: ({ runtimes }) => {
                         return runtimes.map((r) => {
-                            return new ExpandableGroupView({
-                                title: `Pyodide ${r.info.version}, python ${r.info.python}`,
+                            const noteView = new MdWidgets.NoteView({
+                                level: 'info',
+                                expandable: true,
+                                label: `Pyodide \`${r.info.version}\`, python \`${r.info.python}\``,
                                 icon: new NavIconSvg({
                                     filename: 'icon-python.svg',
                                 }),
-                                content: () => ({
-                                    tag: 'div',
+                                content: {
+                                    tag: 'div' as const,
                                     children: [
                                         parseMd({
                                             src: `
@@ -127,17 +91,41 @@ export class RuntimesView implements VirtualDOM<'div'> {
 *  platform: ${r.info.platform}  
 *  python: ${r.info.python}  
 
-**Ported packages:**
+**Installed C/C++/Fortran Packages:**
 
-Here are the non-pure Python packages that have been adapted for the runtime, 
-in addition to pure Python packages from <a href="https://pypi.org/" target="_blank">PyPI</a> which can also be utilized.
-`,
-                                            router: undefined,
+<installedPackages></installedPackages>
+
+<availablePackages></availablePackages>
+    `,
+                                            views: {
+                                                installedPackages: () =>
+                                                    new PackagesTableView(
+                                                        r.installedPackages,
+                                                    ),
+                                                availablePackages: () => {
+                                                    const tableView =
+                                                        new PackagesTableView(
+                                                            r.availablePackages,
+                                                        )
+                                                    return new MdWidgets.NoteView(
+                                                        {
+                                                            level: 'hint',
+                                                            label: 'Available C/C++/Fortran Packages',
+                                                            content: tableView,
+                                                            expandable: true,
+                                                        },
+                                                    )
+                                                },
+                                            },
                                         }),
-                                        new PackagesTableView(r.packages),
                                     ],
-                                }),
+                                },
                             })
+                            return {
+                                tag: 'div',
+                                class: 'my-2',
+                                children: [noteView],
+                            }
                         })
                     },
                 }),
@@ -157,29 +145,50 @@ export class PackagesTableView implements VirtualDOM<'div'> {
     constructor(packages: Local.Python.Package[]) {
         this.children = [
             {
-                tag: 'thead',
+                tag: 'table',
+                class: 'table-auto border-collapse w-full text-sm text-left',
                 children: [
                     {
-                        tag: 'tr',
+                        tag: 'thead',
+                        class: 'bg-gray-100',
                         children: [
-                            { tag: 'th', innerText: 'name' },
-                            { tag: 'th', innerText: 'version' },
+                            {
+                                tag: 'tr',
+                                children: [
+                                    {
+                                        tag: 'th',
+                                        innerText: 'Name',
+                                        class: 'px-4 py-2 font-medium',
+                                    },
+                                    {
+                                        tag: 'th',
+                                        innerText: 'Version',
+                                        class: 'px-4 py-2 font-medium',
+                                    },
+                                ],
+                            },
                         ],
                     },
+                    {
+                        tag: 'tbody',
+                        children: packages.map((p) => ({
+                            tag: 'tr',
+                            class: 'hover:bg-gray-50',
+                            children: [
+                                {
+                                    tag: 'td',
+                                    innerText: p.name,
+                                    class: 'px-4 py-2',
+                                },
+                                {
+                                    tag: 'td',
+                                    innerText: p.version,
+                                    class: 'px-4 py-2',
+                                },
+                            ],
+                        })),
+                    },
                 ],
-            },
-            {
-                tag: 'tbody',
-                children: packages.map((p) => {
-                    return {
-                        tag: 'tr',
-
-                        children: [
-                            { tag: 'td', innerText: p.name },
-                            { tag: 'td', innerText: p.version },
-                        ],
-                    }
-                }),
             },
         ]
     }

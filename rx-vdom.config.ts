@@ -39,3 +39,5 @@ type DevTags =
     | 'label'
     | 'canvas'
     | 'code'
+    | 'colgroup'
+    | 'col'

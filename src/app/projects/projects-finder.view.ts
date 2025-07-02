@@ -28,7 +28,7 @@ export class ProjectsFinderView implements VirtualDOM<'div'> {
         this.children = [
             new PageTitleView({
                 title: `Projects finder '${finder.name}'`,
-                icon: 'fa-search',
+                icon: 'fas fa-search',
                 helpNav: '@nav[w3nest-api]/app/config.projects.ProjectsFinder',
             }),
             parseMd({

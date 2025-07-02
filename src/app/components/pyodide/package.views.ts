@@ -3,7 +3,7 @@ import { State } from '../state'
 
 import { ReplaySubject } from 'rxjs'
 import { parseMd, Router } from 'mkdocs-ts'
-import { VersionsView } from '../package.views'
+import { VersionsDropDown } from '../package.views'
 
 /**
  * @category View
@@ -65,7 +65,7 @@ export class PyodideView implements VirtualDOM<'div'> {
                                         packageInfo.versions.slice(-1)[0]
                                             .version,
                                     )
-                                    return new VersionsView({
+                                    return new VersionsDropDown({
                                         cdnState: this.cdnState,
                                         package: packageInfo,
                                         selectedVersion$: this.selectedVersion$,

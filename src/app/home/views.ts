@@ -48,7 +48,7 @@ export class HomeView implements VirtualDOM<'div'> {
         this.children = [
             new PageTitleView({
                 title: 'Home',
-                icon: 'fa-home',
+                icon: 'fas fa-home',
                 actions: [editHomeAction(this.state)],
                 helpNav: `@nav/doc/how-to/custom-home`,
             }),

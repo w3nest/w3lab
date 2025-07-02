@@ -109,7 +109,7 @@ export class PageView implements VirtualDOM<'div'> {
         this.children = [
             new PageTitleView({
                 title: 'Backends',
-                icon: 'fa-server',
+                icon: 'fas fa-server',
                 helpNav: '@nav[w3nest-api]/app/api/backends',
             }),
             parseMd({

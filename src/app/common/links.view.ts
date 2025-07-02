@@ -61,8 +61,8 @@ export class CdnLinkView implements VirtualDOM<'div'> {
                         pyodide: 'pyodide',
                     }
                     return parseMd({
-                        src: `The project is published in components 
-                        [here](@nav/components/${topics[type]}/${resp.id}).`,
+                        src: `The project is published in WebPM 
+                        [here](@nav/webpm/${topics[type]}/${resp.id}).`,
                         router,
                     })
                 },
