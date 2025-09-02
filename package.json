@@ -3,6 +3,7 @@
     "description": "The W3Nest's laboratory application.",
     "version": "0.8.1",
     "author": "greinisch@youwol.com",
+    "license": "MIT",
     "homepage": "https://github.com/w3nest/w3lab#README.md",
     "main": "./dist/@w3nest/w3lab.js",
     "types": "src/index.ts",
