@@ -46,16 +46,15 @@ return async ({webpm}) => {
 export type PluginTrait = {
     /**
      *
-     * The navigation definition.
+     * The plugin's navigation definition.
      *
      * @param params
-     * @param params.colabState State of the **colab** application.
+     * @param params.appState State of the **W3Lab** application.
      * @param params.basePath The base path from which the plugin is exposed within the navigation tree.
-     * @returns A navigation object.
-     *     See  <a target="_blank" href='https://l.youwol.com/doc/mkdocs-ts'>mkdocs-ts documentation</a>.
+     * @returns A navigation object from  {@link mkdocs-ts}.
      */
     navigation: (params: {
-        colabState: AppState
+        appState: AppState
         basePath: string
     }) =>
         | Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>
