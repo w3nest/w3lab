@@ -19,11 +19,11 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
-    "mkdocs-ts": "^0.5.2",
+    "mkdocs-ts": "^0.5.3",
     "rx-vdom": "^0.1.3",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.11",
-    "@w3nest/http-clients": "^0.1.8",
+    "@w3nest/http-clients": "^0.1.10",
     "@w3nest/rx-tree-views": "^0.2.0",
     "@floating-ui/dom": "^1.6.3",
     "rxjs": "^7.8.1",
@@ -36,9 +36,9 @@ in_bundle_deps = {
     "d3-dag": "0.8.2",
     "prism-code-editor": "^4.0.0",
     # only for type definitions
-    "@mkdocs-ts/code-api": "^0.2.0",
+    "@mkdocs-ts/code-api": "^0.2.3",
     # only for type definitions
-    "@mkdocs-ts/notebook": "^0.1.2",
+    "@mkdocs-ts/notebook": "^0.1.5",
 }
 dev_deps = {
     "lz-string": "^1.4.4",
@@ -73,13 +73,16 @@ config = ProjectConfig(
                 "@w3nest/ui-tk/Mkdocs",
                 "@w3nest/ui-tk/Trees",
                 "@w3nest/doc/api",
+                "@w3nest/doc/how-to",
             ],
         ),
     ),
-    userGuide=True,
     devServer=DevServer(port=3023),
     inPackageJson={
         "scripts": {"doc": "(cd .w3nest && npx tsx doc.ts)"},
+    },
+    links={
+        "W3Nest": "https://w3nest.com",
     },
 )
 
@@ -88,11 +91,13 @@ template_folder = Path(__file__).parent / ".template"
 generate_template(config=config, dst_folder=template_folder)
 
 files = [
+    ".gitignore",
     "README.md",
     "package.json",
     "tsconfig.json",
     "jest.config.ts",
     "webpack.config.ts",
+    "typedoc.js",
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
