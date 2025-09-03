@@ -12,6 +12,7 @@ import {
     navNode,
     projectNav,
     rxvdomDoc,
+    SplitApiButton,
     todo,
     webpmDoc,
 } from './doc/md-widgets'
@@ -21,6 +22,8 @@ import {
     projectsDonutChart,
     projectsHistoric,
 } from './home/md-widgets'
+
+const appState = new AppState()
 
 GlobalMarkdownViews.factory = {
     ...GlobalMarkdownViews.factory,
@@ -46,9 +49,19 @@ GlobalMarkdownViews.factory = {
     docLink: (elem) => {
         return docAction(elem.getAttribute('nav'))
     },
+    'split-api': () => new SplitApiButton({ appState }),
+    btn: (elem) => {
+        const faClass = {
+            edit: 'fas fa-pen',
+            'open-folder': 'fas fa-folder-open',
+        }[elem.getAttribute('target')]
+        return {
+            tag: 'button',
+            class: `btn btn-sm btn-light`,
+            children: [{ tag: 'i', class: faClass }],
+        }
+    },
 }
-
-const appState = new AppState()
 
 document
     .getElementById('content')

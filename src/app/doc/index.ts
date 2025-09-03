@@ -6,7 +6,7 @@ import { navigation as navW3NestAPI } from '@w3nest/doc/api'
 import { resolveUrlWithFP, install } from '@w3nest/webpm-client'
 import type * as CodeApiModule from '@mkdocs-ts/code-api'
 import type * as NotebookModule from '@mkdocs-ts/notebook'
-import { howToStartNav, howToPublishNav, howToCINav } from '@w3nest/doc/how-to'
+import { customNavigation } from '@w3nest/doc/how-to'
 
 function fromMd({
     file,
@@ -79,39 +79,13 @@ export const navigation = async (appState: AppState): Promise<NavApp> => {
             }),
         ),
         routes: {
-            [segment('/tutorials')]: {
-                name: 'Tutorials',
-                header: decoration('fa-graduation-cap'),
-                layout: defaultLayout(
-                    fromMd({
-                        file: 'doc.tutorials.md',
-                    }),
-                ),
-                routes: {
-                    [segment('/quick-tour')]: {
-                        name: 'Quick Tour',
-                        header: decoration('fa-play'),
-                        layout: defaultLayout(
-                            fromMd({
-                                file: 'doc.tutorials.quick-tour.md',
-                            }),
-                        ),
+            [segment('/how-to')]: customNavigation([
+                {
+                    abstract: {
+                        url: '../assets/doc.how-to.md',
                     },
-                },
-            },
-            [segment('/how-to')]: {
-                name: 'How-To',
-                header: decoration('fa-question-circle'),
-                layout: defaultLayout(
-                    fromMd({
-                        file: 'doc.how-to.md',
-                    }),
-                ),
-                routes: {
-                    [segment('/start')]: howToStartNav(),
-                    [segment('/publish')]: howToPublishNav(),
-                    [segment('/ci')]: howToCINav(),
-                    [segment('/custom-home')]: {
+                    nav: '/custom-home',
+                    routes: {
                         name: 'Custom Home Page',
                         header: decoration('fa-home'),
                         layout: defaultLayout(
@@ -124,7 +98,7 @@ export const navigation = async (appState: AppState): Promise<NavApp> => {
                         ),
                     },
                 },
-            },
+            ]),
             [segment('/server-api')]: navW3NestAPI({
                 header: { name: 'Server API', actions: [] },
                 rootModulesNav: { self: '@nav/doc/server-api' },

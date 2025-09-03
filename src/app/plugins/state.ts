@@ -22,8 +22,7 @@ import { DefaultLayout, Navigation } from 'mkdocs-ts'
  * }
  * </code-snippet>
  *
- * The `webpm` argument is the installer instance.
- * See <a target="_blank" href='https://l.youwol.com/doc/@w3nest/webpm-client'>WebPM documentation</a>.
+ * The `webpm` argument is the installer instance; see <ext-link target="webpm">WebPM documentation</ext-link>.
  */
 export type PluginsLoader = ({
     webpm,
@@ -43,7 +42,7 @@ return async ({webpm}) => {
 /**
  * This trait defines the API with which the individual plugins (implemented as JavaScript module) must conform.
  */
-export type PluginTrait = {
+export interface PluginTrait {
     /**
      *
      * The plugin's navigation definition.
@@ -76,7 +75,7 @@ export type PluginTrait = {
     }
 }
 
-export type Status = {
+export interface Status {
     ok: boolean
     message: string
 }

@@ -1,6 +1,14 @@
-# How-to
+<!--this page follow the 'How-To' page from W3Lab -->
 
-This section provides practical solutions for common tasks:
-*  [Start W3Nest](@nav/doc/how-to/start-yw): A quick guide on starting the server.
-*  [Configuration](@nav/doc/how-to/config): Step-by-step instructions for configuration setup.
-*  [Custom Home Page](@nav/doc/how-to/custom-home): Goto place to create custom <navNode target="Home"></navNode> page.
+## 🏠 Custom Home
+
+Your **<navNode target="Home">Home</navNode>** page within **W3Lab** doesn’t have to stay generic — you can shape it 
+into a personal dashboard that fits your needs.
+
+Why customize?
+*  Highlight the projects you care about most.
+*  Display shortcuts to frequently used resources.
+*  Integrate interactive widgets.
+*  *etc*
+
+Find out more in <cross-link target="doc/how-to/custom-home">Custom Home</cross-link>.

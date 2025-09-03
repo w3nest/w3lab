@@ -26,6 +26,9 @@ const externals: any = {
             DOMRect: 'https://developer.mozilla.org/en-US/docs/Web/API/DOMRect',
             ScrollToOptions:
                 'https://developer.mozilla.org/fr/docs/Web/API/Window/scrollTo',
+            WindowOrWorkerGlobalScope:
+                'https://udn.realityripple.com/docs/Web/API/WindowOrWorkerGlobalScope',
+            Element: 'https://developer.mozilla.org/en-US/docs/Web/API/Element',
         }
         if (!(name in urls)) {
             console.warn(`Can not find URL for typescript's '${name}' symbol`)
@@ -59,6 +62,21 @@ const externals: any = {
         }
         if (!(name in urls)) {
             console.warn(`Can not find URL for w3nest's '${name}' symbol`)
+        }
+        return urls[name]
+    },
+    'mkdocs-ts': ({ name }: { name: string }) => {
+        const baseUrl = '/apps/@mkdocs-ts/doc/latest?nav='
+        const urls = {
+            MdWidgets: `${baseUrl}/api/mkdocs-ts/MdWidgets`,
+            Navigation: `${baseUrl}/api/mkdocs-ts.Navigation`,
+            NavLayout: `${baseUrl}/api/mkdocs-ts/DefaultLayout.NavLayout`,
+            NavHeader: `${baseUrl}/api/mkdocs-ts/DefaultLayout.NavHeader`,
+            Router: `${baseUrl}/api/mkdocs-ts.Router`,
+            UrlTarget: `${baseUrl}/api/mkdocs-ts.UrlTarget`,
+        }
+        if (!(name in urls)) {
+            console.warn(`Can not find URL for mkdocs-ts's '${name}' symbol`)
         }
         return urls[name]
     },

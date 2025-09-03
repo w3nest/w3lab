@@ -2,7 +2,7 @@
 
 This page explains how to define and edit a custom Home page.
 
-To begin editing the Home page, click <colabButton target='HomeEdit'></colabButton> button 
+To begin editing the Home page, click the <btn target="edit"></btn> button 
 in the <navNode target="Home"></navNode> navigation node.
 
 While editing, three panels are available:

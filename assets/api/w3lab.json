@@ -1,0 +1,664 @@
+{
+    "name": "@w3nest/w3lab",
+    "documentation": {
+        "sections": [
+            {
+                "content": "# @w3nest/w3lab\n\nThe W3Nest's laboratory application.\n\n## Links \n\n* <a href='https://w3nest.com' target='_blank'>W3Nest</a>\n\n## Installation, Build, Test\n\nTo install the required dependencies:\n\n ```shell\nyarn\n``` \n\n---\n\nTo build for development:\n\n ```shell\nyarn build:dev\n``` \n\nTo build for production:\n\n ```shell\nyarn build:prod\n``` \n\n---\n\n<!-- no specific test configuration documented -->\n\nTo run tests:\n\n ```shell\nyarn test\n``` \n\nTo measure test coverage:\n\n ```shell\nyarn test-coverage\n``` \n\n---\n\nTo start the development server:\n\n ```shell\nyarn start\n``` \n\n---\n\nTo generate code's documentation:\n\n ```shell\nyarn doc\n```",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "w3lab",
+    "navPath": "@nav[w3lab]",
+    "attributes": [],
+    "types": [
+        {
+            "name": "AppState",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "AppState",
+            "navPath": "@nav[w3lab].AppState",
+            "attributes": [
+                {
+                    "name": "backendsState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.backendsState",
+                    "navPath": "@nav[w3lab].AppState.backendsState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly backendsState = new Backends.State()",
+                        "implementation": "",
+                        "startLine": 98,
+                        "endLine": 99,
+                        "references": {
+                            "backendsState": "@nav[w3lab].AppState.backendsState"
+                        }
+                    }
+                },
+                {
+                    "name": "cdnState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.cdnState",
+                    "navPath": "@nav[w3lab].AppState.cdnState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly cdnState: WebPM.State",
+                        "implementation": "",
+                        "startLine": 93,
+                        "endLine": 94,
+                        "references": {
+                            "cdnState": "@nav[w3lab].AppState.cdnState"
+                        }
+                    }
+                },
+                {
+                    "name": "confChanged$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.confChanged$",
+                    "navPath": "@nav[w3lab].AppState.confChanged$",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly confChanged$: Observable<string>",
+                        "implementation": "",
+                        "startLine": 64,
+                        "endLine": 65,
+                        "references": {
+                            "confChanged$": "@nav[w3lab].AppState.confChanged$",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                },
+                {
+                    "name": "connectedLocal$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.connectedLocal$",
+                    "navPath": "@nav[w3lab].AppState.connectedLocal$",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly connectedLocal$: Observable<boolean>",
+                        "implementation": "",
+                        "startLine": 123,
+                        "endLine": 124,
+                        "references": {
+                            "connectedLocal$": "@nav[w3lab].AppState.connectedLocal$",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                },
+                {
+                    "name": "environment$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.environment$",
+                    "navPath": "@nav[w3lab].AppState.environment$",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly environment$: Observable<Local.Environment.EnvironmentStatusResponse>",
+                        "implementation": "",
+                        "startLine": 73,
+                        "endLine": 74,
+                        "references": {
+                            "environment$": "@nav[w3lab].AppState.environment$",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                },
+                {
+                    "name": "environmentClient",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.environmentClient",
+                    "navPath": "@nav[w3lab].AppState.environmentClient",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly environmentClient = new Local.Client().api.environment",
+                        "implementation": "",
+                        "startLine": 68,
+                        "endLine": 69,
+                        "references": {
+                            "environmentClient": "@nav[w3lab].AppState.environmentClient"
+                        }
+                    }
+                },
+                {
+                    "name": "environmentState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.environmentState",
+                    "navPath": "@nav[w3lab].AppState.environmentState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly environmentState: Environment.State",
+                        "implementation": "",
+                        "startLine": 108,
+                        "endLine": 109,
+                        "references": {
+                            "environmentState": "@nav[w3lab].AppState.environmentState"
+                        }
+                    }
+                },
+                {
+                    "name": "esmServersState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.esmServersState",
+                    "navPath": "@nav[w3lab].AppState.esmServersState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly esmServersState: EsmServers.State",
+                        "implementation": "",
+                        "startLine": 103,
+                        "endLine": 104,
+                        "references": {
+                            "esmServersState": "@nav[w3lab].AppState.esmServersState"
+                        }
+                    }
+                },
+                {
+                    "name": "homeState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.homeState",
+                    "navPath": "@nav[w3lab].AppState.homeState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly homeState: Home.State",
+                        "implementation": "",
+                        "startLine": 83,
+                        "endLine": 84,
+                        "references": {
+                            "homeState": "@nav[w3lab].AppState.homeState",
+                            "State": "@nav[w3lab]/Home.State"
+                        }
+                    }
+                },
+                {
+                    "name": "navigation",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.navigation",
+                    "navPath": "@nav[w3lab].AppState.navigation",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly navigation: Navigation<\n        DefaultLayout.NavLayout,\n        DefaultLayout.NavHeader\n    >",
+                        "implementation": "",
+                        "startLine": 47,
+                        "endLine": 48,
+                        "references": {
+                            "navigation": "@nav[w3lab].AppState.navigation",
+                            "Navigation": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
+                            "NavLayout": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
+                            "NavHeader": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                        }
+                    }
+                },
+                {
+                    "name": "notificationsState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.notificationsState",
+                    "navPath": "@nav[w3lab].AppState.notificationsState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly notificationsState = new Notification.State()",
+                        "implementation": "",
+                        "startLine": 118,
+                        "endLine": 119,
+                        "references": {
+                            "notificationsState": "@nav[w3lab].AppState.notificationsState"
+                        }
+                    }
+                },
+                {
+                    "name": "pluginsState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.pluginsState",
+                    "navPath": "@nav[w3lab].AppState.pluginsState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly pluginsState = new Plugins.State()",
+                        "implementation": "",
+                        "startLine": 113,
+                        "endLine": 114,
+                        "references": {
+                            "pluginsState": "@nav[w3lab].AppState.pluginsState",
+                            "State": "@nav[w3lab]/Plugins.State"
+                        }
+                    }
+                },
+                {
+                    "name": "projectsState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.projectsState",
+                    "navPath": "@nav[w3lab].AppState.projectsState",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly projectsState: Projects.State",
+                        "implementation": "",
+                        "startLine": 88,
+                        "endLine": 89,
+                        "references": {
+                            "projectsState": "@nav[w3lab].AppState.projectsState"
+                        }
+                    }
+                },
+                {
+                    "name": "router",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.router",
+                    "navPath": "@nav[w3lab].AppState.router",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly router: Router<\n        DefaultLayout.NavLayout,\n        DefaultLayout.NavHeader,\n        W3NestDocAliases\n    >",
+                        "implementation": "",
+                        "startLine": 54,
+                        "endLine": 55,
+                        "references": {
+                            "router": "@nav[w3lab].AppState.router",
+                            "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                            "NavLayout": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
+                            "NavHeader": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                        }
+                    }
+                },
+                {
+                    "name": "session$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppState.session$",
+                    "navPath": "@nav[w3lab].AppState.session$",
+                    "code": {
+                        "filePath": "src/app/app-state.ts",
+                        "declaration": "public readonly session$: Observable<Accounts.SessionDetails>",
+                        "implementation": "",
+                        "startLine": 78,
+                        "endLine": 79,
+                        "references": {
+                            "session$": "@nav[w3lab].AppState.session$",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/app-state.ts",
+                "declaration": "export class AppState",
+                "implementation": "export class AppState {\n    /**\n     * @group Immutable Constants\n     */\n    public readonly navigation: Navigation<\n        DefaultLayout.NavLayout,\n        DefaultLayout.NavHeader\n    >\n    /**\n     * @group Immutable Constants\n     */\n    public readonly router: Router<\n        DefaultLayout.NavLayout,\n        DefaultLayout.NavHeader,\n        W3NestDocAliases\n    >\n\n    public readonly bookmarks$: BehaviorSubject<string[]>\n    /**\n     * @group Observables\n     */\n    public readonly confChanged$: Observable<string>\n    /**\n     * @group Immutable Constants\n     */\n    public readonly environmentClient = new Local.Client().api.environment\n\n    /**\n     * @group Observables\n     */\n    public readonly environment$: Observable<Local.Environment.EnvironmentStatusResponse>\n\n    /**\n     * @group Observables\n     */\n    public readonly session$: Observable<Accounts.SessionDetails>\n\n    /**\n     * @group State\n     */\n    public readonly homeState: Home.State\n\n    /**\n     * @group State\n     */\n    public readonly projectsState: Projects.State\n\n    /**\n     * @group State\n     */\n    public readonly cdnState: WebPM.State\n\n    /**\n     * @group State\n     */\n    public readonly backendsState = new Backends.State()\n\n    /**\n     * @group State\n     */\n    public readonly esmServersState: EsmServers.State\n\n    /**\n     * @group State\n     */\n    public readonly environmentState: Environment.State\n\n    /**\n     * @group State\n     */\n    public readonly pluginsState = new Plugins.State()\n\n    /**\n     * @group State\n     */\n    public readonly notificationsState = new Notification.State()\n\n    /**\n     * @group Observables\n     */\n    public readonly connectedLocal$: Observable<boolean>\n\n    public readonly mountedHdPaths$ = new BehaviorSubject<MountedPath[]>([])\n\n    public readonly companionPage$ = new BehaviorSubject<string[]>([])\n\n    install(id: 'd3') {\n        if (this._installed[id]) {\n            return this._installed[id]\n        }\n        this._installed[id] = from(install(this.dynamicInstallBodies[id])).pipe(\n            shareReplay(1),\n        )\n        return this._installed[id]\n    }\n    private dynamicInstallBodies = {\n        d3: {\n            esm: [`d3#${pkgJson.webpm.dependencies.d3} as d3`],\n        },\n    }\n    private _installed: { [k: string]: Observable<WindowOrWorkerGlobalScope> } =\n        {}\n\n    constructor() {\n        Local.Client.startWs$()\n            .pipe(take(1))\n            .subscribe(() => {\n                console.log('Web sockets connected')\n            })\n        this.environment$ = this.environmentClient.webSocket.status$().pipe(\n            map(({ data }) => data),\n            shareReplay(1),\n        )\n        this.connectedLocal$ = Local.Client.ws.connected$\n\n        this.homeState = new Home.State({ appState: this })\n        this.projectsState = new Projects.State({ appState: this })\n        this.cdnState = new WebPM.State({ appState: this })\n        this.esmServersState = new EsmServers.State({ appState: this })\n        this.environmentState = new Environment.State({ appState: this })\n\n        this.projectsState.projects$.subscribe(() => {})\n        this.confChanged$ = this.environment$.pipe(\n            map((env) => env.pathsBook.config),\n            distinctUntilChanged(),\n            tap((path) => console.log('Configuration changed', path)),\n        )\n        this.connectedLocal$.subscribe((connected) => {\n            if (connected) {\n                this.environmentClient.getStatus$().subscribe()\n                this.cdnState.refreshPackages()\n                this.projectsState.refreshProjects()\n            }\n        })\n\n        this.session$ = this.environment$.pipe(\n            map((env) => env.currentConnection),\n            distinctUntilChanged(\n                (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),\n            ),\n            mergeMap(() => new Accounts.AccountsClient().getSessionDetails$()),\n            raiseHTTPErrors(),\n            shareReplay(1),\n        )\n        this.navigation = this.getNav()\n        this.bookmarks$ = new BehaviorSubject([\n            '/environment',\n            '/webpm',\n            '/projects',\n            '/explorer',\n            '/mounted',\n            '/plugins',\n            '/doc',\n        ])\n        const ctx = createRootContext({\n            threadName: 'App',\n            labels: [],\n        })\n\n        this.router = new Router(\n            {\n                navigation: this.navigation,\n                pathAliases: {\n                    'w3nest-api': '@nav/doc/server-api/w3nest',\n                    'w3nest-client-api': '@nav/doc/server-api/w3nest-client',\n                    'w3nest-install': '@nav/doc/how-to/install',\n                    'w3nest-start': '@nav/doc/how-to/start',\n                    'w3nest-publish': '@nav/doc/how-to/publish',\n                    'w3nest-ci': '@nav/doc/how-to/ci',\n                },\n                redirects: [(target) => this.getRedirects(target)],\n                userStore: this,\n            },\n            ctx,\n        )\n    }\n\n    mountHdPath(path: string, type: 'file' | 'folder') {\n        const values = this.mountedHdPaths$.value\n        const redirectNav =\n            type === 'folder'\n                ? `/mounted/${encodeHdPath(path)}`\n                : `/mounted/file_${encodeHdPath(path)}`\n        if (!values.map((p) => p.path).includes(path)) {\n            this.mountedHdPaths$.next([...values, { path, type }])\n            const nodeMounted = this.router.explorerState.getNode('/mounted')\n            this.router.explorerState.selectNodeAndExpand(nodeMounted)\n            this.router.explorerState.root$\n                .pipe(\n                    filter(\n                        () =>\n                            this.router.explorerState.getNode(redirectNav) !==\n                            undefined,\n                    ),\n                    take(1),\n                    Patches.patchRequestObjectAlreadyUsed(),\n                )\n                .subscribe(() => {\n                    this.router.fireNavigateTo({\n                        path: redirectNav,\n                    })\n                })\n            return\n        }\n        this.router.fireNavigateTo({\n            path: redirectNav,\n        })\n    }\n\n    private getNav(): Navigation<\n        DefaultLayout.NavLayout,\n        DefaultLayout.NavHeader\n    > {\n        return {\n            name: 'w3Lab',\n            header: {\n                wrapperClass: `${DefaultLayout.NavHeaderView.DefaultWrapperClass} border-bottom p-1`,\n                icon: {\n                    tag: 'img',\n                    src: '../assets/favicon.svg',\n                    style: {\n                        height: '30px',\n                    },\n                },\n                actions: [editHomeAction(this.homeState)],\n            },\n            layout: {\n                content: () => new HomeView({ state: this.homeState }),\n            },\n            routes: {\n                [segment('/environment')]: Environment.navigation(this),\n                [segment('/webpm')]: WebPM.navigation(this),\n                [segment('/projects')]: Projects.navigation(this),\n                [segment('/explorer')]: Explorer.navigation({\n                    session$: this.session$,\n                }),\n                [segment('/mounted')]: Mounted.navigation(this),\n                [segment('/plugins')]: Plugins.navigation(this),\n                [segment('/doc')]: Doc.navigation(this),\n            },\n        }\n    }\n\n    getRedirects(target: UrlTarget) {\n        let to = target.path\n        if (target.path.startsWith('/api/youwol')) {\n            to = target.path.replace('/api/youwol', '/doc/api/youwol')\n        }\n        if (target.path.startsWith('/api/yw_utils')) {\n            to = target.path.replace('/api/yw_utils', '/doc/api/yw_utils')\n        }\n        return Promise.resolve({ ...target, path: to })\n    }\n}",
+                "startLine": 43,
+                "endLine": 297,
+                "references": {
+                    "AppState": "@nav[w3lab].AppState",
+                    "State": "@nav[w3lab]/Plugins.State",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "Navigation": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
+                    "NavLayout": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
+                    "NavHeader": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader",
+                    "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                    "UrlTarget": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.UrlTarget",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "WindowOrWorkerGlobalScope": "https://udn.realityripple.com/docs/Web/API/WindowOrWorkerGlobalScope"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [],
+    "files": [
+        {
+            "name": "index.ts",
+            "path": "src/app/home/index.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/app/plugins/index.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "app-state.ts",
+            "path": "src/app/app-state.ts",
+            "documentation": {
+                "sections": []
+            }
+        }
+    ],
+    "children": [
+        {
+            "name": "Home",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "w3lab.Home",
+            "navPath": "@nav[w3lab]/Home",
+            "isLeaf": false
+        },
+        {
+            "name": "Plugins",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "w3lab.Plugins",
+            "navPath": "@nav[w3lab]/Plugins",
+            "isLeaf": true
+        }
+    ],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

@@ -12,6 +12,7 @@ import { forkJoin, Observable, of } from 'rxjs'
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
 import { defaultLayout } from '../common/utils-nav'
+import { PageTitleView } from '../common'
 
 export const navigation = ({
     session$,
@@ -45,13 +46,13 @@ export class PageView implements VirtualDOM<'div'> {
 
     constructor({ router }: { router: Router }) {
         this.children = [
+            new PageTitleView({
+                title: 'Explorer',
+                icon: 'fas fa-folder',
+                helpNav: '@nav/doc.4-',
+            }),
             parseMd({
-                src: `
-# Explorer
-
-The explorer organize assets in a files-explorer like structure.
-
-                 `,
+                src: ``,
                 router,
             }),
         ]

@@ -6,6 +6,7 @@ import { map, take } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ExplorerView } from './explorer.view'
 import { defaultLayout } from '../common/utils-nav'
+import { PageTitleView } from '../common'
 
 export function encodeHdPath(str: string) {
     return window.btoa(encodeURIComponent(str))
@@ -37,16 +38,13 @@ export class PageView implements VirtualDOM<'div'> {
 
     constructor({ router }: { appState: AppState; router: Router }) {
         this.children = [
+            new PageTitleView({
+                title: 'Mounted',
+                icon: 'fas fa-laptop',
+                helpNav: '@nav/doc.5-',
+            }),
             parseMd({
                 src: `
-# Mounted
-
-
-This page allows to explore folders referenced by your laboratory.
-
-These folders are added when clicking on the <i class="fas fa-folder-open"></i> associated to folder path on 
-your hard drive.
-
 `,
                 router,
             }),

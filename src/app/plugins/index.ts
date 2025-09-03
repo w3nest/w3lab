@@ -1,14 +1,14 @@
 /**
- * This module contains the implementation of the `Plugins` page.
+ * Implementation of the **Plugins** page.
  *
- * The `Plugins` page allows users to dynamically load and manage JavaScript libraries known as "Plugins."
- * Each plugin defines a navigation object that integrates into the application's navigation system.
+ * The `Plugins` page lets users **dynamically load and manage JavaScript libraries** known as "Plugins."
+ * Each plugin defines a {@link mkdocs-ts.Navigation} object that integrates into the application's
+ * {@link AppState.navigation}. In practice, plugins are JavaScript modules exposing an API
+ * that conforms to the {@link PluginTrait} interface.
  *
- * Plugins are referenced by JavaScript code that can be edited directly from the [Plugins page](@nav/plugins)
- * within the application. It implements a function that asynchronously loads and returns an array of plugins,
- * adhering to the {@link PluginsLoader} signature.
- *
- * Example:
+ * Plugins can be referenced and edited directly from the <navNode target="Plugins"></navNode> page
+ * within the application. The page uses a {@link PluginsLoader} function to asynchronously load plugins
+ * and return them as an array:
  *
  * <code-snippet language='javascript'>
  * return async ({ webpm }) => {
@@ -21,9 +21,8 @@
  * }
  * </code-snippet>
  *
- * The individual plugins are JavaScript modules that must expose an API that conforms to the
- * {@link PluginTrait} interface.
- *
+ * Each plugin installed this way automatically integrates with the navigation system
+ * and becomes available to the application at runtime.
  *
  * @module
  */
@@ -34,6 +33,7 @@ import { BehaviorSubject } from 'rxjs'
 import { State } from './state'
 import { defaultLayout } from '../common/utils-nav'
 import { CodeEditorView } from '../common/code-editor.view'
+import { PageTitleView } from '../common'
 export * from './state'
 
 export async function navigation(
@@ -47,7 +47,7 @@ export async function navigation(
             const { name } = plugin.metadata()
             const id = name.split('/').slice(-1)[0]
             const nav = plugin.navigation({
-                colabState: appState,
+                appState,
                 basePath: `/plugins/${id}`,
             })
             if (nav instanceof Promise) {
@@ -81,17 +81,15 @@ export class PluginsView implements VirtualDOM<'div'> {
         Object.assign(this, params)
 
         this.children = [
+            new PageTitleView({
+                title: 'Plugins',
+                icon: 'fas fa-puzzle-piece',
+                helpNav: '@nav/doc.6-',
+            }),
             parseMd({
                 src: `
-# Plugins
-
-<note level="hint">
-For assistance with implementing the function to load plugins, as well as information on plugin development, 
-please refer to the API documentation for <apiLink target="ColabPlugins"></apiLink>.
-</note>
         
-        
-Plugins are imported using the following function:
+Edit the following function to define the plugins list:
 
 <editor></editor>
         `,
@@ -129,7 +127,7 @@ export class PluginsCodeEditorView implements VirtualDOM<'div'> {
             }),
             {
                 tag: 'button',
-                class: 'btn btn-light btn-sm',
+                class: 'btn btn-light btn-sm my-2',
                 innerText: 'Apply',
                 onclick: () => {
                     this.appState.pluginsState

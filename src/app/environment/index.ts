@@ -83,6 +83,7 @@ export class PageView implements VirtualDOM<'div'> {
             new PageTitleView({
                 title: 'Environment',
                 icon: 'fas fa-tasks',
+                helpNav: '@nav/doc.1-',
             }),
             parseMd({
                 src: `

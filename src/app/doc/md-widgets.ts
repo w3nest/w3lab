@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, child$ } from 'rx-vdom'
+import { AnyVirtualDOM, child$, VirtualDOM } from 'rx-vdom'
 import { Router } from 'mkdocs-ts'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { icon } from '../projects/icons'
@@ -39,6 +39,14 @@ MdWidgets.CrossLink.Mapper = (target: string) => {
         return W3NestHowTo.CrossLinkMapper(target)
     }
     return LinksDict.crossLinks[
+        target
+    ] as unknown as ReturnType<MdWidgets.LinkMapper>
+}
+MdWidgets.GitHubLink.Mapper = (target: string) => {
+    if (W3NestHowTo.GithubLinkMapper(target)) {
+        return W3NestHowTo.GithubLinkMapper(target)
+    }
+    return LinksDict.githubLinks[
         target
     ] as unknown as ReturnType<MdWidgets.LinkMapper>
 }
@@ -301,10 +309,35 @@ interface NodeLink {
     icon: string
 }
 const NodeLinksDict: Record<string, NodeLink> = {
+    Environment: {
+        path: 'environment',
+        name: 'Environment',
+        icon: 'fas fa-tasks',
+    },
+    WebPM: {
+        path: 'webpm',
+        name: 'WebPM',
+        icon: 'fas fa-boxes',
+    },
     Projects: {
         path: 'projects',
         name: 'Projects',
-        icon: 'fas fa-boxes',
+        icon: 'fas fa-tools',
+    },
+    Explorer: {
+        path: 'explorer',
+        name: 'Explorer',
+        icon: 'fas fa-folder',
+    },
+    Mounted: {
+        path: 'mounted',
+        name: 'Mounted',
+        icon: 'fas fa-laptop',
+    },
+    Plugins: {
+        path: 'plugins',
+        name: 'Plugins',
+        icon: 'fas fa-puzzle-piece',
     },
     Backends: {
         path: 'environment/backends',
@@ -316,4 +349,29 @@ const NodeLinksDict: Record<string, NodeLink> = {
         name: 'Home',
         icon: 'fas fa-home',
     },
+}
+
+export class SplitApiButton implements VirtualDOM<'button'> {
+    public readonly tag = 'button'
+    public readonly class = 'btn btn-sm btn-light fas fa-columns'
+    public readonly onclick: (ev: MouseEvent) => void
+    constructor({ appState }: { appState: AppState }) {
+        this.onclick = () => {
+            const path = '/doc'
+            const selected = appState.companionPage$.value.find(
+                (prefix) => path === prefix,
+            )
+            if (selected) {
+                const newNodes = appState.companionPage$.value.filter(
+                    (prefix) => path !== prefix,
+                )
+                appState.companionPage$.next(newNodes)
+                return
+            }
+            appState.companionPage$.next([
+                ...appState.companionPage$.value,
+                path,
+            ])
+        }
+    }
 }

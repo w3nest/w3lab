@@ -8,9 +8,21 @@
             "href": "@nav[w3nest-api]/app/projects.models_project.Project",
             "withClass": "mkapi-role-class"
         },
+        "w3nest.ProjectsFinder": {
+            "href": "@nav[w3nest-api]/app/config.projects.ProjectsFinder",
+            "withClass": "mkapi-role-class"
+        },
         "w3nest.CdnPackageLight": {
             "href": "@nav[w3nest-api]/app/components.models.CdnPackageLight",
             "withClass": "mkapi-role-class"
+        },
+        "w3nest.shared_api.webpm": {
+            "href": "@nav[w3nest-api]/shared_api/webpm",
+            "withClass": "mkapi-role-module"
+        },
+        "w3nest.shared_api.explorer": {
+            "href": "@nav[w3nest-api]/shared_api/explorer",
+            "withClass": "mkapi-role-module"
         },
         "W3Lab.Widgets": {
             "href": "@nav/doc/w3lab/Home/Widgets",
@@ -54,11 +66,46 @@
         },
         "HTMLElement": {
             "href": "https://developer.mozilla.org/fr/docs/Web/API/HTMLElement"
+        },
+        "slack/w3lab": {
+            "href": "https://app.slack.com/client/T08RWKMJS58/C09DNLA08GH"
         }
     },
     "crossLinks": {
+        "How-To": {
+            "href": "@nav/doc/how-to"
+        },
+        "Server API": {
+            "href": "@nav/doc/server-api"
+        },
+        "api/http-clients-py": {
+            "href": "@nav/doc/server-api/w3nest-client"
+        },
+        "W3Lab API": {
+            "href": "@nav/doc/w3lab"
+        },
         "install": {
             "href": "@nav[w3nest-install]"
+        },
+        "doc/how-to/custom-home": {
+            "href": "@nav/doc/how-to/custom-home"
+        },
+        "doc/how-to/publish": {
+            "href": "@nav/doc/how-to/publish"
+        },
+        "w3lab/plugins": {
+            "href": "@nav/doc/w3lab/Plugins"
+        }
+    },
+    "githubLinks": {
+        "w3lab": {
+            "href": "https://github.com/w3nest/w3lab"
+        },
+        "w3labDiscussions": {
+            "href": "https://github.com/w3nest/w3lab/discussions"
+        },
+        "http-clients-js": {
+            "href": "https://github.com/w3nest/http-clients"
         }
     }
 }

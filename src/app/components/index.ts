@@ -166,7 +166,7 @@ class PageView implements VirtualDOM<'div'> {
             new PageTitleView({
                 title: 'WebPM',
                 icon: 'fas fa-boxes',
-                helpNav: '@nav[w3nest-api]/shared_api/webpm',
+                helpNav: '@nav/doc.2-',
             }),
             parseMd({
                 src: `

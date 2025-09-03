@@ -1,0 +1,1853 @@
+{
+    "name": "Widgets",
+    "documentation": {
+        "sections": [
+            {
+                "content": "This module offers a collection of widgets designed for use when editing the  `Home`  page.\n\n\n##  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.LaunchPadView\" semantic=\"class\">LaunchPadView</mkapi-api-link> \n\nA container for applications' link, *e.g.*:\n\n<launchPad size='50px'>\n<app name=\"@mkdocs-ts/doc\"></app>\n<app name=\"@rx-vdom/doc\"></app>\n<app name=\"@webpm-client/doc\"></app>\n</launchPad>\n\n##  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ProjectsDonutChart\" semantic=\"class\">ProjectsDonutChart</mkapi-api-link> \n\nA donut chart that displays a histogram of  <mkapi-ext-link href=\"@nav[w3nest-api]/app/projects.models_project.Project\">w3nest.Project</mkapi-ext-link> , *e.g.*:\n\n<projectsDonutChart margin=\"70\" width=\"75%\">\n    <section label=\"Typescript\" style=\"fill:darkblue\">\n       return (p) => p.ci.tags.includes('typescript')\n    </section>\n    <section label=\"Python\" class=\"pie-chart-py\" style=\"fill:rebeccapurple\">\n       return (p) => p.ci.tags.includes('python')\n    </section>\n    <section  label=\"JavaScript\" style=\"fill:yellow\">\n       return (p) => p.ci.tags.includes('javascript')\n    </section>\n</projectsDonutChart>\n\n##  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ComponentsDonutChart\" semantic=\"class\">ComponentsDonutChart</mkapi-api-link> \n\nA donut chart that visualizes a histogram of  <mkapi-ext-link href=\"@nav[w3nest-api]/app/components.models.CdnPackageLight\">w3nest.CdnPackageLight</mkapi-ext-link> , *e.g.*:\n\n<componentsDonutChart margin=\"70\" width=\"75%\">\n    <section label=\"JS/WASM\" style=\"fill:darkblue\">\n       return (c) => c.versions.slice(-1)[0].kind === 'esm'\n    </section>\n    <section label=\"Pyodide\" style=\"fill:rebeccapurple\">\n       return (c) => c.versions.slice(-1)[0].kind === 'pyodide'\n    </section>\n    <section  label=\"Backend\" style=\"fill:yellow\">\n       return (c) => c.versions.slice(-1)[0].kind === 'backend'\n    </section>\n    <section  label=\"WebApp\" style=\"fill:darkgreen\">\n       return (c) => c.versions.slice(-1)[0].kind === 'webapp'\n    </section>\n</componentsDonutChart>\n\n## Recent Projects\n\nThis widget displays a list of the most recently edited projects, *e.g.*:\n\n<projectsHistoric count=\"5\"></projectsHistoric>",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "w3lab/Home/Widgets",
+    "navPath": "@nav[w3lab]",
+    "attributes": [],
+    "types": [
+        {
+            "name": "AppIcon",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a link for a specific application within a  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.LaunchPadView\" semantic=\"class\">LaunchPadView</mkapi-api-link> .\n\nEach  `AppIcon`  dynamically loads metadata (like the application name, icon) to render it.\n\nRefer to  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.AppIcon.fromHTMLElement\" semantic=\"method\">AppIcon.fromHTMLElement</mkapi-api-link>  for constructing the view from an HTML element in MarkDown.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "AppIcon",
+            "navPath": "@nav[w3lab]/Home/Widgets.AppIcon",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppIcon.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.AppIcon.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 90,
+                        "endLine": 91,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.AppIcon.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "CSS classes applied to the container, maybe modified when constructing the instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppIcon.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.AppIcon.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly class: string = `${colabClassPrefix}-AppIcon btn btn-light btn-sm colab-AppIcon m-3`",
+                        "implementation": "",
+                        "startLine": 83,
+                        "endLine": 84,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.AppIcon.class"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Inlined style specification, maybe modified when constructing the instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppIcon.style",
+                    "navPath": "@nav[w3lab]/Home/Widgets.AppIcon.style",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly style: CSSAttribute = {}",
+                        "implementation": "",
+                        "startLine": 88,
+                        "endLine": 89,
+                        "references": {
+                            "style": "@nav[w3lab]/Home/Widgets.AppIcon.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppIcon.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.AppIcon.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly tag = 'button'",
+                        "implementation": "",
+                        "startLine": 78,
+                        "endLine": 79,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.AppIcon.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an  `AppIcon`  instance from an HTML element, typically sourced from Markdown.\n\nThis function parses the attributes of the given HTML element and converts it into an  `AppIcon`  component.\n\nThe following attributes are expected:\n- **name**: The name of the application (its package name).\n- **version**: The version of the application, defaults to  `'latest'`  if not specified.\n- **class**: Optional CSS classes to associate with the  `AppIcon`  HTML element.\n- **style**: Optional inline styles to apply to the  `AppIcon`  HTML element.\n- **label**: Optional, if provided, this value will be displayed instead of the application's official  `displayName` .\n- **size**: Specifies the size of the application's icon (displayed with a 1:1 aspect ratio), defaults to  `50px`  if not provided.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The HTML element to parse and convert into an  `AppIcon` .\n*  **size**: The default size to apply if the  `size`  attribute is not specified on the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A new instance of  `AppIcon` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "AppIcon.fromHTMLElement",
+                    "navPath": "@nav[w3lab]/Home/Widgets.AppIcon.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "static fromHTMLElement(elem: Element, { size }: { size: string }): AppIcon",
+                        "implementation": "static fromHTMLElement(elem: Element, { size }: { size: string }): AppIcon {\n    const style: CSSAttribute = (elem.getAttribute('style') || '')\n        .split(';')\n        .filter((d) => d !== '')\n        .map((part) => {\n            const key = part.trim().split(':')[0].trim()\n            const val = part.trim().split(':')[1].trim()\n            return { key, val }\n        })\n        .reduce((acc, { key, val }) => ({ ...acc, [key]: val }), {})\n    const d = {\n        package: elem.getAttribute('name'),\n        version: elem.getAttribute('version') || 'latest',\n        class: elem.classList.value,\n        style,\n        label: elem.getAttribute('label'),\n        size: elem.getAttribute('size') || '50px',\n    }\n    return new AppIcon({ ...d, size: elem.getAttribute('size') ?? size })\n}",
+                        "startLine": 181,
+                        "endLine": 201,
+                        "references": {
+                            "fromHTMLElement": "@nav[w3lab]/Home/Widgets.AppIcon.fromHTMLElement",
+                            "Element": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+                            "AppIcon": "@nav[w3lab]/Home/Widgets.AppIcon"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                "declaration": "export class AppIcon implements VirtualDOM<'button'>",
+                "implementation": "export class AppIcon implements VirtualDOM<'button'> {\n    public readonly tag = 'button'\n\n    /**\n     * CSS classes applied to the container, maybe modified when constructing the instance.\n     */\n    public readonly class: string = `${colabClassPrefix}-AppIcon btn btn-light btn-sm colab-AppIcon m-3`\n\n    /**\n     * Inlined style specification, maybe modified when constructing the instance.\n     */\n    public readonly style: CSSAttribute = {}\n\n    public readonly children: ChildrenLike\n\n    static readonly appMetadata$ = (\n        appName: string,\n    ): Observable<Webpm.GetVersionMetadataResponse> => {\n        if (appName in AppIcon._appMetadata$) {\n            return AppIcon._appMetadata$[appName]\n        }\n        AppIcon._appMetadata$[appName] = new AssetsGateway.Client().webpm\n            .getMetadataInfo$({\n                libraryId: window.btoa(appName),\n                version: 'latest',\n            })\n            .pipe(raiseHTTPErrors(), shareReplay(1))\n        return AppIcon._appMetadata$[appName]\n    }\n    private static _appMetadata$: Record<\n        string,\n        Observable<Webpm.GetVersionMetadataResponse>\n    > = {}\n\n    constructor(params: {\n        package: string\n        size: string\n        version?: string\n        label?: string\n        class?: string\n        style?: CSSAttribute\n    }) {\n        if (params.class) {\n            this.class = params.class\n        }\n        if (params.style) {\n            this.style = params.style\n        }\n        this.children = [\n            child$({\n                source$: AppIcon.appMetadata$(params.package),\n                vdomMap: (appInfo) => {\n                    return {\n                        tag: 'a',\n                        class: 'd-flex flex-column align-items-center',\n                        href: `/apps/${params.package}/${params.version}`,\n                        target: '_blank',\n                        children: [\n                            {\n                                tag: 'img',\n                                style: {\n                                    width: params.size,\n                                    height: params.size,\n                                },\n                                src: appInfo.icon,\n                            },\n                            {\n                                tag: 'i',\n                                class: 'my-1',\n                            },\n                            {\n                                tag: 'div',\n                                class: '',\n\n                                innerText: params.label || appInfo.displayName,\n                            },\n                        ],\n                    }\n                },\n                untilFirst: {\n                    tag: 'i',\n                    class: 'fas fa-spinner fa-spin m-5',\n                },\n            }),\n        ]\n    }\n\n    /**\n     * Creates an `AppIcon` instance from an HTML element, typically sourced from Markdown.\n     *\n     * This function parses the attributes of the given HTML element and converts it into an `AppIcon` component.\n     *\n     * The following attributes are expected:\n     * - **name**: The name of the application (its package name).\n     * - **version**: The version of the application, defaults to `'latest'` if not specified.\n     * - **class**: Optional CSS classes to associate with the `AppIcon` HTML element.\n     * - **style**: Optional inline styles to apply to the `AppIcon` HTML element.\n     * - **label**: Optional, if provided, this value will be displayed instead of the application's official `displayName`.\n     * - **size**: Specifies the size of the application's icon (displayed with a 1:1 aspect ratio), defaults to `50px` if not provided.\n     *\n     * @param elem - The HTML element to parse and convert into an `AppIcon`.\n     * @param size - The default size to apply if the `size` attribute is not specified on the element.\n     * @returns A new instance of `AppIcon`.\n     */\n    static fromHTMLElement(elem: Element, { size }: { size: string }): AppIcon {\n        const style: CSSAttribute = (elem.getAttribute('style') || '')\n            .split(';')\n            .filter((d) => d !== '')\n            .map((part) => {\n                const key = part.trim().split(':')[0].trim()\n                const val = part.trim().split(':')[1].trim()\n                return { key, val }\n            })\n            .reduce((acc, { key, val }) => ({ ...acc, [key]: val }), {})\n        const d = {\n            package: elem.getAttribute('name'),\n            version: elem.getAttribute('version') || 'latest',\n            class: elem.classList.value,\n            style,\n            label: elem.getAttribute('label'),\n            size: elem.getAttribute('size') || '50px',\n        }\n        return new AppIcon({ ...d, size: elem.getAttribute('size') ?? size })\n    }\n}",
+                "startLine": 77,
+                "endLine": 202,
+                "references": {
+                    "AppIcon": "@nav[w3lab]/Home/Widgets.AppIcon",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "Element": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ComponentsDonutChart",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A widget that displays a donut chart representing components.\n\nThe chart's sections are determined by a selector function that takes a  <mkapi-ext-link href=\"@nav[w3nest-api]/app/components.models.CdnPackageLight\">w3nest.CdnPackageLight</mkapi-ext-link>  as argument.\n\nThis component is designed to be embedded in a  `Markdown`  page,\nrefer to  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ComponentsDonutChart.fromHTMLElement\" semantic=\"method\">ComponentsDonutChart.fromHTMLElement</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ComponentsDonutChart",
+            "navPath": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 215,
+                        "endLine": 216,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly class = 'w-100'",
+                        "implementation": "",
+                        "startLine": 214,
+                        "endLine": 215,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.DonutChart.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 213,
+                        "endLine": 214,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Constructs a  `ComponentsDonutChart`  from an HTML element, typically sourced from\n `Markdown` .\n\nThe HTML element must include specific attributes:\n\n- **margin**: Margin of the plot in pixels, defaults to  `75` .\n- **width**: Width of the plot in CSS units, defaults to  `100%` .\n\nThe sections of the chart are defined by  `section`  child elements. See  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.DonutChart.sections\" semantic=\"method\">DonutChart.sections</mkapi-api-link> \nfor more details.\n\n**Example**\n\n<code-snippet language=\"html\">\n<componentsDonutChart margin=\"70\" width=\"75%\">\n    <section label=\"JS/WASM\" style=\"fill:darkblue\">\n       return (c) => c.versions.slice(-1)[0].kind === 'esm'\n    </section>\n    <section label=\"Pyodide\" style=\"fill:rebeccapurple\">\n       return (c) => c.versions.slice(-1)[0].kind === 'pyodide'\n    </section>\n    <section  label=\"Backend\" style=\"fill:yellow\">\n       return (c) => c.versions.slice(-1)[0].kind === 'backend'\n    </section>\n    <section  label=\"WebApp\" style=\"fill:darkgreen\">\n       return (c) => c.versions.slice(-1)[0].kind === 'webapp'\n    </section>\n</componentsDonutChart>\n</code-snippet>\n\n<note level=\"hint\">\nAttributes of the  `c`  variable, as defined in the example, are available in\n <mkapi-ext-link href=\"@nav[w3nest-api]/app/components.models.CdnPackageLight\">w3nest.CdnPackageLight</mkapi-ext-link> .\n</note>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The HTML element containing the chart configuration.\n*  **router**: The application router.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "An instance of  `ComponentsDonutChart` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ComponentsDonutChart.fromHTMLElement",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/app/home/widgets/components-donut-chart.view.ts",
+                        "declaration": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ComponentsDonutChart",
+                        "implementation": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ComponentsDonutChart {\n    return new ComponentsDonutChart({\n        appState: router.userStore as AppState,\n        margin: parseFloat(elem.getAttribute('margin')) || 75,\n        innerStyle: { width: elem.getAttribute('width') || '100%' },\n        sections: DonutChart.sections(elem),\n    })\n}",
+                        "startLine": 71,
+                        "endLine": 82,
+                        "references": {
+                            "fromHTMLElement": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                            "ComponentsDonutChart": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/components-donut-chart.view.ts",
+                "declaration": "export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackageLight>",
+                "implementation": "export class ComponentsDonutChart extends DonutChart<Local.Components.CdnPackageLight> {\n    constructor(params: {\n        appState: AppState\n        innerStyle: CSSAttribute\n        margin: number\n        sections: DonutChartSection<Local.Components.CdnPackage>[]\n    }) {\n        super({\n            ...params,\n            entities$: params.appState.cdnState.status$.pipe(\n                map((resp) => resp.packages),\n            ),\n        })\n    }\n\n    /**\n     * Constructs a `ComponentsDonutChart` from an HTML element, typically sourced from\n     * `Markdown`.\n     *\n     * The HTML element must include specific attributes:\n     *\n     * - **margin**: Margin of the plot in pixels, defaults to `75`.\n     * - **width**: Width of the plot in CSS units, defaults to `100%`.\n     *\n     * The sections of the chart are defined by `section` child elements. See {@link DonutChart.sections}\n     * for more details.\n     *\n     * **Example**\n     *\n     * <code-snippet language=\"html\">\n     * <componentsDonutChart margin=\"70\" width=\"75%\">\n     *     <section label=\"JS/WASM\" style=\"fill:darkblue\">\n     *        return (c) => c.versions.slice(-1)[0].kind === 'esm'\n     *     </section>\n     *     <section label=\"Pyodide\" style=\"fill:rebeccapurple\">\n     *        return (c) => c.versions.slice(-1)[0].kind === 'pyodide'\n     *     </section>\n     *     <section  label=\"Backend\" style=\"fill:yellow\">\n     *        return (c) => c.versions.slice(-1)[0].kind === 'backend'\n     *     </section>\n     *     <section  label=\"WebApp\" style=\"fill:darkgreen\">\n     *        return (c) => c.versions.slice(-1)[0].kind === 'webapp'\n     *     </section>\n     * </componentsDonutChart>\n     * </code-snippet>\n     *\n     * <note level=\"hint\">\n     * Attributes of the `c` variable, as defined in the example, are available in\n     * {@link w3nest.CdnPackageLight}.\n     * </note>\n     *\n     * @param elem The HTML element containing the chart configuration.\n     * @param router The application router.\n     * @returns An instance of `ComponentsDonutChart`.\n     */\n    static fromHTMLElement(\n        elem: HTMLElement,\n        router: Router,\n    ): ComponentsDonutChart {\n        return new ComponentsDonutChart({\n            appState: router.userStore as AppState,\n            margin: parseFloat(elem.getAttribute('margin')) || 75,\n            innerStyle: { width: elem.getAttribute('width') || '100%' },\n            sections: DonutChart.sections(elem),\n        })\n    }\n}",
+                "startLine": 16,
+                "endLine": 83,
+                "references": {
+                    "ComponentsDonutChart": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart",
+                    "AppState": "@nav[w3lab].AppState",
+                    "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection",
+                    "DonutChart.constructor": "@nav[w3lab]/Home/Widgets.DonutChart.constructor",
+                    "DonutChart.appState": "@nav[w3lab]/Home/Widgets.DonutChart.appState",
+                    "DonutChart.children": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                    "DonutChart.class": "@nav[w3lab]/Home/Widgets.DonutChart.class",
+                    "DonutChart.entities$": "@nav[w3lab]/Home/Widgets.DonutChart.entities$",
+                    "DonutChart.margin": "@nav[w3lab]/Home/Widgets.DonutChart.margin",
+                    "DonutChart.sections": "@nav[w3lab]/Home/Widgets.DonutChart.sections",
+                    "DonutChart.tag": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                    "DonutChart.width": "@nav[w3lab]/Home/Widgets.DonutChart.width",
+                    "DonutChart": "@nav[w3lab]/Home/Widgets.DonutChart",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DonutChart",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Base class for creating donut-style charts.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Generics",
+                        "content": "\n*  **T**: The type of entities being analyzed and represented in the chart.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DonutChart",
+            "navPath": "@nav[w3lab]/Home/Widgets.DonutChart",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 215,
+                        "endLine": 216,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly class = 'w-100'",
+                        "implementation": "",
+                        "startLine": 214,
+                        "endLine": 215,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.DonutChart.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 213,
+                        "endLine": 214,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "sections",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Constructs a list of chart sections from the children of a given HTML element.\n\nThe sections are defined by  `section`  child elements within the container, each with the following attributes:\n\n- **style**: Applied to the associated SVG element for custom styling.\n- **class**: Forwarded to the associated SVG element for custom CSS classes.\n- **label**: Label used to represent the section in the chart.\n- **textContent**: The content of the HTML element should define a  `selector`  function (in string form).\n  This function takes an entity as an argument and returns a boolean indicating whether the entity belongs to\n  the section.\n\n**Example**\n\n<code-snippet language='html'>\n<section label=\"Category 1\" class=\"donut-category-1\" style=\"fill: blue;\">\n    return (entity) => entity.type === 'category1';\n</section>\n</code-snippet>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The parent HTML element containing  `section`  children.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "An array of  `DonutChartSection`  objects derived from the child  `section`  elements.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.sections",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.sections",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "static sections(elem: HTMLElement): DonutChartSection<unknown>[] {",
+                        "implementation": "static sections(elem: HTMLElement): DonutChartSection<unknown>[] {\n    const div = document.createElement('div')\n    div.innerHTML = elem.textContent\n    return Array.from(div.children)\n        .filter((child) => child.tagName === 'SECTION')\n        .map((child) => ({\n            class: child.classList.value,\n            style: child.getAttribute('style'),\n            label: child.getAttribute('label'),\n            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call\n            selector: new Function(child.textContent)() as (\n                entity: unknown,\n            ) => boolean,\n        }))\n}",
+                        "startLine": 283,
+                        "endLine": 298,
+                        "references": {
+                            "sections": "@nav[w3lab]/Home/Widgets.DonutChart.sections",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                "declaration": "export class DonutChart<T> implements VirtualDOM<'div'>",
+                "implementation": "export class DonutChart<T> implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class = 'w-100'\n    public readonly children: ChildrenLike\n\n    public readonly appState: AppState\n    public readonly width: string\n    public readonly margin: number\n    public readonly sections: DonutChartSection<T>[]\n    public readonly entities$: Observable<T[]>\n\n    constructor(params: {\n        appState: AppState\n        innerStyle?: CSSAttribute\n        margin: number\n        sections: DonutChartSection<T>[]\n        entities$: Observable<T[]>\n    }) {\n        Object.assign(this, params)\n\n        const d3$ = this.appState.install('d3') as unknown as Observable<{\n            d3: D3\n        }>\n        this.children = [\n            child$({\n                source$: combineLatest([d3$, this.entities$]),\n                vdomMap: ([{ d3 }, entities]) => {\n                    if (this.sections.length === 0) {\n                        console.warn(\n                            '[w3lab] DonutChart plotted with no sections',\n                        )\n                    }\n                    if (entities.length === 0 || params.sections.length === 0) {\n                        return EmptyDiv\n                    }\n                    return createDonutChartD3<T>({\n                        d3,\n                        style: params.innerStyle,\n                        entities: entities,\n                        margin: this.margin,\n                        sections: this.sections,\n                    })\n                },\n            }),\n        ]\n    }\n\n    /* eslint-enable */\n    /**\n     * Constructs a list of chart sections from the children of a given HTML element.\n     *\n     * The sections are defined by `section` child elements within the container, each with the following attributes:\n     *\n     * - **style**: Applied to the associated SVG element for custom styling.\n     * - **class**: Forwarded to the associated SVG element for custom CSS classes.\n     * - **label**: Label used to represent the section in the chart.\n     * - **textContent**: The content of the HTML element should define a `selector` function (in string form).\n     *   This function takes an entity as an argument and returns a boolean indicating whether the entity belongs to\n     *   the section.\n     *\n     * **Example**\n     *\n     * <code-snippet language='html'>\n     * <section label=\"Category 1\" class=\"donut-category-1\" style=\"fill: blue;\">\n     *     return (entity) => entity.type === 'category1';\n     * </section>\n     * </code-snippet>\n     *\n     * @param elem The parent HTML element containing `section` children.\n     * @returns An array of `DonutChartSection` objects derived from the child `section` elements.\n     */\n    static sections(elem: HTMLElement): DonutChartSection<unknown>[] {\n        const div = document.createElement('div')\n        div.innerHTML = elem.textContent\n        return Array.from(div.children)\n            .filter((child) => child.tagName === 'SECTION')\n            .map((child) => ({\n                class: child.classList.value,\n                style: child.getAttribute('style'),\n                label: child.getAttribute('label'),\n                // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call\n                selector: new Function(child.textContent)() as (\n                    entity: unknown,\n                ) => boolean,\n            }))\n    }\n}",
+                "startLine": 212,
+                "endLine": 299,
+                "references": {
+                    "DonutChart": "@nav[w3lab]/Home/Widgets.DonutChart",
+                    "AppState": "@nav[w3lab].AppState",
+                    "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection",
+                    "ProjectsDonutChart": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart",
+                    "ComponentsDonutChart": "@nav[w3lab]/Home/Widgets.ComponentsDonutChart",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "LaunchPadView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a view that displays a collection of application links, arranged in a flexible grid layout.\n\nThe  `LaunchPadView`  is a container that wraps multiple  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.AppIcon\" semantic=\"class\">AppIcon</mkapi-api-link>  components, each representing an\nindividual application.\n\n\nThis component is designed to be embedded in a  `Markdown`  page,\nrefer to  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.LaunchPadView.fromHTMLElement\" semantic=\"method\">LaunchPadView.fromHTMLElement</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "LaunchPadView",
+            "navPath": "@nav[w3lab]/Home/Widgets.LaunchPadView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LaunchPadView.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.LaunchPadView.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 23,
+                        "endLine": 24,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.LaunchPadView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "CSS classes applied to the container.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LaunchPadView.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.LaunchPadView.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly class = `${colabClassPrefix}-LaunchPadView d-flex flex-wrap`",
+                        "implementation": "",
+                        "startLine": 22,
+                        "endLine": 23,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.LaunchPadView.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LaunchPadView.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.LaunchPadView.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 18,
+                        "endLine": 19,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.LaunchPadView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates a  `LaunchPadView`  instance from an HTML element, typically sourced from  `Markdown` .\n\nThis function parses the child elements of the given HTML element and transforms each child  `APP`  tag\ninto an  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.AppIcon\" semantic=\"class\">AppIcon</mkapi-api-link>  component.\n\n**Example**\n\n<code-snippet language='html'>\n<launchPad size='50px'>\n<app name=\"@mkdocs-ts/doc\"></app>\n<app name=\"@rx-vdom/doc\"></app>\n<app name=\"@webpm-client/doc\"></app>\n</launchPad>\n</code-snippet>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The HTML element to parse and convert.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A new instance of  `LaunchPadView` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LaunchPadView.fromHTMLElement",
+                    "navPath": "@nav[w3lab]/Home/Widgets.LaunchPadView.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): LaunchPadView",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): LaunchPadView {\n    const div = document.createElement('div')\n    div.innerHTML = elem.textContent\n\n    const apps = Array.from(div.children)\n        .filter((child) => child.tagName === 'APP')\n        .map((child) => {\n            return AppIcon.fromHTMLElement(child, {\n                size: elem.getAttribute('size'),\n            })\n        })\n\n    return new LaunchPadView({ size: elem.getAttribute('size'), apps })\n}",
+                        "startLine": 54,
+                        "endLine": 68,
+                        "references": {
+                            "fromHTMLElement": "@nav[w3lab]/Home/Widgets.LaunchPadView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "LaunchPadView": "@nav[w3lab]/Home/Widgets.LaunchPadView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/launch-pad.view.ts",
+                "declaration": "export class LaunchPadView implements VirtualDOM<'div'>",
+                "implementation": "export class LaunchPadView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * CSS classes applied to the container.\n     */\n    public readonly class = `${colabClassPrefix}-LaunchPadView d-flex flex-wrap`\n    public readonly children: ChildrenLike\n\n    public readonly size: string\n    public readonly apps: AppIcon[]\n\n    constructor(params: { size: string; apps: AppIcon[] }) {\n        Object.assign(this, params)\n\n        this.children = params.apps\n    }\n\n    /**\n     * Creates a `LaunchPadView` instance from an HTML element, typically sourced from `Markdown`.\n     *\n     * This function parses the child elements of the given HTML element and transforms each child `APP` tag\n     * into an {@link AppIcon} component.\n     *\n     * **Example**\n     *\n     * <code-snippet language='html'>\n     * <launchPad size='50px'>\n     * <app name=\"@mkdocs-ts/doc\"></app>\n     * <app name=\"@rx-vdom/doc\"></app>\n     * <app name=\"@webpm-client/doc\"></app>\n     * </launchPad>\n     * </code-snippet>\n     *\n     *\n     * @param elem - The HTML element to parse and convert.\n     * @returns A new instance of `LaunchPadView`.\n     */\n    static fromHTMLElement(elem: HTMLElement): LaunchPadView {\n        const div = document.createElement('div')\n        div.innerHTML = elem.textContent\n\n        const apps = Array.from(div.children)\n            .filter((child) => child.tagName === 'APP')\n            .map((child) => {\n                return AppIcon.fromHTMLElement(child, {\n                    size: elem.getAttribute('size'),\n                })\n            })\n\n        return new LaunchPadView({ size: elem.getAttribute('size'), apps })\n    }\n}",
+                "startLine": 17,
+                "endLine": 69,
+                "references": {
+                    "LaunchPadView": "@nav[w3lab]/Home/Widgets.LaunchPadView",
+                    "AppIcon": "@nav[w3lab]/Home/Widgets.AppIcon",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ProjectHistoricItemView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents the view of an individual project in the projects historic.\n\nThis view displays the project's name, links to navigate to the project, and relevant cross-links for enhanced\ninteractivity.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ProjectHistoricItemView",
+            "navPath": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectHistoricItemView.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 94,
+                        "endLine": 95,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "CSS classes applied to the container.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectHistoricItemView.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly class = `${colabClassPrefix}-ProjectHistoricItemView d-flex align-items-center w-100 border rounded p-1 my-1`",
+                        "implementation": "",
+                        "startLine": 93,
+                        "endLine": 94,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectHistoricItemView.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly tag: 'div'",
+                        "implementation": "",
+                        "startLine": 89,
+                        "endLine": 90,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                "declaration": "export class ProjectHistoricItemView implements VirtualDOM<'div'>",
+                "implementation": "export class ProjectHistoricItemView implements VirtualDOM<'div'> {\n    public readonly tag: 'div'\n    /**\n     * CSS classes applied to the container.\n     */\n    public readonly class = `${colabClassPrefix}-ProjectHistoricItemView d-flex align-items-center w-100 border rounded p-1 my-1`\n    public readonly children: ChildrenLike\n\n    constructor({\n        project,\n        appState,\n    }: {\n        appState: AppState\n        project: Local.Projects.Project\n    }) {\n        const source$ = getProjectNav$({\n            projectName: project.name,\n            appState,\n        }).pipe(take(1))\n        this.children = [\n            child$({\n                source$,\n                vdomMap: (nav) => {\n                    return {\n                        tag: 'a',\n                        href: nav,\n                        innerText: project.name,\n                        onclick: (ev) => {\n                            ev.preventDefault()\n                            if (nav) {\n                                appState.router.fireNavigateTo({ path: nav })\n                            }\n                        },\n                    }\n                },\n            }),\n            { tag: 'div', class: 'flex-grow-1' },\n            new ComponentCrossLinksView({\n                appState,\n                component: project.name,\n            }),\n        ]\n    }\n}",
+                "startLine": 88,
+                "endLine": 132,
+                "references": {
+                    "ProjectHistoricItemView": "@nav[w3lab]/Home/Widgets.ProjectHistoricItemView",
+                    "AppState": "@nav[w3lab].AppState",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ProjectsDonutChart",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A widget that displays a donut chart representing components.\n\nThe chart's sections are determined by a selector function that takes a  <mkapi-ext-link href=\"@nav[w3nest-api]/app/projects.models_project.Project\">w3nest.Project</mkapi-ext-link>  as argument.\n\nThis component is designed to be embedded in a  `Markdown`  page,\nrefer to  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ProjectsDonutChart.fromHTMLElement\" semantic=\"method\">ProjectsDonutChart.fromHTMLElement</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ProjectsDonutChart",
+            "navPath": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 215,
+                        "endLine": 216,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly class = 'w-100'",
+                        "implementation": "",
+                        "startLine": 214,
+                        "endLine": 215,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.DonutChart.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChart.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 213,
+                        "endLine": 214,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Constructs a  `ProjectsDonutChart`  from an  `projectsDonutChart`  HTML element, typically sourced from  `Markdown` .\nThe HTML element must include specific attributes:\n\n- **margin**: Margin of the plot in pixels, defaults to  `75` .\n- **width**: Width of the plot in CSS units, defaults to  `100%` .\n\nThe sections of the chart are defined by  `section`  child elements. See  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.DonutChart.sections\" semantic=\"method\">DonutChart.sections</mkapi-api-link> \nfor more details.\n\n**Example**\n<code-snippet language=\"html\">\n<projectsDonutChart margin=\"70\" width=\"75%\">\n    <section label=\"Typescript\" style=\"fill:darkblue\">\n       return (p) => p.ci.tags.includes('typescript')\n    </section>\n    <section label=\"Python\" class=\"pie-chart-py\" style=\"fill:rebeccapurple\">\n       return (p) => p.ci.tags.includes('python')\n    </section>\n    <section  label=\"JavaScript\" style=\"fill:yellow\">\n       return (p) => p.ci.tags.includes('javascript')\n    </section>\n</projectsDonutChart>\n</code-snippet>\n\n<note level=\"hint\">\nAttributes of the  `p`  variable, as defined in the example, are available in  <mkapi-ext-link href=\"@nav[w3nest-api]/app/projects.models_project.Project\">w3nest.Project</mkapi-ext-link> .\n</note>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The HTML element containing the chart configuration.\n*  **router**: The application router.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "An instance of  `ProjectsDonutChart` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectsDonutChart.fromHTMLElement",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-donut-chart.view.ts",
+                        "declaration": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ProjectsDonutChart",
+                        "implementation": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ProjectsDonutChart {\n    return new ProjectsDonutChart({\n        appState: router.userStore as AppState,\n        margin: parseFloat(elem.getAttribute('margin')) || 75,\n        innerStyle: { width: elem.getAttribute('width') || '100%' },\n        sections: DonutChart.sections(elem),\n    })\n}",
+                        "startLine": 61,
+                        "endLine": 72,
+                        "references": {
+                            "fromHTMLElement": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                            "ProjectsDonutChart": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/projects-donut-chart.view.ts",
+                "declaration": "export class ProjectsDonutChart extends DonutChart<Local.Projects.Project>",
+                "implementation": "export class ProjectsDonutChart extends DonutChart<Local.Projects.Project> {\n    constructor(params: {\n        appState: AppState\n        innerStyle: CSSAttribute\n        margin: number\n        sections: DonutChartSection<Local.Projects.Project>[]\n    }) {\n        super({\n            ...params,\n            entities$: params.appState.projectsState.projects$,\n        })\n    }\n\n    /**\n     * Constructs a `ProjectsDonutChart` from an `projectsDonutChart` HTML element, typically sourced from `Markdown`.\n     * The HTML element must include specific attributes:\n     *\n     * - **margin**: Margin of the plot in pixels, defaults to `75`.\n     * - **width**: Width of the plot in CSS units, defaults to `100%`.\n     *\n     * The sections of the chart are defined by `section` child elements. See {@link DonutChart.sections}\n     * for more details.\n     *\n     * **Example**\n     * <code-snippet language=\"html\">\n     * <projectsDonutChart margin=\"70\" width=\"75%\">\n     *     <section label=\"Typescript\" style=\"fill:darkblue\">\n     *        return (p) => p.ci.tags.includes('typescript')\n     *     </section>\n     *     <section label=\"Python\" class=\"pie-chart-py\" style=\"fill:rebeccapurple\">\n     *        return (p) => p.ci.tags.includes('python')\n     *     </section>\n     *     <section  label=\"JavaScript\" style=\"fill:yellow\">\n     *        return (p) => p.ci.tags.includes('javascript')\n     *     </section>\n     * </projectsDonutChart>\n     * </code-snippet>\n     *\n     * <note level=\"hint\">\n     * Attributes of the `p` variable, as defined in the example, are available in {@link w3nest.Project}.\n     * </note>\n     *\n     * @param elem The HTML element containing the chart configuration.\n     * @param router The application router.\n     * @returns An instance of `ProjectsDonutChart`.\n     */\n    static fromHTMLElement(\n        elem: HTMLElement,\n        router: Router,\n    ): ProjectsDonutChart {\n        return new ProjectsDonutChart({\n            appState: router.userStore as AppState,\n            margin: parseFloat(elem.getAttribute('margin')) || 75,\n            innerStyle: { width: elem.getAttribute('width') || '100%' },\n            sections: DonutChart.sections(elem),\n        })\n    }\n}",
+                "startLine": 15,
+                "endLine": 73,
+                "references": {
+                    "ProjectsDonutChart": "@nav[w3lab]/Home/Widgets.ProjectsDonutChart",
+                    "AppState": "@nav[w3lab].AppState",
+                    "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection",
+                    "DonutChart.constructor": "@nav[w3lab]/Home/Widgets.DonutChart.constructor",
+                    "DonutChart.appState": "@nav[w3lab]/Home/Widgets.DonutChart.appState",
+                    "DonutChart.children": "@nav[w3lab]/Home/Widgets.DonutChart.children",
+                    "DonutChart.class": "@nav[w3lab]/Home/Widgets.DonutChart.class",
+                    "DonutChart.entities$": "@nav[w3lab]/Home/Widgets.DonutChart.entities$",
+                    "DonutChart.margin": "@nav[w3lab]/Home/Widgets.DonutChart.margin",
+                    "DonutChart.sections": "@nav[w3lab]/Home/Widgets.DonutChart.sections",
+                    "DonutChart.tag": "@nav[w3lab]/Home/Widgets.DonutChart.tag",
+                    "DonutChart.width": "@nav[w3lab]/Home/Widgets.DonutChart.width",
+                    "DonutChart": "@nav[w3lab]/Home/Widgets.DonutChart",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ProjectsHistoricView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a view that displays the most recently edited projects.\n\nEach item in the historic is displayed using  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ProjectHistoricItemView\" semantic=\"class\">ProjectHistoricItemView</mkapi-api-link> .\n\nThis component is designed to be embedded in a  `Markdown`  page,\nrefer to  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.ProjectsHistoricView.fromHTMLElement\" semantic=\"method\">ProjectsHistoricView.fromHTMLElement</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ProjectsHistoricView",
+            "navPath": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectsHistoricView.children",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.children",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 23,
+                        "endLine": 24,
+                        "references": {
+                            "children": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "CSS classes applied to the container.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectsHistoricView.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly class = `${colabClassPrefix}-ProjectsHistoricView d-flex flex-wrap`",
+                        "implementation": "",
+                        "startLine": 22,
+                        "endLine": 23,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectsHistoricView.tag",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.tag",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 18,
+                        "endLine": 19,
+                        "references": {
+                            "tag": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates a  `ProjectsHistoricView`  instance from an HTML element, typically sourced from  `Markdown` .\n\nThe HTML element can feature specific attributes:\n\n- **count**: (Optional) Maximum number of items to display. Defaults to 10.\n\n**Example**\n\n<code-snippet language='html'>\n<projectsHistoric count=\"5\"></projectsHistoric>\n</code-snippet>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The HTML element to parse and convert.\n*  **router**: The application's router.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A new instance of  `ProjectsHistoricView` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectsHistoricView.fromHTMLElement",
+                    "navPath": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                        "declaration": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ProjectsHistoricView",
+                        "implementation": "static fromHTMLElement(\n    elem: HTMLElement,\n    router: Router,\n): ProjectsHistoricView {\n    return new ProjectsHistoricView({\n        appState: router.userStore as AppState,\n        count: elem.getAttribute('count')\n            ? parseInt(elem.getAttribute('count'))\n            : 10,\n    })\n}",
+                        "startLine": 69,
+                        "endLine": 80,
+                        "references": {
+                            "fromHTMLElement": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                            "ProjectsHistoricView": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/app/home/widgets/projects-historic.view.ts",
+                "declaration": "export class ProjectsHistoricView implements VirtualDOM<'div'>",
+                "implementation": "export class ProjectsHistoricView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * CSS classes applied to the container.\n     */\n    public readonly class = `${colabClassPrefix}-ProjectsHistoricView d-flex flex-wrap`\n    public readonly children: ChildrenLike\n\n    public readonly appState: AppState\n\n    public readonly count: number\n    constructor(params: { count: number; appState: AppState }) {\n        Object.assign(this, params)\n\n        this.children = [\n            child$({\n                source$: this.appState.projectsState.historic$,\n                vdomMap: (projects) => {\n                    return {\n                        tag: 'div',\n                        class: 'w-100',\n                        children: projects.slice(0, this.count).map(\n                            (project) =>\n                                new ProjectHistoricItemView({\n                                    project,\n                                    appState: this.appState,\n                                }),\n                        ),\n                    }\n                },\n            }),\n        ]\n    }\n\n    /**\n     * Creates a `ProjectsHistoricView` instance from an HTML element, typically sourced from `Markdown`.\n     *\n     * The HTML element can feature specific attributes:\n     *\n     * - **count**: (Optional) Maximum number of items to display. Defaults to 10.\n     *\n     * **Example**\n     *\n     * <code-snippet language='html'>\n     * <projectsHistoric count=\"5\"></projectsHistoric>\n     * </code-snippet>\n     *\n     *\n     * @param elem The HTML element to parse and convert.\n     * @param router The application's router.\n     * @returns A new instance of `ProjectsHistoricView`.\n     */\n    static fromHTMLElement(\n        elem: HTMLElement,\n        router: Router,\n    ): ProjectsHistoricView {\n        return new ProjectsHistoricView({\n            appState: router.userStore as AppState,\n            count: elem.getAttribute('count')\n                ? parseInt(elem.getAttribute('count'))\n                : 10,\n        })\n    }\n}",
+                "startLine": 17,
+                "endLine": 81,
+                "references": {
+                    "ProjectsHistoricView": "@nav[w3lab]/Home/Widgets.ProjectsHistoricView",
+                    "AppState": "@nav[w3lab].AppState",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Router": "/apps/@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Router",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DonutChartSection",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Data model representing a section within a donut chart.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Generics",
+                        "content": "\n*  **T**: The type of the entity used in the  `selector`  function to determine section membership.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DonutChartSection",
+            "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection",
+            "attributes": [
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Optional CSS classes applied to the associated SVG element for custom styling.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChartSection.class",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection.class",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "class?: string",
+                        "implementation": "",
+                        "startLine": 38,
+                        "endLine": 39,
+                        "references": {
+                            "class": "@nav[w3lab]/Home/Widgets.DonutChartSection.class"
+                        }
+                    }
+                },
+                {
+                    "name": "fill",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Fill color.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChartSection.fill",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection.fill",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "fill?: string",
+                        "implementation": "",
+                        "startLine": 47,
+                        "endLine": 48,
+                        "references": {
+                            "fill": "@nav[w3lab]/Home/Widgets.DonutChartSection.fill"
+                        }
+                    }
+                },
+                {
+                    "name": "label",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The label used to represent the section in the chart.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChartSection.label",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection.label",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "label: string",
+                        "implementation": "",
+                        "startLine": 34,
+                        "endLine": 35,
+                        "references": {
+                            "label": "@nav[w3lab]/Home/Widgets.DonutChartSection.label"
+                        }
+                    }
+                },
+                {
+                    "name": "selector",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "A selector function that determines whether a given entity\nbelongs to this section.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChartSection.selector",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection.selector",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "selector: (entity: T) => boolean",
+                        "implementation": "",
+                        "startLine": 30,
+                        "endLine": 31,
+                        "references": {
+                            "selector": "@nav[w3lab]/Home/Widgets.DonutChartSection.selector"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An optional inline style applied to the associated SVG element for custom styling.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DonutChartSection.style",
+                    "navPath": "@nav[w3lab]/Home/Widgets.DonutChartSection.style",
+                    "code": {
+                        "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                        "declaration": "style?: string",
+                        "implementation": "",
+                        "startLine": 42,
+                        "endLine": 43,
+                        "references": {
+                            "style": "@nav[w3lab]/Home/Widgets.DonutChartSection.style"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                "declaration": "export interface DonutChartSection<T> {",
+                "implementation": "export interface DonutChartSection<T> {\n    /**\n     * A selector function that determines whether a given entity\n     * belongs to this section.\n     *\n     * @param entity The entity to evaluate.\n     * @returns `true` if the entity should be included in the section,\n     *     `false` otherwise.\n     */\n    selector: (entity: T) => boolean\n    /**\n     * The label used to represent the section in the chart.\n     */\n    label: string\n    /**\n     * Optional CSS classes applied to the associated SVG element for custom styling.\n     */\n    class?: string\n    /**\n     * An optional inline style applied to the associated SVG element for custom styling.\n     */\n    style?: string\n\n    /**\n     * Fill color.\n     */\n    fill?: string\n}",
+                "startLine": 21,
+                "endLine": 49,
+                "references": {
+                    "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [
+        {
+            "name": "createDonutChartD3",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Creates a donut chart using D3.js within a Virtual DOM structure.\n\nThis function generates a donut chart, visualizing sections based on the provided entities and selectors.\nThe chart is rendered as an SVG element.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: An object containing parameters to configure the donut chart.\n*  **d3**: The D3.js library instance used to generate the chart.\n*  **entities**: An array of entities to be analyzed and displayed in the chart sections.\n*  **margin**: The margin size around the chart (in pixels).\n*  **sections**: An array of  <mkapi-api-link nav=\"@nav[w3lab]/Home/Widgets.DonutChartSection\" semantic=\"interface\">DonutChartSection</mkapi-api-link>  objects defining the chart's sections,\n       including labels and selectors.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Generics",
+                        "content": "\n*  **T**: The type of the entities being analyzed and represented in the chart.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "A  `Virtual DOM`  that represents the  `div`  container.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "createDonutChartD3",
+            "navPath": "@nav[w3lab]/Home/Widgets.createDonutChartD3",
+            "code": {
+                "filePath": "src/app/home/widgets/donut-chart.utils.ts",
+                "declaration": "export function createDonutChartD3<T>({\n    d3,\n    entities,\n    margin,\n    style,\n    sections,\n}: {\n    style: CSSAttribute\n    d3: D3\n    entities: T[]\n    margin: number\n    sections: DonutChartSection<T>[]\n}): AnyVirtualDOM",
+                "implementation": "export function createDonutChartD3<T>({\n    d3,\n    entities,\n    margin,\n    style,\n    sections,\n}: {\n    style: CSSAttribute\n    d3: D3\n    entities: T[]\n    margin: number\n    sections: DonutChartSection<T>[]\n}): AnyVirtualDOM {\n    return {\n        tag: 'div',\n        class: 'mx-auto',\n        style: {\n            ...style,\n            aspectRatio: '1/1',\n        },\n        connectedCallback: (elem) => {\n            const width = elem.offsetWidth\n            const height = elem.offsetHeight\n            const radius = Math.min(width, height) / 2 - margin\n            const svg = d3\n                .select(elem)\n                .append('svg')\n                .attr('width', '100%')\n                .attr('height', '100%')\n                .append('g')\n                .attr('transform', `translate(${width / 2}, ${height / 2})`)\n            const data = sections\n                .map((section, i) => {\n                    const count = entities.filter((p) => {\n                        return section.selector(p)\n                    }).length\n                    return {\n                        ...section,\n                        key: `${i}`,\n                        label: section.label,\n                        count,\n                    }\n                })\n                .reduce((acc, e) => ({ ...acc, [e.key]: e }), {})\n\n            const pie = d3.pie().value(function (d) {\n                return d[1].count\n            })\n            // @ts-ignore\n            const data_ready = pie(Object.entries(data))\n\n            // @ts-ignore\n            svg.selectAll('path')\n                .data(data_ready)\n                .join('path')\n                .attr('class', (d) => d.data[1].class)\n                .attr('style', (d) => d.data[1].style)\n                .attr(\n                    'd',\n                    // @ts-ignore\n                    d3\n                        .arc()\n                        .innerRadius(radius / 3)\n                        .outerRadius(radius),\n                )\n                .attr('fill', (d) => d.data[1].fill ?? 'grey')\n                .attr('stroke', 'black')\n                .style('stroke-width', '2px')\n                .style('opacity', 0.7)\n\n            const text = svg.selectAll('text').data(data_ready)\n\n            const legendRectSize = 18\n            const legendSpacing = 8\n            const legendHeight = legendRectSize + legendSpacing\n            const legendPadding = 10\n            // Container for the whole legend block\n            const legendGroup = d3\n                .select(elem.querySelector('svg'))\n                .append('g')\n                .attr('class', 'legend-group')\n                .attr(\n                    'transform',\n                    `translate(${margin}, ${height - sections.length * legendHeight - margin})`,\n                )\n\n            // Inner group that holds only items (excluding background)\n            const legendItemsGroup = legendGroup\n                .append('g')\n                .attr('class', 'legend-items')\n\n            // Add legend items to inner group\n            const legendItems = legendItemsGroup\n                .selectAll('.legend-item')\n                .data(data_ready)\n                .enter()\n                .append('g')\n                .attr('class', 'legend-item')\n                .attr(\n                    'transform',\n                    (_, i) =>\n                        `translate(${legendPadding}, ${i * legendHeight + legendPadding})`,\n                )\n\n            legendItems\n                .append('rect')\n                .attr('width', legendRectSize)\n                .attr('height', legendRectSize)\n                .attr('fill', (d) => d.data[1].fill ?? 'grey')\n                .attr('class', (d) => d.data[1].class)\n                .attr('stroke', 'black')\n\n            legendItems\n                .append('text')\n                .attr('x', legendRectSize + 6)\n                .attr('y', legendRectSize / 2)\n                .attr('dy', '0.35em')\n                .text((d) => `${d.data[1].label} (${d.data[1].count})`)\n\n            // Now add background *after* so we can measure the bbox of the content only\n            setTimeout(() => {\n                const bbox = legendItemsGroup.node()?.getBBox()\n                if (bbox) {\n                    // Insert rect *before* the items group so it goes underneath\n                    legendGroup\n                        .insert('rect', '.legend-items')\n                        .attr('x', bbox.x - legendPadding)\n                        .attr('y', bbox.y - legendPadding)\n                        .attr('width', bbox.width + 2 * legendPadding)\n                        .attr('height', bbox.height + 2 * legendPadding)\n                        .attr('fill', '#f0f0f0')\n                        .attr('opacity', 0.6)\n                        .attr('stroke', '#ccc')\n                        .attr('rx', 6)\n                        .attr('ry', 6)\n                }\n            }, 0)\n        },\n    }\n}",
+                "startLine": 67,
+                "endLine": 207,
+                "references": {
+                    "createDonutChartD3": "@nav[w3lab]/Home/Widgets.createDonutChartD3",
+                    "DonutChartSection": "@nav[w3lab]/Home/Widgets.DonutChartSection",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "files": [
+        {
+            "name": "launch-pad.view.ts",
+            "path": "src/app/home/widgets/launch-pad.view.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "components-donut-chart.view.ts",
+            "path": "src/app/home/widgets/components-donut-chart.view.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "donut-chart.utils.ts",
+            "path": "src/app/home/widgets/donut-chart.utils.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "projects-historic.view.ts",
+            "path": "src/app/home/widgets/projects-historic.view.ts",
+            "documentation": {
+                "sections": []
+            }
+        },
+        {
+            "name": "projects-donut-chart.view.ts",
+            "path": "src/app/home/widgets/projects-donut-chart.view.ts",
+            "documentation": {
+                "sections": []
+            }
+        }
+    ],
+    "children": [],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

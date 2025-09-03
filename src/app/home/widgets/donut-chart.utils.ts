@@ -18,7 +18,7 @@ type D3 = typeof d3
  *
  * @typeParam T The type of the entity used in the `selector` function to determine section membership.
  */
-export type DonutChartSection<T> = {
+export interface DonutChartSection<T> {
     /**
      * A selector function that determines whether a given entity
      * belongs to this section.

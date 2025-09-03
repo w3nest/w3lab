@@ -1,8 +1,12 @@
 /**
- * This module contains the implementation of the `Home` page.
+ * Implementation of the **W3Lab** `Home` page (located at the root of the navigation).
  *
- * The `Home` page is the only page within **W3Lab** that allows custom content editing.
- * For the available widgets, beyond those provided by **mkdocs-ts**, refer to the {@link Widgets} module.
+ * The `Home` page is the **only page** in W3Lab that supports custom content editing.
+ * To explore the available widgets beyond those provided by {@link mkdocs-ts.MdWidgets},
+ * see the {@link Widgets} module.
+ *
+ * For a hands-on guide to creating your own custom Home page, visit the
+ * <cross-link target='doc/how-to/custom-home'>Custom Home</cross-link> guide.
  *
  * @module
  */
