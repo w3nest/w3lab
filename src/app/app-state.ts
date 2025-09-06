@@ -153,6 +153,20 @@ export class AppState {
             map(({ data }) => data),
             shareReplay(1),
         )
+        this.environment$
+            .pipe(
+                map(({ pathsBook }) => pathsBook),
+                distinctUntilChanged(
+                    (a, b) => JSON.stringify(a) === JSON.stringify(b),
+                ),
+            )
+            .subscribe((paths) => {
+                this.mountedHdPaths$.next([
+                    { path: paths.config, type: 'file' },
+                    { path: paths.databases, type: 'folder' },
+                    { path: paths.system, type: 'folder' },
+                ])
+            })
         this.connectedLocal$ = Local.Client.ws.connected$
 
         this.homeState = new Home.State({ appState: this })
@@ -247,6 +261,11 @@ export class AppState {
         this.router.fireNavigateTo({
             path: redirectNav,
         })
+    }
+
+    unmountHdPath(path: string) {
+        const paths = this.mountedHdPaths$.value.filter((d) => d.path !== path)
+        this.mountedHdPaths$.next(paths)
     }
 
     private getNav(): Navigation<

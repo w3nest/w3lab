@@ -97,6 +97,11 @@ export class HeaderView implements VirtualDOM<'div'> {
             .flat()
             .slice(0, -1)
         this.children = [
+            {
+                tag: 'a',
+                children: [{ tag: 'i', class: 'fas fa-laptop mx-1' }],
+                href: '@nav/mounted',
+            },
             ...pathItems,
             { tag: 'div', class: 'flex-grow-1' },
             type === 'folder' && openView,

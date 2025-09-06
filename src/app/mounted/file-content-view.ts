@@ -1,6 +1,5 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
-import { ObjectJs } from '@w3nest/rx-tree-views'
 import { HeaderView } from './explorer.view'
 import { MdWidgets, Router } from 'mkdocs-ts'
 import { headerViewWrapper } from '../explorer/explorer.views'
@@ -56,23 +55,21 @@ export class FileContentView implements VirtualDOM<'div'> {
             child$({
                 source$: file$,
                 vdomMap: (resp: string | { [k: string]: unknown }) => {
-                    if (typeof resp == 'string') {
-                        const language: [string, CodeLanguage] = Object.entries(
-                            languages,
-                        ).find(([ext]) => {
-                            return full.endsWith(ext)
-                        })
+                    if (typeof resp == 'object') {
                         return new MdWidgets.CodeSnippetView({
-                            language: language ? language[1] : 'unknown',
-                            content: resp,
+                            language: 'json',
+                            content: JSON.stringify(resp, null, 4),
                         })
                     }
-                    const state = new ObjectJs.State({
-                        title: 'data',
-                        data: resp,
-                        expandedNodes: ['data_0'],
+                    const language: [string, CodeLanguage] = Object.entries(
+                        languages,
+                    ).find(([ext]) => {
+                        return full.endsWith(ext)
                     })
-                    return new ObjectJs.View({ state })
+                    return new MdWidgets.CodeSnippetView({
+                        language: language ? language[1] : 'unknown',
+                        content: resp,
+                    })
                 },
             }),
         ]

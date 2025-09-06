@@ -1,12 +1,12 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { AppState, MountedPath } from '../app-state'
-import { DefaultLayout, Navigation, parseMd, Router } from 'mkdocs-ts'
+import { DefaultLayout, MdWidgets, Navigation, Router } from 'mkdocs-ts'
 import { FileContentView } from './file-content-view'
 import { map, take } from 'rxjs/operators'
 import { raiseHTTPErrors, Local } from '@w3nest/http-clients'
 import { ExplorerView } from './explorer.view'
 import { defaultLayout } from '../common/utils-nav'
-import { PageTitleView } from '../common'
+import { HdPathBookView, PageTitleView } from '../common'
 
 export function encodeHdPath(str: string) {
     return window.btoa(encodeURIComponent(str))
@@ -21,7 +21,7 @@ export const navigation = (
 ): Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader> => ({
     name: 'Mounted',
     header: { icon: { tag: 'i', class: 'fas fa-laptop' } },
-    layout: defaultLayout(({ router }) => new PageView({ router, appState })),
+    layout: defaultLayout(() => new PageView({ appState })),
     routes: appState.mountedHdPaths$.pipe(
         map(
             (folders: MountedPath[]) =>
@@ -36,22 +36,69 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
-    constructor({ router }: { appState: AppState; router: Router }) {
+    constructor({ appState }: { appState: AppState }) {
         this.children = [
             new PageTitleView({
                 title: 'Mounted',
                 icon: 'fas fa-laptop',
                 helpNav: '@nav/doc.5-',
             }),
-            parseMd({
-                src: `
-`,
-                router,
-            }),
+            {
+                tag: 'div',
+                children: [
+                    child$({
+                        source$: appState.mountedHdPaths$,
+                        vdomMap: (paths) => {
+                            return new MdWidgets.NoteView({
+                                level: 'info',
+                                content: new MountedItemsView({
+                                    appState,
+                                    paths,
+                                }),
+                                icon: 'fas fa-link',
+                                label: 'Mounted from local disk',
+                            })
+                        },
+                    }),
+                ],
+            },
         ]
     }
 }
 
+class MountedItemsView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+
+    constructor({
+        appState,
+        paths,
+    }: {
+        appState: AppState
+        paths: MountedPath[]
+    }) {
+        this.children = paths.map(({ type, path }) => {
+            return {
+                tag: 'div',
+                class: 'd-flex align-items-center px-2',
+                children: [
+                    new HdPathBookView({
+                        path,
+                        appState,
+                        type,
+                    }),
+                    {
+                        tag: 'button',
+                        class: 'btn btn-danger btn-sm fas fa-times',
+                        onclick: () => {
+                            appState.unmountHdPath(path)
+                        },
+                    },
+                ],
+            }
+        })
+    }
+}
 export function decodeHRef(path: string) {
     return path
         .split('/')

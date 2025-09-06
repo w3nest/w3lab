@@ -121,7 +121,7 @@ export class HeaderView implements VirtualDOM<'div'> {
 
 export class OpenFolderInHostView implements VirtualDOM<'button'> {
     public readonly tag = 'button'
-    public readonly class = 'btn btn-sm btn-light fas fa-folder-open'
+    public readonly class = 'btn btn-sm btn-secondary fas fa-folder-open'
     public readonly onclick: () => undefined
     constructor(params: { folder: string }) {
         this.onclick = () => {

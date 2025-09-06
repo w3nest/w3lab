@@ -41,7 +41,6 @@
                     "bootstrap",
                     "@w3nest/webpm-client",
                     "@w3nest/http-clients",
-                    "@w3nest/rx-tree-views",
                     "@floating-ui/dom",
                     "d3",
                     "@w3nest/ui-tk/Badges",
@@ -58,9 +57,8 @@
         "@floating-ui/dom": "^1.6.3",
         "@mkdocs-ts/code-api": "^0.2.3",
         "@mkdocs-ts/notebook": "^0.1.5",
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757140515.tgz",
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757148699.tgz",
         "@w3nest/http-clients": "^0.1.10",
-        "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/ui-tk": "^0.1.6",
         "@w3nest/webpm-client": "^0.1.11",
         "bootstrap": "^5.3.0",
@@ -109,7 +107,6 @@
             "@floating-ui/dom": "^1.6.3",
             "@w3nest/doc": "^0.1.13",
             "@w3nest/http-clients": "^0.1.10",
-            "@w3nest/rx-tree-views": "^0.2.0",
             "@w3nest/ui-tk": "^0.1.6",
             "@w3nest/webpm-client": "^0.1.11",
             "bootstrap": "^5.3.0",
@@ -126,60 +123,57 @@
         "main": "./app/main.ts",
         "additionalEntries": {},
         "externals": {
-            "@w3nest/ui-tk/Mkdocs": [
-                "@w3nest/ui-tk_APIv01/Mkdocs"
-            ],
-            "@w3nest/doc/api": [
-                "@w3nest/doc_APIv01/api"
-            ],
-            "@w3nest/rx-tree-views": [
-                "@w3nest/rx-tree-views_APIv02"
-            ],
-            "mkdocs-ts": [
-                "mkdocs-ts_APIv05"
-            ],
-            "@w3nest/ui-tk/Trees": [
-                "@w3nest/ui-tk_APIv01/Trees"
-            ],
-            "@w3nest/doc": [
-                "@w3nest/doc_APIv01"
-            ],
-            "rxjs/operators": [
-                "rxjs_APIv7/operators"
-            ],
-            "@w3nest/ui-tk/Badges": [
-                "@w3nest/ui-tk_APIv01/Badges"
-            ],
-            "rx-vdom": [
-                "rx-vdom_APIv01"
-            ],
-            "d3": [
-                "d3_APIv7"
-            ],
-            "@w3nest/webpm-client": [
-                "@w3nest/webpm-client_APIv01"
+            "@w3nest/doc/how-to": [
+                "@w3nest/doc_APIv01/how-to"
             ],
             "@w3nest/ui-tk": [
                 "@w3nest/ui-tk_APIv01"
             ],
+            "rxjs": [
+                "rxjs_APIv7"
+            ],
             "bootstrap": [
                 "bootstrap_APIv5"
             ],
-            "rxjs": [
-                "rxjs_APIv7"
+            "@w3nest/doc": [
+                "@w3nest/doc_APIv01"
             ],
             "@floating-ui/dom": [
                 "@floating-ui/dom_APIv1"
             ],
-            "@w3nest/doc/how-to": [
-                "@w3nest/doc_APIv01/how-to"
+            "@w3nest/doc/api": [
+                "@w3nest/doc_APIv01/api"
             ],
             "@w3nest/http-clients": [
                 "@w3nest/http-clients_APIv01"
+            ],
+            "rx-vdom": [
+                "rx-vdom_APIv01"
+            ],
+            "@w3nest/ui-tk/Trees": [
+                "@w3nest/ui-tk_APIv01/Trees"
+            ],
+            "@w3nest/ui-tk/Mkdocs": [
+                "@w3nest/ui-tk_APIv01/Mkdocs"
+            ],
+            "mkdocs-ts": [
+                "mkdocs-ts_APIv05"
+            ],
+            "@w3nest/ui-tk/Badges": [
+                "@w3nest/ui-tk_APIv01/Badges"
+            ],
+            "@w3nest/webpm-client": [
+                "@w3nest/webpm-client_APIv01"
+            ],
+            "rxjs/operators": [
+                "rxjs_APIv7/operators"
+            ],
+            "d3": [
+                "d3_APIv7"
             ]
         }
     },
     "resolutions": {
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757140515.tgz"
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757148699.tgz"
     }
 }

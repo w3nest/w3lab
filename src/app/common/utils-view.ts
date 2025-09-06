@@ -265,6 +265,9 @@ export class HdPathBookView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     public readonly class = 'd-flex align-items-center'
+    public readonly style = {
+        minWidth: '0px',
+    }
 
     constructor({
         path,
@@ -283,12 +286,14 @@ export class HdPathBookView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'd-flex align-items-center w-50 mkdocs-bg-1 rounded me-3 px-2',
+                class: 'd-flex align-items-center w-50 mkdocs-bg-5 mkdocs-text-5 rounded me-3 px-2 py-1',
                 children: [
                     {
                         tag: 'i',
                         class:
-                            type === 'file' ? 'fas fa-file' : 'fas fa-folder',
+                            type === 'file'
+                                ? 'fas fa-file mkdocs-text-info'
+                                : 'fas fa-folder mkdocs-text-hint',
                     },
                     sep,
                     {
