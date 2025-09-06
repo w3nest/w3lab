@@ -180,6 +180,43 @@ export class CloudEnvironmentView implements VirtualDOM<'div'> {
     }
 }
 
+export class GroupsView implements VirtualDOM<'ul'> {
+    public readonly tag = 'ul'
+    public readonly children: ChildrenLike
+
+    constructor({ session }: { session: Accounts.SessionDetails }) {
+        const hSep = { tag: 'i' as const, class: 'mx-1' }
+        this.children = session.userInfo.groups.map((g) => ({
+            tag: 'li' as const,
+            class: 'd-flex align-items-center',
+            children: [
+                {
+                    tag: 'i',
+                    class: g.id.startsWith('private')
+                        ? 'fas fa-user'
+                        : 'fas fa-users',
+                },
+                hSep,
+                {
+                    tag: 'div',
+                    innerText: g.path,
+                },
+                hSep,
+                hSep,
+                {
+                    tag: 'a',
+                    href: `@nav/explorer/${g.id}`,
+                    children: [
+                        {
+                            tag: 'button',
+                            class: 'btn btn-sm btn-light fas fa-folder-open',
+                        },
+                    ],
+                },
+            ],
+        }))
+    }
+}
 /**
  * @category View
  */
@@ -202,39 +239,6 @@ export class UserInfo implements VirtualDOM<'div'> {
     public readonly customAttributes: CustomAttribute
 
     constructor(session: Accounts.SessionDetails) {
-        const hSep = { tag: 'i' as const, class: 'mx-1' }
-        const groupView: AnyVirtualDOM = {
-            tag: 'ul',
-            children: session.userInfo.groups.map((g) => ({
-                tag: 'li' as const,
-                class: 'd-flex align-items-center',
-                children: [
-                    {
-                        tag: 'i',
-                        class: g.id.startsWith('private')
-                            ? 'fas fa-user'
-                            : 'fas fa-users',
-                    },
-                    hSep,
-                    {
-                        tag: 'div',
-                        innerText: g.path,
-                    },
-                    hSep,
-                    hSep,
-                    {
-                        tag: 'a',
-                        href: `@nav/explorer/${g.id}`,
-                        children: [
-                            {
-                                tag: 'button',
-                                class: 'btn btn-sm btn-light fas fa-folder-open',
-                            },
-                        ],
-                    },
-                ],
-            })),
-        }
         this.children = [
             new MdWidgets.NoteView({
                 level: 'info',
@@ -247,7 +251,7 @@ export class UserInfo implements VirtualDOM<'div'> {
                     `**Groups**:\n<groups></groups>`,
                 parsingArgs: {
                     views: {
-                        groups: () => groupView,
+                        groups: () => new GroupsView({ session }),
                     },
                 },
             }),

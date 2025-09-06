@@ -1,18 +1,19 @@
 import {
     DefaultLayout,
     LazyRoutesReturn,
+    MdWidgets,
     Navigation,
-    parseMd,
     Router,
 } from 'mkdocs-ts'
 import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
 import { forkJoin, Observable, of } from 'rxjs'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { ExplorerState } from './explorer.state'
 import { defaultLayout } from '../common/utils-nav'
 import { PageTitleView } from '../common'
+import { GroupsView } from '../environment/user-connection.view'
 
 export const navigation = ({
     session$,
@@ -25,7 +26,7 @@ export const navigation = ({
         header: { icon: { tag: 'i', class: 'fas fa-folder' } },
         layout: defaultLayout(({ router }) => {
             explorerState.setRouter(router)
-            return new PageView({ router })
+            return new PageView({ session$ })
         }),
         routes: (session$ || of(undefined)).pipe(
             map(() => ({ router, path }) => {
@@ -44,17 +45,33 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
-    constructor({ router }: { router: Router }) {
+    constructor({
+        session$,
+    }: {
+        session$: Observable<Accounts.SessionDetails>
+    }) {
         this.children = [
             new PageTitleView({
                 title: 'Explorer',
                 icon: 'fas fa-folder',
                 helpNav: '@nav/doc.4-',
             }),
-            parseMd({
-                src: ``,
-                router,
-            }),
+            {
+                tag: 'div',
+                children: [
+                    child$({
+                        source$: session$,
+                        vdomMap: (session) => {
+                            return new MdWidgets.NoteView({
+                                level: 'info',
+                                content: new GroupsView({ session }),
+                                icon: 'fas fa-hdd',
+                                label: 'Drives available',
+                            })
+                        },
+                    }),
+                ],
+            },
         ]
     }
 }
