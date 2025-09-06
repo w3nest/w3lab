@@ -2,7 +2,7 @@ import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { Router } from 'mkdocs-ts'
 import { Local } from '@w3nest/http-clients'
 import { classFolderFileBase } from '../explorer/item.view'
-import { decodeHdPath, encodeHdPath, encodeHRef } from './index'
+import { decodeHdPath, encodeHdPath } from './index'
 import {
     classPathAnchors,
     folderAnchorView,
@@ -29,25 +29,32 @@ export class HeaderView implements VirtualDOM<'div'> {
         type: 'file' | 'folder'
         router: Router
     }) {
-        let file: { name: string; nav: string; path: string } = undefined
+        let file: { name: string; nav: string; path: string; target: string } =
+            undefined
         let folderPath = path
         if (type === 'file' && path !== '') {
             folderPath = path.split('/').slice(0, -1).join('/')
             const name = path.split('/').slice(-1)[0]
             file = {
                 name,
-                nav: `@nav/mounted/${origin}/${encodeHRef(folderPath)}/file_${encodeHdPath(name)}`,
+                nav: `/mounted/${origin}`,
                 path,
+                target: `file_${encodeHdPath(`${folderPath}/${name}`)}`,
             }
         }
         const getRec = (
             path: string,
-            parents: { name: string; nav: string; path: string }[] = [],
+            parents: {
+                name: string
+                nav: string
+                path: string
+                target: string
+            }[] = [],
         ) => {
-            const nav = `@nav/mounted/${origin}&target=${encodeHdPath(path)}`
+            const nav = `/mounted/${origin}`
             const name = path.split('/').slice(-1)[0]
             if (name !== '') {
-                parents.push({ name, nav, path })
+                parents.push({ name, nav, path, target: encodeHdPath(path) })
             }
             if (path.split('/').length > 1) {
                 return getRec(path.split('/').slice(0, -1).join('/'), parents)
@@ -59,13 +66,15 @@ export class HeaderView implements VirtualDOM<'div'> {
             type === 'file' && path === ''
                 ? {
                       name: decodeHdPath(origin).split('/').slice(-1)[0],
-                      nav: `@nav/mounted/file_${origin}`,
+                      nav: `/mounted/file_${origin}`,
                       path: path,
+                      target: undefined as string,
                   }
                 : {
                       name: decodeHdPath(origin).split('/').slice(-1)[0],
-                      nav: `@nav/mounted/${origin}`,
+                      nav: `/mounted/${origin}`,
                       path: decodeHdPath(origin),
+                      target: undefined as string,
                   }
         const parents = getRec(folderPath)
 
@@ -80,7 +89,7 @@ export class HeaderView implements VirtualDOM<'div'> {
                         name: entity.name,
                         nav: entity.nav,
                         router,
-                        target: '',
+                        target: entity.target,
                     }),
                     separator,
                 ] as AnyVirtualDOM[]
