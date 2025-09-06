@@ -515,7 +515,13 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
         hrefKind?: 'internal' | 'external'
         urlParams?: Record<string, string>
     }): AnyVirtualDOM {
-        const href = hrefKind && hrefKind === 'external' ? nav : `@nav/${nav}`
+        const hrefBase =
+            hrefKind && hrefKind === 'external' ? nav : `@nav/${nav}`
+        const href = urlParams
+            ? Object.entries(urlParams).reduce((acc, [k, v]) => {
+                  return acc + `&${k}=${v}`
+              }, hrefBase)
+            : hrefBase
         if (enabled) {
             return {
                 tag: 'a',
@@ -538,6 +544,7 @@ export class ComponentCrossLinksView implements VirtualDOM<'div'> {
                 },
             }
         }
+        //item_UUhjemJtVnpkQzluWVd4c1pYSjU%3D
         return {
             tag: 'i',
             class: `fas ${icon} text-muted`,
