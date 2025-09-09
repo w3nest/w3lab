@@ -172,7 +172,7 @@ export function createDonutChartD3<T>({
                 .append('rect')
                 .attr('width', legendRectSize)
                 .attr('height', legendRectSize)
-                .attr('fill', (d) => d.data[1].fill ?? 'grey')
+                .attr('style', (d) => d.data[1].style)
                 .attr('class', (d) => d.data[1].class)
                 .attr('stroke', 'black')
 
