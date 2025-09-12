@@ -5,4 +5,5 @@ module.exports = {
     out: 'tooling/typedoc-html',
     theme: 'default',
     categorizeByGroup: false,
+    "tsconfig": "./tsconfig.json"
 }

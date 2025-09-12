@@ -30,8 +30,6 @@ yarn build:prod
 
 ---
 
-<!-- no specific test configuration documented -->
-
 To run tests:
 
 ```shell
