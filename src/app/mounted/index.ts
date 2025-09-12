@@ -82,11 +82,20 @@ class MountedItemsView implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'd-flex align-items-center px-2',
                 children: [
-                    new HdPathBookView({
-                        path,
-                        appState,
-                        type,
-                    }),
+                    {
+                        tag: 'div',
+                        class: 'flex-grow-1',
+                        style: {
+                            minWidth: '0px',
+                        },
+                        children: [
+                            new HdPathBookView({
+                                path,
+                                appState,
+                                type,
+                            }),
+                        ],
+                    },
                     {
                         tag: 'button',
                         class: 'btn btn-danger btn-sm fas fa-times',
