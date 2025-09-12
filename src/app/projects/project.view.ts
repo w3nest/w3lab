@@ -228,7 +228,7 @@ export class TryMeView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
     constructor({ project }: { project: Local.Projects.Project }) {
         const kind = project.webpmSpec.specification.kind
-        const src = `
+        let src = `
 Run the following snippet **after the library has been published** in your local WebPM database:
 
 <js-cell>
@@ -237,6 +237,26 @@ const { Mdl } = await webpm.install({${kind}:["${project.name}#${project.version
 display(Mdl)
 </js-cell>
         `
+        if (kind === 'backend') {
+            src = `
+Run the following snippet **after the library has been published** in your local WebPM database:
+
+<js-cell>
+const { installWithUI } = await webpm.installViewsModule()
+const { backend } = await installWithUI({
+    backends:["${project.name}#${project.version} as backend"],
+    display: (view) => display(view)
+})
+
+display(backend)
+// Adapt to available backends endpoints
+// resp = await backend.fetchJson('/bar')
+// display(resp)
+
+// If '/docs' end point is available (it should be).
+display({tag:'a', target:'_blank', href: \`\${backend.urlBase}/docs\`, innerText:'API doc'})
+</js-cell>`
+        }
         this.children = [
             new MdWidgets.NoteView({
                 level: 'hint',
