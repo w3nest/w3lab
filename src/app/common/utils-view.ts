@@ -264,7 +264,7 @@ export class AttributeView implements VirtualDOM<'div'> {
 export class HdPathBookView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = 'd-flex align-items-center'
+    public readonly class = 'd-flex align-items-center w-100'
     public readonly style = {
         minWidth: '0px',
     }
@@ -286,7 +286,8 @@ export class HdPathBookView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'd-flex align-items-center w-50 mkdocs-bg-5 mkdocs-text-5 rounded me-3 px-2 py-1',
+                class: 'd-flex align-items-center flex-grow-1 mkdocs-bg-5 mkdocs-text-5 rounded me-3 px-2 py-1',
+                style: { minWidth: '0px' },
                 children: [
                     {
                         tag: 'i',
