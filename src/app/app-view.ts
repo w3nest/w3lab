@@ -144,7 +144,7 @@ export class AppView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         const layout = new DefaultLayout.LayoutWithCompanion({
             router: this.appState.router,
-            bookmarks$: this.appState.bookmarks$,
+            // bookmarks$: this.appState.bookmarks$,
             topBanner: {
                 logo: { icon: '../assets/favicon.svg', title: 'W3Lab' },
                 expandedContent: new TopBannerContent({
