@@ -24,7 +24,7 @@ export class FailuresView implements VirtualDOM<'div'> {
                         return EmptyDiv
                     }
                     return new MdWidgets.NoteView({
-                        level: 'warning',
+                        level: 'failure',
                         label: 'Some projects have failed to load',
                         expandable: true,
                         parsingArgs: {},
@@ -37,10 +37,16 @@ export class FailuresView implements VirtualDOM<'div'> {
                                         : true,
                                 )
                                 .map((failure) => {
-                                    return new FailureView({
-                                        failure,
-                                        appState,
-                                    })
+                                    return {
+                                        tag: 'div',
+                                        class: 'my-1',
+                                        children: [
+                                            new FailureView({
+                                                failure,
+                                                appState,
+                                            }),
+                                        ],
+                                    }
                                 }),
                         },
                     })
