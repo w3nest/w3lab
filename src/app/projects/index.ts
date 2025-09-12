@@ -1,4 +1,4 @@
-import { NewProjectsCard, ProjectView } from './project.view'
+import { ProjectView } from './project.view'
 import { AppState } from '../app-state'
 import { Navigation, parseMd, Router, DefaultLayout } from 'mkdocs-ts'
 import { AnyVirtualDOM, attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
@@ -81,8 +81,6 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({ router, appState }: { router: Router; appState: AppState }) {
-        const { projectsState } = appState
-
         const searchItemView = (p: Local.Projects.Project): AnyVirtualDOM => {
             return {
                 tag: 'div',
@@ -142,12 +140,6 @@ export class PageView implements VirtualDOM<'div'> {
 
 ---
 
-## <i class="fas fa-folder-plus"></i> Project Starters  <docLink nav='@nav[w3nest-api]/app/config.projects.ProjectTemplate'></docLink>
-
-<newProject></newProject>
-
----
-
 <quickSearchSection></quickSearchSection>
 
 `,
@@ -181,11 +173,6 @@ export class PageView implements VirtualDOM<'div'> {
                                     fill: '#64748B',
                                 },
                             ],
-                        })
-                    },
-                    newProject: () => {
-                        return new NewProjectsCard({
-                            projectsState,
                         })
                     },
                     quickSearchSection: () => {

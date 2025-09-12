@@ -4,6 +4,7 @@ import { HdPathBookView, PageTitleView } from '../common'
 import { AppState } from '../app-state'
 import { FailuresView } from './failures.view'
 import { Local } from '@w3nest/http-clients'
+import { NewProjectsCard } from './project.view'
 
 export class ProjectsFinderView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -51,6 +52,12 @@ export class ProjectsFinderView implements VirtualDOM<'div'> {
 ### 🚫 Ignored Folders
 ${ignored}
 
+---
+
+## <i class="fas fa-folder-plus"></i> Project Starters  <docLink nav='@nav[w3nest-api]/app/config.projects.ProjectTemplate'></docLink>
+
+<newProject></newProject>
+
 `,
                 router,
                 views: {
@@ -67,6 +74,12 @@ ${ignored}
                             router,
                             prefix: finder.fromPath,
                         }),
+                    newProject: () => {
+                        return new NewProjectsCard({
+                            parentFolder: finder.fromPath,
+                            projectsState: appState.projectsState,
+                        })
+                    },
                 },
             }),
         ]

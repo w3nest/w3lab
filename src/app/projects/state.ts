@@ -321,14 +321,17 @@ export class State {
 
     createProjectFromTemplate$({
         type,
+        parentFolder,
         parameters,
     }: {
         type: string
+        parentFolder: string
         parameters: { [_k: string]: string }
     }) {
         return this.projectsClient.createProjectFromTemplate$({
             body: {
                 type,
+                parentFolder,
                 parameters,
             },
         })

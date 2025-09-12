@@ -5,48 +5,27 @@ import { BehaviorSubject, Subject } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { CodeEditorView } from '../common/code-editor.view'
 
-/**
- * @category View
- */
 export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'div'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly class = 'd-flex flex-column w-100 h-100'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly style = {
         position: 'relative' as const,
     }
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly id: string
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: ChildrenLike
 
-    /**
-     * @group States
-     */
     public readonly projectsState: ProjectsState
 
-    /**
-     * @group Immutable Constants
-     */
+    public readonly parentFolder: string
+
     public readonly projectTemplate: Local.Environment.ProjectTemplate
 
     constructor(params: {
+        parentFolder: string
         projectsState: ProjectsState
         projectTemplate: Local.Environment.ProjectTemplate
     }) {
@@ -59,6 +38,7 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
                 style: { minHeight: '0px' },
                 children: [
                     new ProjectTemplateEditor({
+                        parentFolder: this.parentFolder,
                         projectsState: this.projectsState,
                         projectTemplate: this.projectTemplate,
                         onError: () => {},
@@ -69,36 +49,21 @@ export class NewProjectFromTemplateView implements VirtualDOM<'div'> {
     }
 }
 
-/**
- * @category View
- */
 export class ProjectTemplateEditor implements VirtualDOM<'div'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'div'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly class = 'w-100'
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: ChildrenLike
 
-    /**
-     * @group Immutable Constants
-     */
     public readonly projectTemplate: Local.Environment.ProjectTemplate
 
-    /**
-     * @group State
-     */
     public readonly projectsState: ProjectsState
 
+    public readonly parentFolder: string
+
     constructor(params: {
+        parentFolder: string
         projectsState: ProjectsState
         projectTemplate: Local.Environment.ProjectTemplate
         onError: () => void
@@ -112,6 +77,7 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
         })
 
         const generateButton = new GenerateButton({
+            parentFolder: this.parentFolder,
             projectsState: this.projectsState,
             projectTemplate: this.projectTemplate,
             file$: editor.content$,
@@ -131,46 +97,28 @@ export class ProjectTemplateEditor implements VirtualDOM<'div'> {
     }
 }
 
-/**
- * @category View
- */
 export class GenerateButton implements VirtualDOM<'button'> {
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly tag = 'button'
-    /**
-     * @group Immutable DOM Constants
-     */
+
     public readonly class = `btn btn-sm btn-light mx-auto px-2`
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly style = {
         width: 'fit-content',
     }
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: ChildrenLike
 
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly onclick: (ev: MouseEvent) => void
 
-    /**
-     * @group Observables
-     */
     public readonly error$ = new Subject<HTTPError>()
 
     constructor({
+        parentFolder,
         projectsState,
         projectTemplate,
         file$,
     }: {
+        parentFolder: string
         projectsState: ProjectsState
         projectTemplate: Local.Environment.ProjectTemplate
         file$: BehaviorSubject<string>
@@ -196,6 +144,7 @@ export class GenerateButton implements VirtualDOM<'button'> {
             projectsState
                 .createProjectFromTemplate$({
                     type: projectTemplate.type,
+                    parentFolder,
                     parameters,
                 })
                 .pipe(

@@ -379,7 +379,13 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
 
-    constructor({ projectsState }: { projectsState: State }) {
+    constructor({
+        parentFolder,
+        projectsState,
+    }: {
+        parentFolder: string
+        projectsState: State
+    }) {
         this.children = [
             {
                 tag: 'div',
@@ -407,6 +413,7 @@ export class NewProjectsCard implements VirtualDOM<'div'> {
                                         icon: projectTemplate.icon as AnyVirtualDOM,
                                         content: new NewProjectFromTemplateView(
                                             {
+                                                parentFolder,
                                                 projectsState,
                                                 projectTemplate,
                                             },
