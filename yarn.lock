@@ -1704,9 +1704,9 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@w3nest/doc@file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz":
+"@w3nest/doc@file:.local-dependencies/w3nest-doc-0.1.13-wip-1762162270.tgz":
   version "0.1.13-wip"
-  resolved "file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz#555d2940820be498385ccb0589003dadebeddd0f"
+  resolved "file:.local-dependencies/w3nest-doc-0.1.13-wip-1762162270.tgz#555d2940820be498385ccb0589003dadebeddd0f"
   dependencies:
     "@mkdocs-ts/code-api" "^0.2.3"
     "@w3nest/http-clients" "^0.1.5"
