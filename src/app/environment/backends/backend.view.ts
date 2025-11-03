@@ -21,19 +21,14 @@ export class BackendView implements VirtualDOM<'div'> {
         router: Router
     }) {
         const logs$ = merge(
-            of({ name: backend.name, version: backend.version }),
+            of({ uid: backend.uid }),
             appState.backendsState.response$,
         ).pipe(
-            filter(
-                (resp) =>
-                    resp.name === backend.name &&
-                    resp.version === backend.version,
-            ),
+            filter((resp) => resp.uid === backend.uid),
             debounceTime(500),
             mergeMap(() =>
                 new Local.Client().api.system.queryBackendLogs$({
-                    name: backend.name,
-                    version: backend.version,
+                    uid: backend.uid,
                 }),
             ),
             raiseHTTPErrors(),
@@ -41,18 +36,11 @@ export class BackendView implements VirtualDOM<'div'> {
         )
         const stdOuts$ = merge(
             of({
-                name: backend.name,
-                version: backend.version,
+                uid: backend.uid,
                 text: '👂 Start Recording Std Outs',
             }),
             appState.backendsState.stdOut$,
-        ).pipe(
-            filter(
-                (resp) =>
-                    resp.name === backend.name &&
-                    resp.version === backend.version,
-            ),
-        )
+        ).pipe(filter((resp) => resp.uid === backend.uid))
 
         this.children = [
             parseMd({

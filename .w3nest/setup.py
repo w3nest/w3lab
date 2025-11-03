@@ -23,7 +23,7 @@ externals_deps = {
     "rx-vdom": "^0.1.9",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.11",
-    "@w3nest/http-clients": "^0.1.11",
+    "@w3nest/http-clients": "^0.1.12",
     "@floating-ui/dom": "^1.6.3",
     "rxjs": "^7.8.1",
     "d3": "^7.7.0",

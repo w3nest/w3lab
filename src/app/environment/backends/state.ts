@@ -1,5 +1,4 @@
 import { ReplaySubject } from 'rxjs'
-import { Backend } from '../../environment/notifications'
 import { Local } from '@w3nest/http-clients'
 
 type BackendResponse = Local.System.BackendResponse
@@ -12,7 +11,7 @@ export class State {
     /**
      * Start install events for all backends.
      */
-    public readonly stdOut$ = new ReplaySubject<Backend & { text: string }>(
+    public readonly stdOut$ = new ReplaySubject<{ uid: string; text: string }>(
         1000,
     )
 
@@ -21,8 +20,7 @@ export class State {
             .startBackendStdOut$()
             .subscribe((m) => {
                 this.stdOut$.next({
-                    name: m.attributes.name,
-                    version: m.attributes.version,
+                    uid: m.attributes.uid,
                     text: m.text,
                 })
             })

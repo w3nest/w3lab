@@ -1704,22 +1704,23 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@w3nest/doc@file:.local-dependencies/w3nest-doc-0.1.13-wip-1757685098.tgz":
+"@w3nest/doc@file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz":
   version "0.1.13-wip"
-  resolved "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757685098.tgz#9775ddf305065da0282256c6528fe0640280e282"
+  resolved "file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz#555d2940820be498385ccb0589003dadebeddd0f"
   dependencies:
     "@mkdocs-ts/code-api" "^0.2.3"
     "@w3nest/http-clients" "^0.1.5"
     "@w3nest/ui-tk" "^0.1.6"
     "@w3nest/webpm-client" "^0.1.10"
+    bootstrap "5.3.3"
     mkdocs-ts "^0.5.3"
     rx-vdom "^0.1.4"
     rxjs "^7.5.6"
 
-"@w3nest/http-clients@^0.1.11", "@w3nest/http-clients@^0.1.5", "@w3nest/http-clients@^0.1.7":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@w3nest/http-clients/-/http-clients-0.1.11.tgz#26dbe927fc68062fa6565654080d5f1860ac66c3"
-  integrity sha512-+qCGysmvvXf3DdAXj5REjlQBBP8hW0/0yqse9uAhll+5PQJrBWdheyvvRVpdigEHCUrWm/8lZ2jinvwK3eEE3g==
+"@w3nest/http-clients@^0.1.12", "@w3nest/http-clients@^0.1.5", "@w3nest/http-clients@^0.1.7":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@w3nest/http-clients/-/http-clients-0.1.12.tgz#a49309600cb0118f0831641e9e617ed6e554913c"
+  integrity sha512-MwJD4d1TE8L4lxiJF7W3BjO5QD8YYlPvppew6BckhSGSM0msq+o4PzY2AmL0d7LX/H1NHBK4IvdyZoRFiWIoXA==
   dependencies:
     rxjs "^7.5.6"
 
@@ -2147,6 +2148,11 @@ boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
+
+bootstrap@5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.3.3.tgz#de35e1a765c897ac940021900fcbb831602bac38"
+  integrity sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==
 
 bootstrap@^5.3.0:
   version "5.3.8"

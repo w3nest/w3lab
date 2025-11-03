@@ -3,13 +3,13 @@ import { ImmutableTree, ObjectJs } from '@w3nest/ui-tk/Trees'
 import { parseMd } from 'mkdocs-ts'
 import {
     AnyVirtualDOM,
-    append$,
     attr$,
     AttributeLike,
     child$,
     ChildrenLike,
     EmptyDiv,
     replace$,
+    sync$,
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs'
@@ -129,12 +129,13 @@ export class LogsExplorerTree implements VirtualDOM<'div'> {
             }),
         )
         const children = stream
-            ? append$({
-                  policy: 'append',
+            ? sync$({
+                  policy: 'sync',
                   source$,
                   vdomMap: (child) => {
                       return toChildView(child)
                   },
+                  comparisonOperator: (d1, d2) => d1.contextId === d2.contextId,
                   orderOperator,
               })
             : replace$({

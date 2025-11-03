@@ -92,6 +92,8 @@ class StdOutsView implements VirtualDOM<'pre'> {
         minHeight: '25vh',
         maxHeight: '100vh',
     }
+    public readonly class = 'p-1'
+
     constructor({ stdOuts$ }: { stdOuts$: Observable<{ text: string }> }) {
         this.children = append$({
             policy: 'append',

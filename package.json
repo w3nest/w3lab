@@ -57,8 +57,8 @@
         "@floating-ui/dom": "^1.6.3",
         "@mkdocs-ts/code-api": "^0.2.3",
         "@mkdocs-ts/notebook": "^0.1.5",
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757685098.tgz",
-        "@w3nest/http-clients": "^0.1.11",
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz",
+        "@w3nest/http-clients": "^0.1.12",
         "@w3nest/ui-tk": "^0.1.6",
         "@w3nest/webpm-client": "^0.1.11",
         "bootstrap": "^5.3.0",
@@ -106,7 +106,7 @@
         "dependencies": {
             "@floating-ui/dom": "^1.6.3",
             "@w3nest/doc": "^0.1.13",
-            "@w3nest/http-clients": "^0.1.11",
+            "@w3nest/http-clients": "^0.1.12",
             "@w3nest/ui-tk": "^0.1.6",
             "@w3nest/webpm-client": "^0.1.11",
             "bootstrap": "^5.3.0",
@@ -174,6 +174,6 @@
         }
     },
     "resolutions": {
-        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1757685098.tgz"
+        "@w3nest/doc": "file:.local-dependencies/w3nest-doc-0.1.13-wip-1762161877.tgz"
     }
 }
