@@ -20,7 +20,7 @@ pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
     "mkdocs-ts": "^0.5.3",
-    "rx-vdom": "^0.1.3",
+    "rx-vdom": "^0.1.9",
     "bootstrap": "^5.3.0",
     "@w3nest/webpm-client": "^0.1.11",
     "@w3nest/http-clients": "^0.1.11",
