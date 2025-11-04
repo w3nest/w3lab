@@ -259,7 +259,7 @@ export class TrashView implements VirtualDOM<'a'> {
         explorerState: ExplorerState
     }) {
         const driveId = groupId + '_default-drive'
-        this.href = `@nav/explorer/${groupId}/trash_${driveId}`
+        this.href = `@nav/explorer/${groupId}&target=trash_${driveId}`
 
         this.children = [
             new TrashIconView(),

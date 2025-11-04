@@ -5,7 +5,13 @@ import {
     Navigation,
     Router,
 } from 'mkdocs-ts'
-import { Accounts, AssetsGateway, raiseHTTPErrors } from '@w3nest/http-clients'
+import {
+    Accounts,
+    AssetsGateway,
+    raiseHTTPErrors,
+    Explorer,
+    HTTPResponse$,
+} from '@w3nest/http-clients'
 import { map, switchMap, take } from 'rxjs/operators'
 import { AssetView, ExplorerView } from './explorer.views'
 import { forkJoin, Observable, of } from 'rxjs'
@@ -86,66 +92,94 @@ function lazyResolver({
     explorerState: ExplorerState
 }): LazyRoutesReturn<DefaultLayout.NavLayout, DefaultLayout.NavHeader> {
     const parts = path.split('/').filter((d) => d !== '')
-    const client = new AssetsGateway.Client()
-    if (parts.length === 0) {
-        return client.accounts.getSessionDetails$().pipe(
-            raiseHTTPErrors(),
-            map((details) => {
-                const children = details.userInfo.groups.map((group) => {
-                    return {
-                        name: group.path.split('/').slice(-1)[0],
-                        header: {
-                            icon: {
-                                tag: 'div' as const,
-                                class: group.id.includes('private')
-                                    ? 'fas fa-user mx-2'
-                                    : 'fas fa-users mx-2',
-                            },
-                        },
-                        leaf: true,
-                        id: group.id,
-                        layout: {
-                            toc: () => Promise.resolve({ tag: 'div' as const }),
-                            content: () => {
-                                const target =
-                                    router.parseUrl().parameters['target']
-                                if (!target || target.startsWith('folder_')) {
-                                    return folderExplorerView({
-                                        client,
-                                        router,
-                                        groupId: group.id,
-                                        explorerState,
-                                    })
-                                }
-                                return assetExplorerView({
-                                    client,
-                                    router,
-                                    itemId: target.replace('item_', ''),
-                                    explorerState,
-                                })
-                            },
-                        },
-                    }
-                })
-                return children.reduce(
-                    (acc, c) => ({ ...acc, [`/${c.id}`]: c }),
-                    {},
-                )
-            }),
-        )
+    if (parts.length !== 0) {
+        return
     }
+    const client = new AssetsGateway.Client()
+
+    const content = (groupId: string) => {
+        const target = router.parseUrl().parameters['target']
+        if (target && target.startsWith('item_')) {
+            return assetExplorerView({
+                client,
+                target,
+                router,
+                itemId: target.replace('item_', ''),
+                explorerState,
+            })
+        }
+        const children$ = (driveId: string) => {
+            if (!target) {
+                return client.explorer.queryChildren$({
+                    parentId: driveId,
+                })
+            }
+            if (target.startsWith('folder_')) {
+                return client.explorer.queryChildren$({
+                    parentId: target.replace('folder_', ''),
+                })
+            }
+            if (target.startsWith('trash_')) {
+                return client.explorer.queryDeleted$({
+                    driveId,
+                })
+            }
+        }
+        return folderExplorerView({
+            client,
+            target,
+            router,
+            groupId,
+            explorerState,
+            children$,
+        })
+    }
+    return client.accounts.getSessionDetails$().pipe(
+        raiseHTTPErrors(),
+        map((details) => {
+            const children = details.userInfo.groups.map((group) => {
+                return {
+                    name: group.path.split('/').slice(-1)[0],
+                    header: {
+                        icon: {
+                            tag: 'div' as const,
+                            class: group.id.includes('private')
+                                ? 'fas fa-user mx-2'
+                                : 'fas fa-users mx-2',
+                        },
+                    },
+                    leaf: true,
+                    id: group.id,
+                    layout: {
+                        toc: () => Promise.resolve({ tag: 'div' as const }),
+                        content: () => content(group.id),
+                    },
+                }
+            })
+            return children.reduce(
+                (acc, c) => ({ ...acc, [`/${c.id}`]: c }),
+                {},
+            )
+        }),
+    )
 }
 
 function folderExplorerView({
     client,
+    target,
     router,
     groupId,
     explorerState,
+    children$,
 }: {
     client: AssetsGateway.Client
+    target: string | undefined
     router: Router
     groupId: string
     explorerState: ExplorerState
+    children$: (
+        driveId: string,
+    ) => HTTPResponse$<Explorer.QueryChildrenResponse>
 }): Observable<AnyVirtualDOM> {
     return client.explorer
         .getDefaultDrive$({
@@ -155,24 +189,9 @@ function folderExplorerView({
             take(1),
             raiseHTTPErrors(),
             switchMap(({ driveId }) => {
-                const target = router.parseUrl().parameters['target']
-
-                return client.explorer
-                    .queryChildren$({
-                        parentId: target
-                            ? target.replace('folder_', '')
-                            : driveId,
-                    })
-                    .pipe(
-                        raiseHTTPErrors(),
-                        map((response) => ({
-                            response,
-                            driveId,
-                            target,
-                        })),
-                    )
+                return children$(driveId).pipe(raiseHTTPErrors())
             }),
-            map(({ response, target }) => {
+            map((response) => {
                 return new ExplorerView({
                     response,
                     path: target ?? groupId,
@@ -186,11 +205,13 @@ function folderExplorerView({
 
 function assetExplorerView({
     client,
+    target,
     router,
     itemId,
     explorerState,
 }: {
     client: AssetsGateway.Client
+    target: string
     router: Router
     itemId: string
     explorerState: ExplorerState
@@ -218,7 +239,6 @@ function assetExplorerView({
                 ),
             ),
             map(({ itemResponse, assetResponse, permissionResponse }) => {
-                const target = router.parseUrl().parameters['target']
                 return new AssetView({
                     itemResponse,
                     asset: assetResponse,

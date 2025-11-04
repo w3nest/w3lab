@@ -17,7 +17,6 @@ import {
     PathView,
     groupAnchorView,
     folderAnchorView,
-    separator,
     classPathAnchors,
 } from './path.views'
 import {
@@ -51,13 +50,14 @@ export class HeaderView implements VirtualDOM<'div'> {
     constructor({
         explorerState,
         router,
+        groupId,
         path,
     }: {
         path: string
+        groupId: string
         explorerState: ExplorerState
         router: Router
     }) {
-        const groupId = path.split('/')[0]
         const target = path.split('/').slice(-1)[0]
         const pathView = (entityId: string): RxChild => {
             const client = new AssetsGateway.Client().explorer
@@ -94,20 +94,33 @@ export class HeaderView implements VirtualDOM<'div'> {
             return
         }
         if (target.startsWith('trash_')) {
+            const driveId = target.replace('trash_', '')
             const ctxMenu = new ContextMenuHandler({
                 node: new TrashNode({
-                    driveId: target.replace('trash_', ''),
+                    driveId,
                     groupId,
                 }),
                 explorerState: explorerState,
             })
             this.children = [
-                groupAnchorView({ groupId: groupId, router }),
-                separator,
+                new PathView({
+                    path: {
+                        folders: [],
+                        drive: {
+                            driveId: driveId,
+                            name: 'Trash',
+                            groupId,
+                            metadata: '',
+                        },
+                    },
+                    router,
+                    explorerState,
+                    displayCtxMenu: false,
+                }),
                 folderAnchorView({
                     name: 'trash',
-                    nav: path,
-                    target: 'trash',
+                    nav: `/explorer/${groupId}`,
+                    target,
                     icon: 'fas fa-trash',
                     router,
                 }),
@@ -160,7 +173,9 @@ export class ExplorerView implements VirtualDOM<'div'> {
         const isTrash = path.split('/').slice(-1)[0].startsWith('trash_')
 
         this.children = [
-            headerViewWrapper(new HeaderView({ explorerState, router, path })),
+            headerViewWrapper(
+                new HeaderView({ explorerState, router, path, groupId }),
+            ),
             ...response.folders.sort(sortFct).map((folder) =>
                 isTrash
                     ? new TrashedFolderView({ folder })
@@ -247,6 +262,7 @@ export class AssetView implements VirtualDOM<'div'> {
                             explorerState,
                             path: path,
                             router: router,
+                            groupId: itemResponse.groupId,
                         }),
                     launch: () => new LaunchView({ asset }),
                     description: () =>

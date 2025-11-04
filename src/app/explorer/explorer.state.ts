@@ -193,7 +193,10 @@ export class ExplorerState {
     }
 
     refresh() {
-        this.router.fireNavigateTo(this.router.parseUrl())
+        this.router.fireNavigateTo({
+            ...this.router.parseUrl(),
+            forceReload: true,
+        })
     }
 
     uploadAsset(node: ItemNode) {

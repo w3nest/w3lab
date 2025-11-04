@@ -29,7 +29,7 @@ export function folderAnchorView({
             },
         ],
         href: target
-            ? `${router.basePath}?nav=${nav}&target=folder_${target}`
+            ? `${router.basePath}?nav=${nav}&target=${target}`
             : `${router.basePath}?nav=${nav}`,
         onclick: (e: MouseEvent) => {
             e.preventDefault()
@@ -71,7 +71,7 @@ export const separator: AnyVirtualDOM = {
     innerText: '/',
 }
 export const classPathAnchors =
-    'w-100 d-flex flex-wrap align-items-center mkdocs-bg-1 rounded'
+    'd-flex flex-wrap align-items-center mkdocs-bg-1 rounded'
 export class PathView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = classPathAnchors
@@ -109,17 +109,14 @@ export class PathView implements VirtualDOM<'div'> {
             })
             .flat()
             .slice(0, -1)
-        const ctxMenu = new ContextMenuHandler({
-            node: target
-                ? new ItemNode(target)
-                : new FolderNode(path.folders.slice(-1)[0]),
-            explorerState: explorerState,
-        })
-        this.children = [
-            groupView,
-            separator,
-            ...folders,
-            displayCtxMenu && ctxMenu,
-        ]
+        const ctxMenu =
+            displayCtxMenu &&
+            new ContextMenuHandler({
+                node: target
+                    ? new ItemNode(target)
+                    : new FolderNode(path.folders.slice(-1)[0]),
+                explorerState: explorerState,
+            })
+        this.children = [groupView, separator, ...folders, ctxMenu]
     }
 }
