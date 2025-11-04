@@ -135,7 +135,8 @@ export class LogsExplorerTree implements VirtualDOM<'div'> {
                   vdomMap: (child) => {
                       return toChildView(child)
                   },
-                  comparisonOperator: (d1, d2) => d1.contextId === d2.contextId,
+                  comparisonOperator: (d1, d2) =>
+                      d1.attributes.traceId === d2.attributes.traceId,
                   orderOperator,
               })
             : replace$({
