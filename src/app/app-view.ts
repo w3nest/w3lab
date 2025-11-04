@@ -11,6 +11,7 @@ import {
 } from './environment/nav-badges.view'
 import { Local } from '@w3nest/http-clients'
 import { getProjectNav$ } from './common/utils-nav'
+import { createRootContext } from './config.context'
 
 export const footer = new Footer({
     license: 'MIT',
@@ -142,24 +143,31 @@ export class AppView implements VirtualDOM<'div'> {
 
     constructor(params: { appState: AppState }) {
         Object.assign(this, params)
-        const layout = new DefaultLayout.LayoutWithCompanion({
-            router: this.appState.router,
-            // bookmarks$: this.appState.bookmarks$,
-            topBanner: {
-                logo: { icon: '../assets/favicon.svg', title: 'W3Lab' },
-                expandedContent: new TopBannerContent({
-                    appState: this.appState,
-                }),
-                badge: new AuthBadge(),
-                zIndex: 1001,
-            },
-            footer,
-            navFooter: true,
-            displayOptions: {
-                pageVertPadding: '3rem',
-            },
-            companionNodes$: this.appState.companionPage$,
+        const ctx = createRootContext({
+            threadName: 'AppView',
+            labels: [],
         })
+        const layout = new DefaultLayout.LayoutWithCompanion(
+            {
+                router: this.appState.router,
+                // bookmarks$: this.appState.bookmarks$,
+                topBanner: {
+                    logo: { icon: '../assets/favicon.svg', title: 'W3Lab' },
+                    expandedContent: new TopBannerContent({
+                        appState: this.appState,
+                    }),
+                    badge: new AuthBadge(),
+                    zIndex: 1001,
+                },
+                footer,
+                navFooter: true,
+                displayOptions: {
+                    pageVertPadding: '3rem',
+                },
+                companionNodes$: this.appState.companionPage$,
+            },
+            ctx,
+        )
         this.children = [
             layout,
             new DisconnectedView({ appState: this.appState }),
